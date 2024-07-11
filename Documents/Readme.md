@@ -5,7 +5,7 @@
 - [MPA Documents and file structure](#mpa-documents-and-file-structure)
   - [Index](#index)
   - [About the Documents](#about-the-documents)
-  - [About the file structer](#about-the-file-structer)
+  - [About the file structurer](#about-the-file-structurer)
 
 
 ## About the Documents
@@ -15,7 +15,7 @@
 |[MPA_KR3_R540_Digital_Twin_Final_Report](/Documents/Final_Report/MPA_KR3_Digital_Twin_Final_Report.docx)| xxx.xxx.xxx|The final report of the master project to be submitted|
 
 
-## About the file structer
+## About the file structurer
 
 ```(Bash)
 MPA_KR3_Digital_Twin      
