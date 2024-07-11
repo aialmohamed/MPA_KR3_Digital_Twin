@@ -32,7 +32,7 @@ MPA_KR3_Digital_Twin
 
 | Directory Name        | Description|
 |-----------------------|------------|
-| **Final_Report**      | The final report must be submitted here along with a presentation on this project.|
+| **Final_Report**      | The final report will be submitted together with a presentation on this project.|
 | **Research_Documents**| All sources needed to define the approach of this project should be found here.|
 | **System_Documents**  | Documentation about this system with the required documents (requirements, design, etc.) should be filed here.|
 | **User_Guids**        | Various user guides for the setup, installation of the interface, and operation of the system nodes should be found here. |
