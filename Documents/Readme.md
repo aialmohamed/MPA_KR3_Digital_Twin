@@ -12,7 +12,7 @@
 
 |Document_Name | Version | Description |
 |--------------|---------|-----------|
-|MPA_KR3_R540_Digital_Twin_Final_Report| xxx.xxx.xxx|The final report of the master project to be submitted|
+|[MPA_KR3_R540_Digital_Twin_Final_Report](/Documents/Final_Report/MPA_KR3_Digital_Twin_Final_Report.docx)| xxx.xxx.xxx|The final report of the master project to be submitted|
 
 
 ## About the file structers
