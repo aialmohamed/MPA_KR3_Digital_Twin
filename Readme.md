@@ -21,7 +21,7 @@
 
 ## Introduction and Motivation
 
-This repository documents my Master Project at the **THU** under the supervision of **Prof. List Ollinger**.
+This repository documents my Master Project at the **THU** under the supervision of **Prof. Lisa Ollinger**.
 
 The project involves setting up a **digital twin** system for the **Kuka KR3 R540** robot. The key objectives are:
 
