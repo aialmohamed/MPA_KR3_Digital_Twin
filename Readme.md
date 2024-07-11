@@ -32,7 +32,7 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 ## To-do
 
 ### Setup and Repository
-- [x] Create a digital twin and set up a Git repository
+- [x] Create and set up a Git repository
 - [ ] Create the project's file system
 - [ ] Set up the system requirements
 - [ ] Create a concept for the props
