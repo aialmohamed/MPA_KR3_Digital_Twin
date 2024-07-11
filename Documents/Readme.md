@@ -18,16 +18,21 @@
 ## About the file structurer
 
 ```(Bash)
-MPA_KR3_Digital_Twin      
-├─ Documents              
-│  ├─ Final_Report        
-│  ├─ Research_Documents  
-│  ├─ System_Documents    
-│  ├─ User_Guids          
-│  └─ Readme.md           
-├─ Software               
-│  └─ Readme.md           
-└─ Readme.md
+MPA_KR3_Digital_Twin                             
+├─ Documents                                     
+│  ├─ Final_Report                               
+│  │  └─ MPA_KR3_Digital_Twin_Final_Report.docx  
+│  ├─ Research_Documents                         
+│  │  └─ dummy.txt                               
+│  ├─ System_Documents                           
+│  │  └─ dummy.txt                               
+│  ├─ User_Guids                                 
+│  │  └─ dummy.txt                               
+│  └─ Readme.md                                  
+├─ Software                                      
+│  └─ Readme.md                                  
+└─ Readme.md                                     
+
 ```
 
 | Directory Name        | Description|
