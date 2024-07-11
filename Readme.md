@@ -14,6 +14,9 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 > [!NOTE]
 > duration of the project: 6 months from the beginning of September (from 01.09.2024 to 28.02.2025)
 
+>[!NOTE]
+> This repository is manged with this [jira](
+>  https://ahmaedibrahim311-1720719768107.atlassian.net/jira/software/projects/DT/boards/2?atlOrigin=eyJpIjoiNjg4YjM5ZjIyYjM2NDUyYjlkYmYzN2RiZTRhMmNkNjUiLCJwIjoiaiJ9) project 
 
 ## Index
 
