@@ -2,6 +2,8 @@
 
 ## Introduction and Motivation
 
+> A digital twin is a virtual representation of an object or system designed to reflect a physical object accurately. It spans the object's lifecycle, is updated from real-time data and uses simulation, machine learning and reasoning to help make decisions.
+
 This repository documents my Master Project at the **THU** under the supervision of **Prof. Lisa Ollinger**.
 
 The project involves setting up a **digital twin** system for the **Kuka KR3 R540** robot. The key objectives are:
@@ -9,6 +11,9 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 * Creating an interface between ROS and the robot
 * Developing an OPC UA server to synchronize the real robot with the simulated robot
 * Exploring potential use cases for the digital twin
+> [!NOTE]
+> duration of the project: 6 months from the beginning of September (from 01.09.2024 to 28.02.2025)
+
 
 ## Index
 
