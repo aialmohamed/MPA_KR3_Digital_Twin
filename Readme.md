@@ -1,12 +1,21 @@
 # Digital Twin KR3
 
+## Introduction and Motivation
 
+This repository documents my Master Project at the **THU** under the supervision of **Prof. Lisa Ollinger**.
+
+The project involves setting up a **digital twin** system for the **Kuka KR3 R540** robot. The key objectives are:
+
+* Creating an interface between ROS and the robot
+* Developing an OPC UA server to synchronize the real robot with the simulated robot
+* Exploring potential use cases for the digital twin
 
 ## Index
 
 - [Digital Twin KR3](#digital-twin-kr3)
-  - [Index](#index)
   - [Introduction and Motivation](#introduction-and-motivation)
+  - [Index](#index)
+  - [System and development specification](#system-and-development-specification)
   - [To-do](#to-do)
     - [Setup and Repository](#setup-and-repository)
     - [Interface Development](#interface-development)
@@ -19,15 +28,16 @@
   - [Results](#results)
 
 
-## Introduction and Motivation
 
-This repository documents my Master Project at the **THU** under the supervision of **Prof. Lisa Ollinger**.
+## System and development specification
 
-The project involves setting up a **digital twin** system for the **Kuka KR3 R540** robot. The key objectives are:
+|specification   | Version   | Note|
+|----------------|-----------|-----|
+| OS | Ubuntu Jammy (22.04) 64-bit | n/A |
+| ROS2 |Humble Hawksbill |  n/A |
+| Gazebo | Fortress | n/A|
+| Robot | KuKa KR3 R540 | n/A|
 
-* Creating an interface between ROS and the robot
-* Developing an OPC UA server to synchronize the real robot with the simulated robot
-* Exploring potential use cases for the digital twin
 
 ## To-do
 
