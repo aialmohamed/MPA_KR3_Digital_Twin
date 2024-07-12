@@ -30,6 +30,8 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
     - [Use Case and Evaluation](#use-case-and-evaluation)
     - [Digital Twin Application](#digital-twin-application)
   - [Approach](#approach)
+    - [Conceptualisation](#conceptualisation)
+    - [Hardware Interface and connection](#hardware-interface-and-connection)
   - [Setup](#setup)
   - [Software/s](#softwares)
   - [Testing](#testing)
@@ -74,6 +76,44 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 - [ ] Test and validate the Digital Twin application through synchronised movements and data comparisons between simulation and reality
 
 ## Approach 
+
+### Conceptualisation
+
+To create a working digital twin of a robot with ROS2 and Gazebo, we first need to understand the basic concept of ROS2.
+
+ROS2 is a middleware that allows us to control and monitor different types of robots by separating the hardware management layer, the control management layer and the application layer and then dynamically connecting them.
+
+This allows us to constantly change the controllers and easily switch off the hardware, making it easier to use the hardware.
+
+![ros control concept](../MPA_KR3_Digital_Twin/Images/ros2_controll_concept.png)
+
+
+For the digital twin to work on the KuKa KR3, we need to develop the following 
+* a hardware interface 
+* a ROS2 interface
+* a ROS2 controller 
+
+This is only the side of the real robot. For the simulation or digital twin, we need to develop the simulation environment (Gazebo), so we need a dedicated BringUp ROS2 workspace for that.
+
+Fortunately, the team from last semester has already taken care of the simulation (and the controllers), so all we have to do now is develop the interfaces between the hardware and the ROS side.
+
+### Hardware Interface and connection
+
+| Feature                     | RSI (Robot Sensor Interface)          | KVP (KUKA Variable Protocol) | EKI (Ethernet KRL Interface)    |
+|-----------------------------|---------------------------------------|------------------------------|---------------------------------|
+| **Purpose**                 | Real-time control and sensor integration | Non-real-time monitoring and control | Flexible communication using XML |
+| **Communication**           | Real-time Ethernet                    | TCP/IP                       | TCP/IP                          |
+| **Real-Time Support**       | Yes                                   | No                           | Limited real-time support       |
+| **Typical Use Cases**       | Adaptive control, precision tasks, advanced robotics | Monitoring, configuration, data logging | Custom protocols, flexible data exchange |
+| **Ease of Use**             | Complex                               | Simple                       | Moderate                        |
+| **Integration**             | Requires real-time systems expertise  | Easy to integrate with various environments | Requires knowledge of XML and KRL |
+| **Update Frequency**        | High frequency (millisecond range)    | Lower frequency              | Moderate frequency              |
+| **Data Format**             | XML-based configuration               | Plain text commands          | XML-based messages              |
+| **Implementation Complexity**| High                                  | Low                          | Moderate                        |
+| **Computational Resources** | High                                  | Low                          | Moderate                        |
+| **Advantages**              | Real-time performance, advanced control | Simplicity, ease of implementation | Flexibility, custom data formats  |
+| **Disadvantages**           | Complexity, resource-intensive        | Non-real-time                | Requires XML and KRL knowledge  |
+| **Typical Applications**    | Research, high-precision manufacturing, robotics R&D | Basic monitoring and control, configuration | Custom integrations, flexible data handling |
 
 ## Setup 
 

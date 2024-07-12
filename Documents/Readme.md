@@ -23,16 +23,17 @@ MPA_KR3_Digital_Twin
 │  ├─ Final_Report                               
 │  │  └─ MPA_KR3_Digital_Twin_Final_Report.docx  
 │  ├─ Research_Documents                         
-│  │  └─ dummy.txt                               
+│  │  └─ Resources.md                            
 │  ├─ System_Documents                           
 │  │  └─ dummy.txt                               
 │  ├─ User_Guids                                 
 │  │  └─ dummy.txt                               
 │  └─ Readme.md                                  
+├─ Images                                        
+│  └─ ros2_controll_concept.png                  
 ├─ Software                                      
 │  └─ Readme.md                                  
 └─ Readme.md                                     
-
 ```
 
 | Directory Name        | Description|
