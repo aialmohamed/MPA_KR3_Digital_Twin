@@ -85,7 +85,7 @@ ROS2 is a middleware that allows us to control and monitor different types of ro
 
 This allows us to constantly change the controllers and easily switch off the hardware, making it easier to use the hardware.
 
-![ros control concept](../MPA_KR3_Digital_Twin/Images/ros2_controll_concept.png)
+![ros control concept](/Images/ros2_controll_concept.png)
 
 
 For the digital twin to work on the KuKa KR3, we need to develop the following 
