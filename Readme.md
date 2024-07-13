@@ -53,6 +53,7 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 
 ### Setup and Repository
 - [x] Create and set up a Git repository
+- [ ] Clearfiy OPCUA usage ? connection to kuka is via rsi or opcua ????
 - [ ] Create the project's file system
 - [ ] Set up the system requirements
 - [ ] Create a concept for the props
@@ -114,6 +115,9 @@ Fortunately, the team from last semester has already taken care of the simulatio
 | **Advantages**              | Real-time performance, advanced control | Simplicity, ease of implementation | Flexibility, custom data formats  |
 | **Disadvantages**           | Complexity, resource-intensive        | Non-real-time                | Requires XML and KRL knowledge  |
 | **Typical Applications**    | Research, high-precision manufacturing, robotics R&D | Basic monitoring and control, configuration | Custom integrations, flexible data handling |
+
+After extensive consultation, we believe that the best communication method is RSI, even though it is quite complex, real-time operation is a must for this project.
+
 
 ## Setup 
 
