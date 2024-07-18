@@ -8,3 +8,4 @@
 |https://github.com/ros-industrial/kuka_experimental/issues/77|eki vs rsi thread|
 | https://github.com/ImtsSrl/KUKAVARPROXY | KUKAVARPROXY |
 | https://www.robot-forum.com/robotforum/thread/40958-rsi-block-diagram-editing-generation/ | tools for rsi on the robot|
+|https://robotics.stackexchange.com/questions/23126/opc-ua-in-ros-2-to-communicate-with-plc ||
