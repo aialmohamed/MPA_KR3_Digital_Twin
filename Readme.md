@@ -8,8 +8,7 @@ This repository documents my Master Project at the **THU** under the supervision
 
 The project involves setting up a **digital twin** system for the **Kuka KR3 R540** robot. The key objectives are:
 
-* Creating an interface between ROS and the robot
-* Developing an OPC UA server to synchronize the real robot with the simulated robot
+* Creating an interface between ROS and the robot via OPC UA
 * Exploring potential use cases for the digital twin
 > [!NOTE]
 > duration of the project: 6 months from the beginning of September (from 01.09.2024 to 28.02.2025)
@@ -31,7 +30,8 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
     - [Digital Twin Application](#digital-twin-application)
   - [Approach](#approach)
     - [Conceptualisation](#conceptualisation)
-    - [Hardware Interface and connection using OPCUA](#hardware-interface-and-connection-using-opcua)
+    - [Main System-Design](#main-system-design)
+    - [Hardware Interface and connection](#hardware-interface-and-connection)
   - [Setup](#setup)
   - [Software/s](#softwares)
   - [Testing](#testing)
@@ -93,13 +93,33 @@ For the digital twin to work on the KuKa KR3, we need to develop the following
 * a hardware interface 
 * a ROS2 interface
 * a ROS2 controller 
+* a ROS2-OPCUA-Bridge
 
 This is only the side of the real robot. For the simulation or digital twin, we need to develop the simulation environment (Gazebo), so we need a dedicated BringUp ROS2 workspace for that.
 
 Fortunately, the team from last semester has already taken care of the simulation (and the controllers), so all we have to do now is develop the interfaces between the hardware and the ROS side.
 
-### Hardware Interface and connection using OPCUA
+### Main System-Design
 
+
+
+![sytem_init](/Images/Sytem_main_idea.png) 
+
+### Hardware Interface and connection
+
+>[!NOTE]
+>According to this [research](https://ntnuopen.ntnu.no/ntnu-xmlui/handle/11250/2561319), the main connection to the robot and the use of this connection as the basis of an OPCUA server is as follows.
+
+| Aspect                   | KVP                                         | RSI                                           | Implications                                      |
+|--------------------------|---------------------------------------------|----------------------------------------------|---------------------------------------------------|
+| **Time-Delay**           | Average time-delay of 8.75ms                | Average time-delay of 4.0ms                  | RSI has a lower time-delay, suitable for faster response times. |
+| **Communication Protocols** | Uses TCP (Transmission Control Protocol)  | Uses UDP (User Datagram Protocol)            | UDP is faster but less reliable; TCP is more reliable but can have higher latency. |
+| **Real-Time Requirements** | Less stringent real-time requirements      | Harder real-time requirements                | RSI provides faster responses but may be less stable. |
+| **System Requirements**   | Can run in the background on the controller | Requires running on a Linux machine          | KVP offers more flexibility and resource efficiency. |
+| **Reliability**           | More reliable, stable background operation  | Higher likelihood of breakdowns              | KVP is more robust for long-term stability.       |
+| **Functional Requirements** | Requires a specific program for position updates | Requires a specific program for position updates | Both need dedicated resources on the controller for position updates. |
+| **Advantages**            | - Higher reliability<br>- Flexibility<br>- Ease of use | - Lower latency<br>- Better real-time performance | KVP is better for general reliability and flexibility, RSI is better for low-latency applications. |
+| **Drawbacks**             | - Higher latency                            | - Higher risk of breakdowns<br>- More resource intensive | Trade-off between reliability and performance depending on use case. |
 
 
 
