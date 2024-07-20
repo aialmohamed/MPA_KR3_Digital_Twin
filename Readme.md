@@ -29,7 +29,7 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
     - [Use Case and Evaluation](#use-case-and-evaluation)
     - [Digital Twin Application](#digital-twin-application)
   - [Approach](#approach)
-    - [Conceptualisation](#conceptualisation)
+    - [Motiviation and Defnitions](#motiviation-and-defnitions)
     - [Main System-Design](#main-system-design)
     - [Hardware Interface and connection](#hardware-interface-and-connection)
   - [Setup](#setup)
@@ -53,7 +53,6 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 
 ### Setup and Repository
 - [x] Create and set up a Git repository
-- [ ] Clearfiy OPCUA usage ? connection to kuka is via rsi or opcua ????
 - [ ] Create the project's file system
 - [ ] Set up the system requirements
 - [ ] Create a concept for the props
@@ -78,7 +77,7 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 
 ## Approach 
 
-### Conceptualisation
+### Motiviation and Defnitions
 
 To create a working digital twin of a robot with ROS2 and Gazebo, we first need to understand the basic concept of ROS2.
 
