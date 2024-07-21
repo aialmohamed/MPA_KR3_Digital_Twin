@@ -2,7 +2,10 @@
 
 ## Introduction and Motivation
 
-> A digital twin is a virtual representation of an object or system designed to reflect a physical object accurately. It spans the object's lifecycle, is updated from real-time data and uses simulation, machine learning and reasoning to help make decisions.
+> digital representation of a unique asset (product, machine, service,
+> product service system or other intangible asset), that alters
+> its properties, condition and behaviour by means of models,
+> information and data
 
 This repository documents my Master Project at the **THU** under the supervision of **Prof. Lisa Ollinger**.
 
