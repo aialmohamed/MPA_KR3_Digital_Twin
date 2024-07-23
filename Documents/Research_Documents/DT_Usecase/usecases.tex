@@ -1,0 +1,60 @@
+\section{Usecases for DT}
+
+\subsection{System specifications}
+
+The existing system consists of a KuKa robot "KR3-R540" with a KC4 controller as a physical twin, with the team from last semester creating a digital mirror of the system using ROS2 and Gazebo.
+The next step in this project is to develop a digital shadow of the system. This will involve connecting the physical twin to the digital model in a unidirectional way.
+After that we should be able to go to the next step by implementing a full digital twin or bi-directional communication between the digital model and the physical twin, 
+reading and monitoring data from the sensors in real time and sending commands to the physical twin via the digital model. 
+
+\subsection{Usecases}
+
+We can take a step towards potential use cases that we can implement by thinking about Industry 4.0 concepts such as CPS and IoT.
+
+\subsubsection{DashKuKa}
+The objective is to integrate the digital twin and the physical twin into a 
+unified dashboard for control and monitoring. This dashboard can be implemented 
+as a desktop application, mobile app, web page, or VR application. 
+Through this interface, users can send commands to the OPCUA server, 
+which will subsequently synchronize the actions of both the physical and digital 
+twins simultaneously, ensuring better synchronization between them.
+Additionally, the interface can display the values of the sensors, providing real-time data and insights. 
+The use of OPCUA in this context enhances the efficiency of the synchronization 
+between the physical and digital twins.
+
+\subsubsection{SmartKuKa}
+
+An AI system can be integrated to read and analyze the data for enhanced
+operational efficiency. Specifically, 
+a machine learning (ML) model can be utilized to better calculate 
+the movement of robotic joints and optimize the trajectory path. 
+This ML model can be integrated into the system layers where sensor data is 
+processed. By analyzing real-time data and historical patterns, 
+the AI can provide precise control and improved efficiency for 
+physical operations, ensuring optimal performance and predictive maintenance.
+
+\begin{itemize}
+    \item \textbf{Simulation and Testing}: The digital twin provides a virtual replica of the physical system, allowing the AI to run simulations and test various trajectory paths without affecting the physical twin.
+    \item \textbf{Data Generation}: The digital twin generates additional data that the AI can use to refine its models and improve predictions. This includes historical data, real-time sensor inputs, and environmental conditions.
+    \item \textbf{Feedback Loop}: The AI uses the digital twin to create a feedback loop where predictions and optimizations are continuously tested and validated virtually before being applied to the physical twin.
+    \item \textbf{Predictive Maintenance}: By analyzing data from both the digital and physical twins, the AI can predict when maintenance is needed and optimize schedules to minimize downtime.
+\end{itemize}
+
+
+\subsubsection{RemoteKuKa}
+
+The idea is to access the robot remotely and monitor it through the Digital Twin.
+The digital twin provides a real-time virtual representation of the robot,
+allowing operators to monitor its status, movements, and sensor readings 
+remotely. Commands can be sent to the digital twin, which are then synchronized
+with the physical robot, ensuring precise control and coordination even from a 
+distance. The digital twin can display sensor values and operational data on a 
+user-friendly dashboard, providing insights and enabling informed decision-making. By continuously comparing the digital twin's model with the physical robot's performance, any deviations or anomalies can be detected early, allowing for prompt corrective actions. Additionally, the digital twin helps predict maintenance needs by analyzing sensor data and operational 
+trends, optimizing maintenance schedules to minimize downtime.
+
+\subsubsection{MultiKuKa}
+
+The concept is to use digital twins to coordinate and monitor the actions of 
+multiple robots within an industrial or automation setting. 
+Each robot has its own digital twin that mirrors its physical state and actions. 
+The unified dashboard provides a centralized interface for overseeing and managing the collective operations of all robots.
