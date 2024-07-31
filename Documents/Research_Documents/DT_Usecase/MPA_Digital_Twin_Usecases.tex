@@ -4,7 +4,11 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
 \usepackage[rightcaption]{sidecap}
+\usepackage{datetime}
+\newdate{date}{20}{07}{2024}
 \graphicspath{{../../../images/}}
+
+\date{\displaydate{date}}
 \title{
     Digital Twin KR3 \\ \large Usecase and Application
 }
@@ -23,6 +27,10 @@
 \newpage
 
 \include{Industry_4_0}
+
+\newpage
+
+\include{IndustrialRobots}
 
 \newpage 
 
