@@ -18,22 +18,51 @@
 ## About the file structurer
 
 ```(Bash)
-MPA_KR3_Digital_Twin                             
-├─ Documents                                     
-│  ├─ Final_Report                               
-│  │  └─ MPA_KR3_Digital_Twin_Final_Report.docx  
-│  ├─ Research_Documents                         
-│  │  └─ Resources.md                            
-│  ├─ System_Documents                           
-│  │  └─ dummy.txt                               
-│  ├─ User_Guids                                 
-│  │  └─ dummy.txt                               
-│  └─ Readme.md                                  
-├─ Images                                        
-│  └─ ros2_controll_concept.png                  
-├─ Software                                      
-│  └─ Readme.md                                  
-└─ Readme.md                                     
+MPA_KR3_Digital_Twin                               
+├─ Documents                                       
+│  ├─ Final_Report                                 
+│  │  └─ MPA_KR3_Digital_Twin_Final_Report.docx    
+│  ├─ Research_Documents                           
+│  │  ├─ DT_Usecase                                
+│  │  │  ├─ AKL.aux                                
+│  │  │  ├─ IndustrialRobots.aux                   
+│  │  │  ├─ IndustrialRobots.tex                   
+│  │  │  ├─ Industry_4_0.aux                       
+│  │  │  ├─ Industry_4_0.tex                       
+│  │  │  ├─ intro.aux                              
+│  │  │  ├─ intro.tex                              
+│  │  │  ├─ MPA_Digital_Twin_Usecases.aux          
+│  │  │  ├─ MPA_Digital_Twin_Usecases.bbl          
+│  │  │  ├─ MPA_Digital_Twin_Usecases.blg          
+│  │  │  ├─ MPA_Digital_Twin_Usecases.fdb_latexmk  
+│  │  │  ├─ MPA_Digital_Twin_Usecases.fls          
+│  │  │  ├─ MPA_Digital_Twin_Usecases.log          
+│  │  │  ├─ MPA_Digital_Twin_Usecases.pdf          
+│  │  │  ├─ MPA_Digital_Twin_Usecases.synctex.gz   
+│  │  │  ├─ MPA_Digital_Twin_Usecases.tex          
+│  │  │  ├─ MPA_Digital_Twin_Usecases.toc          
+│  │  │  ├─ ref.bib                                
+│  │  │  ├─ usecases.aux                           
+│  │  │  └─ usecases.tex                           
+│  │  └─ Resources.md                              
+│  ├─ System_Documents                             
+│  │  └─ dummy.txt                                 
+│  ├─ User_Guids                                   
+│  │  └─ dummy.txt                                 
+│  └─ Readme.md                                    
+├─ Images                                          
+│  ├─ CPS_DT.jpg                                   
+│  ├─ DT_Layers.jpg                                
+│  ├─ KR_3_AGILUS.jpg                              
+│  ├─ opcua_server.png                             
+│  ├─ ros2_controll_concept.png                    
+│  ├─ sensors-22-04950-g001.webp                   
+│  ├─ Sytem_main_idea.png                          
+│  └─ Usecase_DashKuka.png                         
+├─ Software                                        
+│  └─ Readme.md                                    
+└─ Readme.md                                       
+                      
 ```
 
 | Directory Name        | Description|
