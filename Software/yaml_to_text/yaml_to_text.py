@@ -46,11 +46,6 @@ class YamlToLatexConverter:
 
             for i in range(0, len(name_description_datatype), 18):
                 table_count += 1
-
-                # Add \newpage before each new table
-                if table_count > 1:  # Avoid \newpage before the first table
-                    file.write('\\newpage\n')
-
                 file.write(f'\\begin{{tabular}}{{|p{{0.3\\textwidth}}|p{{0.5\\textwidth}}|p{{0.2\\textwidth}}|}}\n')
                 file.write('\\hline\n')
                 file.write(f'\\textbf{{Table {table_count}: Name}} & \\textbf{{Description}} & \\textbf{{Datatype}} \\\\ \\hline\n')
