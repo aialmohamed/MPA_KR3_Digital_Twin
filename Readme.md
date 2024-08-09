@@ -20,6 +20,13 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 > This repository is manged with this [jira](
 >  https://ahmaedibrahim311-1720719768107.atlassian.net/jira/software/projects/DT/boards/2?atlOrigin=eyJpIjoiNjg4YjM5ZjIyYjM2NDUyYjlkYmYzN2RiZTRhMmNkNjUiLCJwIjoiaiJ9) project 
 
+>[!NOTE]
+>After the meeting with the professor on the 6th of August, we are using the CIP because it is easier to implement and we are not limiting the project to real-time (at least for now). 
+>On the other hand, we have some suggestions for future development to improve the real-time aspect of the project, such as using a medium hardware like Respi as a path for the RSI. so for this project we are using **KVP** (**KUKAVARPROXY**)
+
+>[!NOTE]
+> After the meeting on 06 August, we also came to the conclusion that we will implement the remote control use case.
+>With this use case, we can then define a dashboard that acts as a control channel for the system, allowing us to control and monitor the robot(s) from a remote device.
 ## Index
 
 - [Digital Twin KR3](#digital-twin-kr3)
@@ -56,7 +63,7 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 
 ### Setup and Repository
 - [x] Create and set up a Git repository
-- [ ] Create the project's file system
+- [x] Create the project's file system
 - [ ] Set up the system requirements
 - [ ] Create a concept for the props
 - [ ] Finalise the system setup (on my PC)
@@ -69,8 +76,8 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 - [ ] Create the software for the ROS2 controllers (if required)
 
 ### Use Case and Evaluation
-- [ ] Define and document a use case / application of the digital twin
-- [ ] Evaluate the benefits and challenges of using a Digital Twin in the identified scenarios
+- [x] Define and document a use case / application of the digital twin
+- [x] Evaluate the benefits and challenges of using a Digital Twin in the identified scenarios
 - [ ] Exchange insights with industry experts, particularly with Sven Völker
 
 ### Digital Twin Application
@@ -122,8 +129,6 @@ Fortunately, the team from last semester has already taken care of the simulatio
 | **Functional Requirements** | Requires a specific program for position updates | Requires a specific program for position updates | Both need dedicated resources on the controller for position updates. |
 | **Advantages**            | - Higher reliability<br>- Flexibility<br>- Ease of use | - Lower latency<br>- Better real-time performance | KVP is better for general reliability and flexibility, RSI is better for low-latency applications. |
 | **Drawbacks**             | - Higher latency                            | - Higher risk of breakdowns<br>- More resource intensive | Trade-off between reliability and performance depending on use case. |
-
-
 
 
 ## Setup 
