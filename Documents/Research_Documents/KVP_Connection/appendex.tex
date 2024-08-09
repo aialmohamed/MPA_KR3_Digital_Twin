@@ -1,0 +1,234 @@
+\begin{appendices}
+    \section{Tables of Global Variables}
+    \begin{tabular}{|p{0.3\textwidth}|p{0.5\textwidth}|p{0.2\textwidth}|}
+        \hline
+        \textbf{Table 1: Name} & \textbf{Description} & \textbf{Datatype} \\ \hline
+        \$A4PAR & Set axis 4 parallel to the last rotational main axis & INT \\ \hline
+        \$ABS\_ACCUR & Switch absolutely accurate robot model on/off & BOOL \\ \hline
+        \$ABS\_CONVERT & Conversion of point coordinates into absolutely accurate robot model & BOOL \\ \hline
+        \$ABS\_RELOAD & Reload absolutely accurate robot model & BOOL \\ \hline
+        \$ACC & Accelerations in the `ADVANCE` run & STRUC \\ \hline
+        \quad CP & Path acceleration in the `ADVANCE` run & REAL \\ \hline
+        \quad ORI1 & Swivel acceleration in the `ADVANCE` run & REAL \\ \hline
+        \quad ORI2 & Rotational acceleration in the `ADVANCE` run & REAL \\ \hline
+        \$ACC\_ACT\_MA & Limit value of axial command acceleration & INT \\ \hline
+        \$ACC\_AXIS[] & Acceleration of the axes `A1..A6` in the `ADVANCE` run & INT[6] \\ \hline
+        \$ACC\_AXIS\_C[] & Acceleration of the axes `A1..A6` in the `MAIN` run & INT[6] \\ \hline
+        \$ACC\_C & Accelerations in the `MAIN` run & STRUC \\ \hline
+        \quad CP & Path acceleration in the `MAIN` run & REAL \\ \hline
+        \quad ORI1 & Swivel acceleration in the `MAIN` run & REAL \\ \hline
+        \quad ORI2 & Rotational acceleration in the `MAIN` run & REAL \\ \hline
+        \$ACC\_CAR\_ACT & The current values of the acceleration components and the total acceleration & STRUC \\ \hline
+        \quad X & `X` component of the acceleration expressed in \textbf{\$ACC\_CAR\_TOOL} frame. & REAL \\ \hline
+        \quad Y & `Y` component of the acceleration expressed in \textbf{\$ACC\_CAR\_TOOL} frame. & REAL \\ \hline
+        \end{tabular}
+        
+        \newpage
+        \begin{tabular}{|p{0.3\textwidth}|p{0.5\textwidth}|p{0.2\textwidth}|}
+        \hline
+        \textbf{Table 2: Name} & \textbf{Description} & \textbf{Datatype} \\ \hline
+        \quad Z & `Z` component of the acceleration expressed in \textbf{\$ACC\_CAR\_TOOL} frame. & REAL \\ \hline
+        \quad ABS & Acceleration magnitude. & REAL \\ \hline
+        \$ACC\_CAR\_LIMIT & Maximum permissible value for the acceleration components and the total acceleration & STRUC \\ \hline
+        \quad X & Maximum permissible value for the `X` component of the acceleration expressed in \textbf{\$ACC\_CAR\_TOOL} frame. & REAL \\ \hline
+        \quad Y & Maximum permissible value for the `Y` component of the acceleration expressed in \textbf{\$ACC\_CAR\_TOOL} frame. & REAL \\ \hline
+        \quad Z & Maximum permissible value for the `Z` component of the acceleration expressed in \textbf{\$ACC\_CAR\_TOOL} frame. & REAL \\ \hline
+        \quad ABS & Maximum permissible value for the acceleration magnitude. & REAL \\ \hline
+        \$ACC\_CAR\_MAX & Saves the greatest absolute values of \textbf{\$ACC\_CAR\_ACT} & STRUC \\ \hline
+        \$ACC\_CAR\_STOP & Activates/Deactivates stop reaction when the value specified in \textbf{\$ACC\_CAR\_LIMIT} is exceeded. & BOOL \\ \hline
+        \$ACC\_CAR\_TOOL & A point on the tool mounted on the robot at which the current effective acceleration is measured & STRUC \\ \hline
+        \$ACC\_EXTAX[] & Acceleration of the external axes `E1..E7` in the `ADVANCE` run & INT[6] \\ \hline
+        \$ACC\_EXTAX\_C[] & Acceleration of the external axes `E1..E7` in the `MAIN` run & INT[6] \\ \hline
+        \$ACC\_MA & Maximum values for path, swivel and rotational accelerations & STRUC \\ \hline
+        \quad CP & Maximum path acceleration & REAL \\ \hline
+        \quad ORI1 & Maximum swivel acceleration & REAL \\ \hline
+        \quad ORI2 & Maximum rotational acceleration & REAL \\ \hline
+        \$ACC\_OV & Data for acceleration with changes of override & STRUC \\ \hline
+        \quad CP & Path acceleration with change of override & REAL \\ \hline
+        \end{tabular}
+        
+        \newpage
+        \begin{tabular}{|p{0.3\textwidth}|p{0.5\textwidth}|p{0.2\textwidth}|}
+        \hline
+        \textbf{Table 3: Name} & \textbf{Description} & \textbf{Datatype} \\ \hline
+        \quad ORI1 & Swivel acceleration with change of override & REAL \\ \hline
+        \quad ORI2 & Rotational acceleration with change of override & REAL \\ \hline
+        \$ACT\_BASE & Number of the current BASE system & INT \\ \hline
+        \$ACT\_EX\_AX & Number of the current external base kinematic system & INT \\ \hline
+        \$ACT\_TOOL & Number of the current tool coordinate system & INT \\ \hline
+        \$ACT\_VAL\_DIF & Maximum permissible difference of encoder actual values when switching on system. & INT \\ \hline
+        \$ADAP\_ACC & Activation of acceleration adaptation. & ENUM \\ \hline
+        \$ADVANCE & Specification of the `ADVANCE` run. & INT \\ \hline
+        \$ALARM\_STOP & Specification of the `ADVANCE` run. & SIGNAL \\ \hline
+        \$ANA\_DEL\_FLT & Analog output filter & ENUM \\ \hline
+        \$ANIN[] & Analog inputs `\$ANIN[1]..\$ANIN[8]` & REAL[8] \\ \hline
+        \$ANOUT[] & Analog outputs `\$ANIN[1]..\$ANIN[16]` & REAL[16] \\ \hline
+        \$APO\_DIS\_PTP[] & Maximum approximation distance for `PTP` motions. & REAL[12] \\ \hline
+        \$ASYNC\_AX & Motion input for asynchronous external axes `E1..E6`, `negative` or `positive` direction. & SIGNAL \\ \hline
+        \$ASYNC\_AXi\_M & Motion input for asynchronous external axes `E1..E6`, `negative` direction & SIGNAL \\ \hline
+        \$ASYNC\_AXi\_P & Motion input for asynchronous external axes `E1..E6`, `positive` direction & SIGNAL \\ \hline
+        \$ASYNC\_AXIS & Bit arrays to switch external axes to asynchronous mode & INT \\ \hline
+        \$ASYNC\_FLT & Filter for asynchronous external axes & INT \\ \hline
+        \end{tabular}
+        
+        \newpage
+        \begin{tabular}{|p{0.3\textwidth}|p{0.5\textwidth}|p{0.2\textwidth}|}
+        \hline
+        \textbf{Table 4: Name} & \textbf{Description} & \textbf{Datatype} \\ \hline
+        \$ASYNC\_MODE & Mode for asynchronous external axes & INT \\ \hline
+        \$ASYNC\_OPT & Option flag for *asynchronous axes are possible* & BOOL \\ \hline
+        \$ASYNC\_STATE & Current asynchronous motion execution state & ENUM \\ \hline
+        \$ASYNC\_T1\_FAST & Control of the velocity reduction factor in `Test 1` mode & INT \\ \hline
+        \$ASYS & Assignment of the jog keys & ENUM \\ \hline
+        \$AUT & Signal declaration `Automatic` mode & SIGNAL \\ \hline
+        \$AUX\_POWER & Signal declaration for external power supply & SIGNAL \\ \hline
+        \$AXIS\_ACT & Current axis-specific robot position & STRUC \\ \hline
+        \$AXIS\_ACTMOD & Display of axis angle modulo 180° & STRUC \\ \hline
+        \$AXIS\_BACK & Start position of the current motion block, axis-specific & STRUC \\ \hline
+        \$AXIS\_CAL & Display whether axis is referenced & STRUC \\ \hline
+        \$AXIS\_DIR[] & Direction of rotation for axis `A1..A6` and external axis `E1..E6` & INT[12] \\ \hline
+        \$AXIS\_FOR & Target position of the current motion block, axis-specific & STRUC \\ \hline
+        \$AXIS\_HOME[] & Definition of the various home positions & STRUC \\ \hline
+        \$AXIS\_INC & Incremental actual values of the axes & STRUC \\ \hline
+        \$AXIS\_INT & Robot position at the time of an interrupt & STRUC \\ \hline
+        \$AXIS\_JUS & Display whether axis is mastered & STRUC \\ \hline
+        \$AXIS\_RESO[] & Resolution of the position sensing system & INT[12] \\ \hline
+        \end{tabular}
+        
+        \newpage
+        \begin{tabular}{|p{0.3\textwidth}|p{0.5\textwidth}|p{0.2\textwidth}|}
+        \hline
+        \textbf{Table 5: Name} & \textbf{Description} & \textbf{Datatype} \\ \hline
+        \$AXIS\_RET & Axis positions when leaving the programmed path, axis-specific & STRUC \\ \hline
+        \$AXIS\_SEQ[] & Change in sequence of axis ... to axis ... & INT[12] \\ \hline
+        \$AXIS\_TYPE[] & Axis type identification & INT[12] \\ \hline
+        \$AXWORKSPACE[] & Definition of axis-specific workspace monitoring & STRUC \\ \hline
+        \$BASE & Base coordinate system in relation to the world coordinate system in the `ADVANCE` run. & STRUC \\ \hline
+        \$BASE\_C & Base coordinate system in relation to the world coordinate system in the `MAIN` run & STRUC \\ \hline
+        \$BASE\_KIN[] & External kinematic / axes in base & CHAR[29] \\ \hline
+        \$BOUNCE\_TIME & Bounce time for EMT signals & INT \\ \hline
+        \$BRAKE\_SIG & Bit array for axis `A1..A6` and external axis `E1..E6` brakes & INT \\ \hline
+        \$BRK\_DEL\_COM & Time after which the axis brakes are closed on completion of positioning during jogging & INT \\ \hline
+        \$BRK\_DEL\_EX & Brake delay time for external axes & INT \\ \hline
+        \$BRK\_DEL\_PRO & Time after which the axis brakes are closed on completion of posi- tioning in the program & INT \\ \hline
+        \$BRK\_MAX\_TM & Maximum deceleration time for path-maintaining Emergency Stop & INT \\ \hline
+        \$BRK\_MODE & Brake control mode & INT \\ \hline
+        \$BRK\_OPENTM & Time delay of command value output after axis brakes have been opened & INT \\ \hline
+        \$BUS\_PAR & L2 bus interface (KRC32) & STRUC \\ \hline
+        \$CABLE2\_MON & Additional motor cable monitoring & BOOL \\ \hline
+        \$CAL\_DIFF & Mastering difference for EMT mastering with check run & INT \\ \hline
+        \end{tabular}
+        
+        \newpage
+        \begin{tabular}{|p{0.3\textwidth}|p{0.5\textwidth}|p{0.2\textwidth}|}
+        \hline
+        \textbf{Table 6: Name} & \textbf{Description} & \textbf{Datatype} \\ \hline
+        \$CALP & Reference point offset between mathematical zero point and encoder zero point & STRUC \\ \hline
+        \$CIRC\_TYPE & Orientation control with CIRC blocks in the `ADVANCE` run & ENUM \\ \hline
+        \$CIRC\_TYPE\_C & Orientation control with CIRC blocks in the `MAIN` run & ENUM \\ \hline
+        \$CMD & Display assignment number (handle) for command channel & INT \\ \hline
+        \$COM\_NAME & Command which is to be processed after next start & CHAR[486] \\ \hline
+        \$COM\_VAL\_MI[] & Limitation of command speed for axis `A1..A6` and external axis `E1..E6` & REAL[12] \\ \hline
+        \$CONF\_MESS & Signal declaration for `reset acknowledgement messages`. & SIGNAL \\ \hline
+        \$COSYS & Coordinate system for jogging & ENUM \\ \hline
+        \$COUNT\_I[] & Freely usable integer variables & INT[32] \\ \hline
+        \$COUP\_COMP[,] & Axis coupling factors & STRUC \\ \hline
+        \$CP\_VEL\_TYPE & Reduction of the CP path velocity & ENUM \\ \hline
+        \$CP\_VEL\_TYPE & Reduction of the CP path velocity & ENUM \\ \hline
+        \$CPVELREDMELD & Generation of message if path velocity reduced & INT \\ \hline
+        \$CURR\_ACT[] & Actual current of axes & REAL[12] \\ \hline
+        \$CURR\_CAL[] & Current calibration of axis in the power module & REAL[12] \\ \hline
+        \$CURR\_COM\_EX[] & Current limitation for external axes in jog mode & REAL[6] \\ \hline
+        \$CURR\_LIM[] & Current limitation & INT[12] \\ \hline
+        \$CURR\_MAX[] & Maximum effective current on power module output & REAL[12] \\ \hline
+        \end{tabular}
+        
+        \newpage
+        \begin{tabular}{|p{0.3\textwidth}|p{0.5\textwidth}|p{0.2\textwidth}|}
+        \hline
+        \textbf{Table 7: Name} & \textbf{Description} & \textbf{Datatype} \\ \hline
+        \$CURR\_MON[] & Permissible rated current & REAL[12] \\ \hline
+        \$CURR\_RED[,] & Current limitation for axes in `\%` of the maximum current & REAL[12,2] \\ \hline
+        \$CYC\_DEFi[] & Input text for the corresponding cyclical flag & CHAR[470] \\ \hline
+        \$CYCFLAG[] & Cyclical flags & BOOL[32] \\ \hline
+        \$DATA\_SERx & Number of serial receive messages read in the channel x buffer & INT \\ \hline
+        \$DATA\_INTEGRITY & A variable of type `SIGNAL` is output either as groups of bits or one bit at a time & BOOL \\ \hline
+        \$DATAPATH[] & Name of the `SRC` file whose variables in the data list are to be accessed using the variable modification function & CHAR[16] \\ \hline
+        \$DATE & System time and system date & STRUC \\ \hline
+        \$DECEL\_MB & Deceleration time during maximum braking & REAL \\ \hline
+        \$DEF\_A4FIX & Fixing of axis 4 when palletizing & BOOL \\ \hline
+        \$DEF\_FLT\_CP & Default filter for CP motion & INT \\ \hline
+        \$DEF\_FLT\_PTP & Default filter for PTP motion & INT \\ \hline
+        \$DEF\_L\_CM & Center of mass frame for the default load on the flange in the flange coordinate system & STRUC \\ \hline
+        \quad X & Offset in the `X` direction & REAL \\ \hline
+        \quad Y & Offset in the `Y` direction & REAL \\ \hline
+        \quad Z & Offset in the `Z` direction & REAL \\ \hline
+        \quad A & Rotation about the `Z` axis & REAL \\ \hline
+        \quad B & Rotation about the `Y` axis & REAL \\ \hline
+        \end{tabular}
+        
+        \newpage
+        \begin{tabular}{|p{0.3\textwidth}|p{0.5\textwidth}|p{0.2\textwidth}|}
+        \hline
+        \textbf{Table 8: Name} & \textbf{Description} & \textbf{Datatype} \\ \hline
+        \quad C & Rotation about the `X` axis & REAL \\ \hline
+        \$DEF\_L\_J & Default moment of inertia of the load on the flange in the default center of mass coordinate system of the load & STRUC \\ \hline
+        \$DEF\_L\_M & Default mass of the load on the flange & REAL \\ \hline
+        \$DEF\_LA3\_CM & Center of mass frame for the default mass of the supplementary load on axis 3 in the flange coordinate system & STRUC \\ \hline
+        \quad X & Offset in the `X` direction & REAL \\ \hline
+        \quad Y & Offset in the `Y` direction & REAL \\ \hline
+        \quad Z & Offset in the `Z` direction & REAL \\ \hline
+        \quad A & Rotation about the `Z` axis & REAL \\ \hline
+        \quad B & Rotation about the `Y` axis & REAL \\ \hline
+        \quad C & Rotation about the `X` axis & REAL \\ \hline
+        \$DEF\_LA3\_J & DDefault moment of inertia of the supplementary load on axis 3 & STRUC \\ \hline
+        \$DEF\_LA3\_M & Default mass of the supplementary load on axis 3 & REAL \\ \hline
+        \$DEF\_OV\_JOG & Default value for override in jog mode & INT \\ \hline
+        \$DEVICE & Operator control device status & ENUM \\ \hline
+        \$DH\_4 & Denavit-Hartenberg parameters for the wrist (frame between `A4` and `A5`) & STRUC \\ \hline
+        \quad DHART\_A & N/A & REAL \\ \hline
+        \quad DHART\_D & N/A & REAL \\ \hline
+        \quad DHART\_ALPHA & N/A & REAL \\ \hline
+        \end{tabular}
+        
+        \newpage
+        \begin{tabular}{|p{0.3\textwidth}|p{0.5\textwidth}|p{0.2\textwidth}|}
+        \hline
+        \textbf{Table 9: Name} & \textbf{Description} & \textbf{Datatype} \\ \hline
+        \$DH\_5 & Denavit-Hartenberg parameters for the wrist (frame between `A5` and `A6`) & STRUC \\ \hline
+        \quad DHART\_A & N/A & REAL \\ \hline
+        \quad DHART\_D & N/A & REAL \\ \hline
+        \quad DHART\_ALPHA & N/A & REAL \\ \hline
+        \$DIGINi & Assignment of digital inputs 1 to 6 & SIGNAL \\ \hline
+        \$DIGINiCODE & Defines whether or not the value for `\$DIGINi` is preceded by a sign & ENUM \\ \hline
+        \$DIR\_CAL & Defines the referencing direction for each axis `A1..A6` and external axis `E1..E6` & INT \\ \hline
+        \$DIS\_WRP1 & Average distance of wrist point from singularity 1 (Alpha 1 singularity) & REAL \\ \hline
+        \$DIS\_WRP2 & Average distance of wrist point from singularity 2 (Alpha 5 singularity) & REAL \\ \hline
+        \$DISPLAY\_REF & New form output when \textbf{\$DISPLAY\_VAR} is changed & BOOL \\ \hline
+        \$DISPLAY\_VAR[] & Observable variables & STRUC \\ \hline
+        \$DIST\_NEXT & Distance still to be covered to the next point & REAL \\ \hline
+        \$DISTANCE & Curve length, CP motion & REAL \\ \hline
+        \$DRIVE\_CART & Option bit: PTP points with Cartesian coordinates & BOOL \\ \hline
+        \$DRIVE\_CP & Option bit: Cartesian robot motion possible (LIN, CIRC) & BOOL \\ \hline
+        \$DRIVES\_OFF & Signal declaration `Drives OFF` & SIGNAL \\ \hline
+        \$DRIVES\_ON & Signal declaration `Drives ON` & SIGNAL \\ \hline
+        \$DSECHANNEL & Assignment of axes to channels of the digital servoelectronics (DSE) & INT \\ \hline
+        \end{tabular}
+        
+        \newpage
+        \begin{tabular}{|p{0.3\textwidth}|p{0.5\textwidth}|p{0.2\textwidth}|}
+        \hline
+        \textbf{Table 10: Name} & \textbf{Description} & \textbf{Datatype} \\ \hline
+        \$DYN\_DAT[] & Model data of the robot for acceleration adaptation, higher motion profile and kinetic energy & REAL[350] \\ \hline
+        \$OV\_PRO & Program override & INT \\ \hline
+        \$PRO\_MODE & Program run mode dependent on \textbf{\$INTERPRETER} & ENUM \\ \hline
+        \$PRO\_MODE0 & Program run mode of the `SUBMIT` interpreter & ENUM \\ \hline
+        \$PRO\_MODE1 & Program run mode of the `ROBOT` interpreter & ENUM \\ \hline
+        \$PRO\_STATE & Process state dependent on \textbf{\$INTERPRETER} & ENUM \\ \hline
+        \$PRO\_STATE0 & Process state of the `SUBMIT` interpreter & ENUM \\ \hline
+        \$PRO\_STATE1 & Process state of the `ROBOT` interpreter & ENUM \\ \hline
+        \$PRO\_NAME[] & Process name dependent on \textbf{\$INTERPRETER} & CHAR[24] \\ \hline
+        \$PRO\_NAME0[] & Process name of the `SUBMIT` interpreter & CHAR[24] \\ \hline
+        \$PRO\_NAME1[] & Process name of the `ROBOT` interpreter & CHAR[24] \\ \hline
+        \end{tabular}
+    \end{appendices}
