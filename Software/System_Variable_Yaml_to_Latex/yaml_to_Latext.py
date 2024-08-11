@@ -60,7 +60,7 @@ class YamlToLatexConverter:
                 file.write('\\end{tabular}\n\n')
 
 if __name__ == "__main__":
-    yaml_file = "Software/yaml_to_text/System.Variables.yml"
-    output_file = "Software/yaml_to_text/table.tex"
+    yaml_file = "Software\System_Variable_Yaml_to_Latex\System.Variables.yml"
+    output_file = "Software\System_Variable_Yaml_to_Latex\\table.tex"
     converter = YamlToLatexConverter(yaml_file, output_file)
     converter.convert()

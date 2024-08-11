@@ -119,7 +119,7 @@ Fortunately, the team from last semester has already taken care of the simulatio
 >[!NOTE]
 >According to this [research](https://ntnuopen.ntnu.no/ntnu-xmlui/handle/11250/2561319), the main connection to the robot and the use of this connection as the basis of an OPCUA server is as follows.
 
-| Aspect                   | KVP                                         | RSI                                           | Implications                                      |
+| Aspect                   | KVP   (KUKAVARPROXY)                                      | RSI          (RobotSensorInterface)                                 | Implications                                      |
 |--------------------------|---------------------------------------------|----------------------------------------------|---------------------------------------------------|
 | **Time-Delay**           | Average time-delay of 8.75ms                | Average time-delay of 4.0ms                  | RSI has a lower time-delay, suitable for faster response times. |
 | **Communication Protocols** | Uses TCP (Transmission Control Protocol)  | Uses UDP (User Datagram Protocol)            | UDP is faster but less reliable; TCP is more reliable but can have higher latency. |
@@ -132,6 +132,10 @@ Fortunately, the team from last semester has already taken care of the simulatio
 
 
 ## Setup 
+
+>[!NOTE]
+> Add a step by step tutorial for remote desktop UltraVNC and Sharing files on network locations
+> [This Video](https://www.youtube.com/watch?v=4pO9Pvz3nBQ)
 
 ## Software/s
 

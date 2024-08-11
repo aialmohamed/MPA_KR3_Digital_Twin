@@ -6,3 +6,93 @@ In the KUKAVARPROXY protocol the main reading and writing is done to the global 
 This means that we read or write to the global variables of the KUKA controller.
 According to \cite{openkuka_system_variables} is a list of all the global variables that we are able to control, together with their descriptions.
 In the appendix of this file are the tables of all the global variables with the data types and their description.
+
+\subsection{Reading}
+Reading message format:
+\begin{itemize}
+    \item \textbf{2 bytes}: Id (uint16)
+    \item \textbf{2 bytes}: Content length (uint16)
+    \item \textbf{1 byte}: Read/Write mode (0=Read)
+    \item \textbf{2 bytes}: Variable name length (uint16)
+    \item \textbf{N bytes}: Variable name to be read (ASCII)
+\end{itemize}
+To access a variable, 
+the client must include two parameters 
+in the message: the desired function 
+type and the variable name. 
+When reading a specific variable, 
+the function type should be indicated 
+by the character “0”. For example, 
+if the client wishes to read the system 
+variable \texttt{\$OV\_PRO}, which 
+controls the robot's speed override, 
+the message sent to the server will 
+follow the format illustrated in 
+following table\cite{sanfilippo2014jopenshowvar}.
+
+\begin{table}[h!]
+    \centering
+    \caption{Reading variables}
+    \begin{tabular}{|c|c|}
+    \hline
+    \textbf{Field} & \textbf{Description} \\ \hline
+    00 & message ID \\ \hline
+    09 & length of the next segment \\ \hline
+    0  & type of desired function \\ \hline
+    07 & length of the next segment \\ \hline
+    \texttt{\$OV\_PRO} & Variable to be read \\ \hline
+    \end{tabular}
+    \end{table}
+In detail, the first two characters of this string represent the 
+message identifier (ID), which is a sequential integer ranging 
+from 00 to 99. The server's response will include the same ID, 
+allowing each request to be matched with its corresponding response, 
+even if there is a delay. The next two characters in the reading message 
+indicate the length of the following segment in hexadecimal units. 
+In this particular instance, 09 accounts for one character denoting the 
+function type, two characters specifying the length of the subsequent 
+segment, and seven characters for the variable length. 
+The fifth character, 0, indicates the type of function requested—in this 
+case, a reading operation. Following this, two more characters denote 
+the variable length (in hexadecimal units), and finally, the last part
+of the message contains the variable itself.\cite{sanfilippo2014jopenshowvar}
+\newpage
+\subsection{Writing}
+\begin{itemize}
+    \item \textbf{2 bytes:} Id (uint16)
+    \item \textbf{2 bytes:} Content length (uint16)
+    \item \textbf{1 byte:} Read/Write mode (1=Write)
+    \item \textbf{2 bytes:} Variable name length (uint16)
+    \item \textbf{N bytes:} Variable name to be written (ASCII)
+    \item \textbf{2 bytes:} Variable value length (uint16)
+    \item \textbf{M bytes:} Variable value to be written (ASCII)
+\end{itemize}
+To write a specific variable, 
+the message must include three key 
+parameters: the type of function, 
+the name of the target variable, 
+and the value to be assigned. 
+The function type for writing is 
+identified by the character “1”. 
+For example, if the variable to be 
+written is the system variable 
+\texttt{\$OV\_PRO}, and the value 
+to be assigned is 50 
+(indicating a 50\% override speed), 
+the client will send a message to the 
+server in the format illustrated in the following table\cite{sanfilippo2014jopenshowvar}.
+\begin{table}[h!]
+    \centering
+    \caption{Writing variables}
+    \begin{tabular}{|c|c|}
+    \hline
+    \textbf{Field} & \textbf{Description} \\ \hline
+    00 & message ID \\ \hline
+    0b & length of the next segment \\ \hline
+    1  & type of desired function \\ \hline
+    09 & length of the next segment \\ \hline
+    \texttt{\$OV\_PRO} & Variable to be written \\ \hline
+    50 & value to be written \\ \hline
+    \end{tabular}
+    \end{table}
+
