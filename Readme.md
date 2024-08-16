@@ -58,8 +58,8 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 | ROS2 |Humble Hawksbill |  n/A |
 | Gazebo | Fortress | n/A|
 | Robot | KuKa KR3 R540 | n/A|
-| .NET | 8.0|
-| Avalonia | latest|
+| .NET | 8.0| n/A |
+| Avalonia | latest| n/A|
 
 
 ## To-do
