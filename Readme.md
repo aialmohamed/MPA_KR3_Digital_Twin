@@ -42,6 +42,7 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
     - [Motiviation and Defnitions](#motiviation-and-defnitions)
     - [Main System-Design](#main-system-design)
     - [Hardware Interface and connection](#hardware-interface-and-connection)
+    - [Dashboard app](#dashboard-app)
   - [Setup](#setup)
   - [Software/s](#softwares)
   - [Testing](#testing)
@@ -130,7 +131,13 @@ Fortunately, the team from last semester has already taken care of the simulatio
 | **Advantages**            | - Higher reliability<br>- Flexibility<br>- Ease of use | - Lower latency<br>- Better real-time performance | KVP is better for general reliability and flexibility, RSI is better for low-latency applications. |
 | **Drawbacks**             | - Higher latency                            | - Higher risk of breakdowns<br>- More resource intensive | Trade-off between reliability and performance depending on use case. |
 
+### Dashboard app
 
+The Dashboard desktop app shall be devloped using Avalonia framwork , due to it being a corssplatform and easy to wrap for a web interface or mobileapp interface.
+The Dashboard shall be defined in the system requierment file , where also is the use cases of this app is defined .
+For Backend we are using Mysql. 
+>[!NOTE]
+The Name of the project (app) in avalonia should be short otherwies the previewer wont work
 ## Setup 
 
 >[!NOTE]
