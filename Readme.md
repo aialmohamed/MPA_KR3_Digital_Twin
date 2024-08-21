@@ -116,7 +116,7 @@ Fortunately, the team from last semester has already taken care of the simulatio
 
 
 
-![sytem_init](/Images/Sytem_main_idea.png) 
+![sytem_init](/Images/DT_concept.jpg) 
 
 ### Hardware Interface and connection
 
@@ -135,6 +135,24 @@ Fortunately, the team from last semester has already taken care of the simulatio
 | **Drawbacks**             | - Higher latency                            | - Higher risk of breakdowns<br>- More resource intensive | Trade-off between reliability and performance depending on use case. |
 
 ### Dashboard app
+
+| Framework/Toolkit    | Description                                                                 | Supported Languages     | Platform Support            |
+|----------------------|-----------------------------------------------------------------------------|-------------------------|-----------------------------|
+| Electron             | Framework for building cross-platform desktop apps using web technologies.  | JavaScript, HTML, CSS    | Windows, macOS, Linux       |
+| Avalonia             | .NET UI framework for building cross-platform applications.                 | C#                       | Windows, macOS, Linux       |
+| .NET MAUI            | Cross-platform framework for building native mobile and desktop apps.       | C#                       | Windows, macOS              |
+| WPF (Windows Presentation Foundation) | UI framework for building Windows desktop applications.     | C#, XAML                 | Windows                     |
+| GTK                  | Toolkit for creating graphical user interfaces.                             | C, Python, Vala          | Windows, macOS, Linux       |
+| Qt                   | Cross-platform application development framework.                           | C++, QML                 | Windows, macOS, Linux       |
+| WinUI                | Latest UI framework for Windows desktop apps.                               | C#, C++, XAML            | Windows                     |
+| JavaFX               | Platform for building rich internet applications with Java.                 | Java, FXML               | Windows, macOS, Linux       |
+| SwiftUI              | UI toolkit by Apple for building user interfaces across all Apple devices.  | Swift                    | macOS                       |
+| Tauri                | Lightweight framework for building cross-platform desktop apps.             | Rust, JavaScript, HTML   | Windows, macOS, Linux       |
+| PyQt                 | Python binding for the Qt toolkit.                                          | Python                   | Windows, macOS, Linux       |
+| Lazarus              | Open-source cross-platform IDE similar to Delphi.                           | Object Pascal            | Windows, macOS, Linux       |
+| Uno Platform         | Cross-platform framework for building single-codebase applications.         | C#                       | Windows, macOS, Linux       |
+| Xamarin.Forms        | Framework for building cross-platform mobile and desktop apps.              | C#                       | Windows, macOS              |
+
 
 The Dashboard desktop app shall be devloped using Avalonia framwork , due to it being a corssplatform and easy to wrap for a web interface or mobileapp interface.
 The Dashboard shall be defined in the system requierment file , where also is the use cases of this app is defined .
