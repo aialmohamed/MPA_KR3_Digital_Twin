@@ -69,7 +69,7 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 - [x] Create and set up a Git repository
 - [x] Create the project's file system
 - [ ] Set up the system requirements
-- [ ] Create a concept for the props
+- [x] Create a concept for the props
 - [ ] Finalise the system setup (on my PC)
 - [ ] Set up the lab (lab's PC)
 - [ ] (Optional) Automate the setup of the system
