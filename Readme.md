@@ -27,6 +27,9 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 >[!NOTE]
 > After the meeting on 06 August, we also came to the conclusion that we will implement the remote control use case.
 >With this use case, we can then define a dashboard that acts as a control channel for the system, allowing us to control and monitor the robot(s) from a remote device.
+
+>[!NOTE]
+> The bug with binding the controller with the Simulation (solved using by adding use_sim_time flag in the launches.py of the movit_config)
 ## Index
 
 - [Digital Twin KR3](#digital-twin-kr3)
