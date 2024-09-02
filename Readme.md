@@ -90,7 +90,9 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 ### Digital Twin Application
 - [ ] Design and develop a software architecture that connects the virtual and real robots
 - [ ] Implement the communication between the virtual simulation and the real robot using OPC-UA
+-  [ ] Create a c++ Socket client library for the OpenShowVar
 - [ ] Test and validate the Digital Twin application through synchronised movements and data comparisons between simulation and reality
+
 
 ## Approach 
 
@@ -168,6 +170,9 @@ The Name of the project (app) in avalonia should be short otherwies the previewe
 > Add a step by step tutorial for remote desktop UltraVNC and Sharing files on network locations
 > [This Video](https://www.youtube.com/watch?v=4pO9Pvz3nBQ)
 
+>[!NOTE]
+> About the OpenShowVar Client : there is no C++ library for this type of clients , so we need to create one.
+> The Client is quite simple and only covers the needs of the project also it will be used in ros2_kr3r540_interface package.
 ## Software/s
 
 ## Testing 
