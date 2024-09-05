@@ -80,6 +80,7 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 ### Interface Development
 - [ ] Create the software for the interface between ROS2 and KR3 R540
 - [ ] Test the interface with KR3 R540 (on other KR3 robots)
+- [ ] Create a OPCUA Server with TCP client to connect to the KRC4 
 - [ ] Create the software for the ROS2 controllers (if required)
 
 ### Use Case and Evaluation
@@ -90,7 +91,6 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 ### Digital Twin Application
 - [ ] Design and develop a software architecture that connects the virtual and real robots
 - [ ] Implement the communication between the virtual simulation and the real robot using OPC-UA
-- [ ] Create a OPCUA Server with TCP client to connect to the KRC4 
 - [ ] Test and validate the Digital Twin application through synchronised movements and data comparisons between simulation and reality
 
 
@@ -164,6 +164,9 @@ The Dashboard shall be defined in the system requierment file , where also is th
 For Backend we are using Mysql. 
 >[!NOTE]
 The Name of the project (app) in avalonia should be short otherwies the previewer wont work
+
+>[!NOTE]
+On this [Gitrepo](https://github.com/ImtsSrl/openshowvar/blob/master/resources/kukavar.txt) you can find all the global variables that we can change with KUKAVARPROXY , we can create our own.
 ## Setup 
 
 >[!NOTE]
