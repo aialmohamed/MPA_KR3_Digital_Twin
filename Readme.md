@@ -2,11 +2,6 @@
 
 ## Introduction and Motivation
 
-> digital representation of a unique asset (product, machine, service,
-> product service system or other intangible asset), that alters
-> its properties, condition and behaviour by means of models,
-> information and data
-
 This repository documents my Master Project at the **THU** under the supervision of **Prof. Lisa Ollinger**.
 
 The project involves setting up a **digital twin** system for the **Kuka KR3 R540** robot. The key objectives are:
@@ -42,7 +37,7 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
     - [Use Case and Evaluation](#use-case-and-evaluation)
     - [Digital Twin Application](#digital-twin-application)
   - [Approach](#approach)
-    - [Motiviation and Defnitions](#motiviation-and-defnitions)
+    - [Motivation and Definitions](#motivation-and-definitions)
     - [Main System-Design](#main-system-design)
     - [Hardware Interface and connection](#hardware-interface-and-connection)
     - [Dashboard app](#dashboard-app)
@@ -71,16 +66,19 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 ### Setup and Repository
 - [x] Create and set up a Git repository
 - [x] Create the project's file system
-- [ ] Set up the system requirements
+- [x] Set up the system requirements
 - [x] Create a concept for the props
-- [ ] Finalise the system setup (on my PC)
+- [ ] Finalize the system setup (on my PC)
 - [ ] Set up the lab (lab's PC)
 - [ ] (Optional) Automate the setup of the system
 
 ### Interface Development
+- [ ] Create the software for the interface between KR3 R540 and a local client (Experimental in c++)
 - [ ] Create the software for the interface between ROS2 and KR3 R540
+- [ ] create an OPCUA Server 
+- [ ] create a ROS-OPCUA bridge
+- [ ] create a start Dashboard (Web?)
 - [ ] Test the interface with KR3 R540 (on other KR3 robots)
-- [ ] Create a OPCUA Server with TCP client to connect to the KRC4 
 - [ ] Create the software for the ROS2 controllers (if required)
 
 ### Use Case and Evaluation
@@ -96,7 +94,7 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 
 ## Approach 
 
-### Motiviation and Defnitions
+### Motivation and Definitions
 
 To create a working digital twin of a robot with ROS2 and Gazebo, we first need to understand the basic concept of ROS2.
 
@@ -109,7 +107,6 @@ This allows us to constantly change the controllers and easily switch off the ha
 
 For the digital twin to work on the KuKa KR3, we need to develop the following 
 * a hardware interface 
-* a ROS2 interface
 * a ROS2 controller 
 * a ROS2-OPCUA-Bridge
 

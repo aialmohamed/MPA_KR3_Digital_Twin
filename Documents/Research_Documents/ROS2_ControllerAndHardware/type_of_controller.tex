@@ -1,0 +1,31 @@
+\section{Type of Controllers for Arm Manipulation}
+
+The ROS2 controller package contains a set of controllers that covers the most common robotic applications , such as trajectory tracking, position control, velocity control, and effort control.
+The \textbf{Table 1}\cite{ros2controllers} contains the controllers used in the ros2 controller package for arm robots.
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|p{10cm}|}
+    \hline
+    \textbf{Controller} & \textbf{Description} \\
+    \hline
+    Admittance Controller & Enables you do zero-force control from a force measured on your TCP. The controller implements ChainedControllerInterface, so it is possible to add another controllers in front of it, e.g., JointTrajectoryController. \\
+    \hline
+    Effort Controllers & Collection of controllers that work using the “effort” joint command interface but may accept different joint-level commands at the controller level, e.g. controlling the effort on a certain joint to achieve a set position. \\
+    \hline
+    Forward Command Controller & This is a base class implementing a feedforward controller.Specific implementations of this base class can be found in position-controllers ,velocity-controllers ,effort-controllers. \\
+    \hline
+    Gripper Controller & Controllers for executing a gripper command action for simple single-dof grippers. \\
+    \hline
+    Joint Trajectory Controller & Controller for executing joint-space trajectories on a group of joints. The controller interpolates in time between the points so that their distance can be arbitrary. Even trajectories with only one point are accepted. Trajectories are specified as a set of waypoints to be reached at specific time instants, which the controller attempts to execute as well as the mechanism allows. Waypoints consist of positions, and optionally velocities and accelerations. \\
+    \hline
+    PID Controller & The controller can be used directly by sending references through a topic or in a chain having preceding or following controllers. It also enables to use the first derivative of the reference and its feedback to have second-order PID control. \\
+    \hline
+    Position Controllers & This is a collection of controllers that work using the “position” joint command interface but may accept different joint-level commands at the controller level. \\
+    \hline
+    Velocity Controllers &This is a collection of controllers that work using the “velocity” joint command interface but may accept different joint-level commands at the controller level. \\
+    \hline
+    \end{tabular}
+    \caption{ROS 2 Controllers for Robotic Arms and Related Tools}
+    \end{table}
+    

@@ -5,12 +5,13 @@
 \usepackage{graphicx}
 \usepackage[rightcaption]{sidecap}
 \usepackage{datetime}
-\newdate{date}{20}{07}{2024}
+\usepackage{url}
+\newdate{date}{11}{09}{2024}
 \graphicspath{{../../../images/}}
 
 \date{\displaydate{date}}
 \title{
-    Digital Twin KR3 \\ \large Usecase and Application
+    Digital Twin KR3 \\ \large ROS2 Intefaces
 }
 
 \author{
@@ -21,22 +22,13 @@
 \maketitle
 
 \newpage
-\tableofcontents
+\include{Intro}
 \newpage
-\include{intro}
-
-\newpage
-
-\include{Industry_4_0}
+\include{Arch_of_Controller_Layer}
 
 \newpage
-\include{IndustrialRobots}
+\include{type_of_controller}
 
-\newpage 
-
-\include{usecases}
-
-\newpage
 
 \bibliographystyle{IEEEtran}
 \bibliography{ref}
