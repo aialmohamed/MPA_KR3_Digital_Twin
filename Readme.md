@@ -38,7 +38,6 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
     - [Setup and Repository](#setup-and-repository)
     - [Interface Development](#interface-development)
     - [Use Case and Evaluation](#use-case-and-evaluation)
-    - [Digital Twin Application](#digital-twin-application)
   - [Approach](#approach)
     - [Motivation and Definitions](#motivation-and-definitions)
     - [Main System-Design](#main-system-design)
@@ -88,11 +87,6 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 - [x] Define and document a use case / application of the digital twin
 - [x] Evaluate the benefits and challenges of using a Digital Twin in the identified scenarios
 - [ ] Exchange insights with industry experts, particularly with Sven Völker
-
-### Digital Twin Application
-- [ ] Design and develop a software architecture that connects the virtual and real robots
-- [ ] Implement the communication between the virtual simulation and the real robot using OPC-UA
-- [ ] Test and validate the Digital Twin application through synchronised movements and data comparisons between simulation and reality
 
 
 ## Approach 
