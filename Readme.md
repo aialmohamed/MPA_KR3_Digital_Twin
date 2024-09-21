@@ -16,8 +16,8 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 >  https://ahmaedibrahim311-1720719768107.atlassian.net/jira/software/projects/DT/boards/2?atlOrigin=eyJpIjoiNjg4YjM5ZjIyYjM2NDUyYjlkYmYzN2RiZTRhMmNkNjUiLCJwIjoiaiJ9) project 
 
 >[!NOTE]
->After the meeting with the professor on the 6th of August, we are using the CIP because it is easier to implement and we are not limiting the project to real-time (at least for now). 
->On the other hand, we have some suggestions for future development to improve the real-time aspect of the project, such as using a medium hardware like Respi as a path for the RSI. so for this project we are using **KVP** (**KUKAVARPROXY**)
+>After the meeting with the professor on the 6th of August, we are using the KVP because it is easier to implement and we are not limiting the project to real-time (at least for now). 
+>On the other hand, we have some suggestions for future development to improve the real-time aspect of the project, such as using a medium hardware like Revpi as a path for the RSI. so for this project we are using **KVP** (**KUKAVARPROXY**)
 
 >[!NOTE]
 > After the meeting on 06 August, we also came to the conclusion that we will implement the remote control use case.
@@ -61,6 +61,8 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 | Robot controller | KRC4| n/A|
 | .NET | 8.0| n/A |
 | Avalonia | latest| n/A|
+|KRC Windows version|WES7 4.0|n/A|
+|KSS | 8.3 | n/A|
 
 
 ## To-do
@@ -70,9 +72,11 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 - [x] Create the project's file system
 - [x] Set up the system requirements
 - [x] Create a concept for the props
-- [ ] Finalize the system setup (on my PC)
-- [ ] Set up the lab (lab's PC)
-- [ ] (Optional) Automate the setup of the system
+- [x] Finalize the system setup (on my PC)
+- [x] Set up the lab (lab's PC)
+- [ ] create connections by using UltraVCN and mount a driver to the Robot.
+- [ ] install the KUKAVARPROXY on the Lab PC and test it
+- [x] (Optional) Automate the setup of the system
 
 ### Interface Development
 - [ ] Create the software for the interface between KR3 R540 and a local client (Experimental in c++)
@@ -153,11 +157,11 @@ Fortunately, the team from last semester has already taken care of the simulatio
 | Xamarin.Forms        | Framework for building cross-platform mobile and desktop apps.              | C#                       | Windows, macOS              |
 
 
-The Dashboard desktop app shall be devloped using Avalonia framwork , due to it being a corssplatform and easy to wrap for a web interface or mobileapp interface.
-The Dashboard shall be defined in the system requierment file , where also is the use cases of this app is defined .
+The Dashboard desktop app shall be developed using Avalonia framework , due to it being a cross-platform and easy to wrap for a web interface or mobile interface.
+The Dashboard shall be defined in the system requirement file , where also is the use cases of this app is defined .
 For Backend we are using Mysql. 
 >[!NOTE]
-The Name of the project (app) in avalonia should be short otherwies the previewer wont work
+The Name of the project (app) in avalonia should be short otherwise the previewer wont work
 
 >[!NOTE]
 On this [Gitrepo](https://github.com/ImtsSrl/openshowvar/blob/master/resources/kukavar.txt) you can find all the global variables that we can change with KUKAVARPROXY , we can create our own.
@@ -166,6 +170,9 @@ On this [Gitrepo](https://github.com/ImtsSrl/openshowvar/blob/master/resources/k
 >[!NOTE]
 > Add a step by step tutorial for remote desktop UltraVNC and Sharing files on network locations
 > [This Video](https://www.youtube.com/watch?v=4pO9Pvz3nBQ)
+
+> [!NOTE]
+> Add a reference to the use guid 
 ## Software/s
 
 ## Testing 

@@ -12,15 +12,6 @@ check_ros2_installed() {
     fi
 }
 
-# Function to check if Gazebo is installed
-check_gazebo_installed() {
-    if command -v gazebo &> /dev/null; then
-        echo "Gazebo is already installed."
-        return 0
-    else
-        return 1
-    fi
-}
 
 install_ros2() {
 
@@ -59,18 +50,6 @@ sudo apt install -y ros-humble-desktop
     echo "ROS 2 Humble installation complete."
 }
 
-# Function to install Gazebo
-install_gazebo() {
-    echo "Installing Gazebo..."
-    
-    # Update package lists
-    sudo apt update
-    
-    # Install Gazebo packages for ROS 2 Humble
-    sudo apt install -y ros-humble-gazebo*
-    
-    echo "Gazebo installation complete."
-}
 
 # Ros2 Installer
 if check_ros2_installed; then
