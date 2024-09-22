@@ -1,0 +1,8 @@
+packages:
+    - joint-state-publisher-gui
+    - xacro
+    - ros2-control
+    - ros2-controllers
+    - gazebo-ros
+    - gazebo-ros2-control
+    - moveit
