@@ -4,7 +4,7 @@
 # install yq 
 
 sudo snap install yq
-sudo apt-get -y install pip
+sudo apt-get -y install python3-pip
 
 
 # Function to check if ROS 2 Humble is installed
