@@ -171,8 +171,12 @@ On this [Gitrepo](https://github.com/ImtsSrl/openshowvar/blob/master/resources/k
 > Add a step by step tutorial for remote desktop UltraVNC and Sharing files on network locations
 > [This Video](https://www.youtube.com/watch?v=4pO9Pvz3nBQ)
 
-> [!NOTE]
+
+>[!NOTE]
 > Add a reference to the use guid 
+
+>[!NOTE]
+> if KUKAVARPROXY dose not work check this out : https://github.com/ImtsSrl/KUKAVARPROXY/issues/18
 ## Software/s
 
 ## Testing 
