@@ -3,9 +3,17 @@
 
 # install yq 
 
-sudo snap install yq
-sudo apt-get -y install python3-pip
+if ! command -v yq &> /dev/null; then
+  sudo snap install yq
+else 
+  echo "yq is already installed. Skipping installation..."
+fi
 
+if ! command -v pip &> /dev/null; then
+  sudo apt-get -y install python3-pip
+else
+  echo "pip is already installed. Skipping installation..."
+fi
 
 # Function to check if ROS 2 Humble is installed
 check_ros2_humble_installed() {
@@ -128,7 +136,7 @@ install_ros_packages() {
 }
 
 install_vscode_extensions() {
-    echo "Reading package names from the YAML file..."
+    echo "Reading extension names from the YAML file..."
     extensions=$(yq '.vscode_extensions[]' ROS2_Packages.yaml)
 
   # Loop through the packages
@@ -138,7 +146,7 @@ install_vscode_extensions() {
       echo "Installing vscode-$extension..."
       code --install-extension "$extension"
     else
-      echo "Package vscode-$extension is already installed. Skipping..."
+      echo "extension vscode-$extension is already installed. Skipping..."
     fi
   done
 
