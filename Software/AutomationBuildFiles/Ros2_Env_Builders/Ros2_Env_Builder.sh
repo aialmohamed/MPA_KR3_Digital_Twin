@@ -1,7 +1,7 @@
 # !/bin/bash
 
 
-# install yq 
+# install yq and pip (always check those two)
 
 if ! command -v yq &> /dev/null; then
   sudo snap install yq
@@ -19,10 +19,12 @@ fi
 check_ros2_humble_installed() {
   dpkg -l | grep -q "ros-humble-desktop"
 }
-
+# Check collcon installed
 check_colcon_installed() {
     command -v colcon &> /dev/null
 }
+# Check vscode installed
+
 check_vscode_installed() {
   command -v code &> /dev/null
 }
