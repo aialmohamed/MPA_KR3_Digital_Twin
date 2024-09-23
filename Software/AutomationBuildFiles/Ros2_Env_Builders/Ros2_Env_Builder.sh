@@ -15,6 +15,25 @@ check_ros2_humble_installed() {
 check_colcon_installed() {
     command -v colcon &> /dev/null
 }
+check_vscode_installed() {
+  command -v code &> /dev/null
+}
+
+install_vscode() {
+  echo "Checking if vscode is installed..."
+
+    if check_vscode_installed; then
+        echo "vscode is already installed. Skipping installation..."
+    else
+        echo "vscode not found. Installing vscode..."
+        sudo apt update && sudo apt upgrade -y
+        sudo apt install software-properties-common apt-transport-https wget -y
+        wget -O- https://packages.microsoft.com/keys/microsoft.asc | sudo gpg — dearmor | sudo tee /usr/share/keyrings/vscode.gpg
+        echo deb [arch=amd64 signed-by=/usr/share/keyrings/vscode.gpg] https://packages.microsoft.com/repos/vscode stable main | sudo tee /etc/apt/sources.list.d/vscode.list
+        sudo apt update
+        sudo apt install code
+    fi
+}
 
 install_colcon() {
 
@@ -108,6 +127,23 @@ install_ros_packages() {
   done
 }
 
+install_vscode_extensions() {
+    echo "Reading package names from the YAML file..."
+    extensions=$(yq '.vscode_extensions[]' ROS2_Packages.yaml)
+
+  # Loop through the packages
+  for extension in $extensions; do
+    # Check if the package is installed
+    if ! code --list-extensions | grep -q "$extension"; then
+      echo "Installing vscode-$extension..."
+      code --install-extension "$extension"
+    else
+      echo "Package vscode-$extension is already installed. Skipping..."
+    fi
+  done
+
+}
+
 # Function to remove ROS packages from the YAML file
 remove_ros_packages() {
   echo "Reading package names from the YAML file..."
@@ -152,6 +188,12 @@ if [ "$1" == "install" ]; then
   # Step 3: Install colcon
 
   install_colcon
+
+  # Step 4 : install vscode 
+  install_vscode
+
+  # Step 5 : install vscode_extensions
+  install_vscode_extensions
 
   echo "Installation process completed."
 

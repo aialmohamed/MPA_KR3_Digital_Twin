@@ -6,3 +6,10 @@ packages:
     - gazebo-ros
     - gazebo-ros2-control
     - moveit
+vscode_extensions:
+    - ms-python.python
+    - ms-vscode.cpptools
+    - redhat.vscode-xml
+    - redhat.vscode-yaml
+    - twxs.cmake
+    
