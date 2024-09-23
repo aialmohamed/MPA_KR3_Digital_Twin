@@ -9,7 +9,7 @@ packages:
 vscode_extensions:
     - ms-python.python
     - ms-vscode.cpptools
+    - ms-vscode.cpptools-extension-pack
     - redhat.vscode-xml
     - redhat.vscode-yaml
     - twxs.cmake
-    
