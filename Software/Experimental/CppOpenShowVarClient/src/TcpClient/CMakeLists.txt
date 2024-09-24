@@ -1,0 +1,1 @@
+add_library(${TCPLIBRARY_NAME} STATIC "TcpClient.cpp")
