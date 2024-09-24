@@ -1,7 +1,61 @@
 @startuml "CppOpenShowVarClient_Classes"
 
+top to bottom direction
 
+class "KukaVarProxyClient" as C1 {
+    - tcp_client_ :TcpClient
+    + KukaVarProxyClient(TcpClient tcp_client)
+    + readAsync(variable:string,callback: function)        
+    +writeAsync(variable: string,value: string,callback: function)
+}
 
+class "TcpClient" as C2 {
+    - io_con-text_ : boost::asio::io_context&
+    - socket_ : boost::asio::ip::tcp::socket
+    - resolver_ : boost::asio::ip::tcp::resolver
+    - error_ : boost::system::error_code 
+    -  m_endpoints_ : boost::asio::ip::tcp::resolver::results_type
+    + TcpClient(io_context : boost::asio::io_context& ,host_ip : string,port : string)
+    + async_tcp_connect(endpoints : boost::asio::ip::tcp::resolver::results_type ,callback : std::function<void()>) :void
+    + async_send( message : const std::vector<uint8_t>&, callback : std::function<void()> ) :void
+    + async_receive(callback : std::function<void(std::string)>) :void
+    + close() :void
+}
 
+class "Message" as C3 {
+    # message_id_ : uint16_t
+    # content_length_ : uint16_t
+    # mode_ : uint8_t
+    + Message(message_id : uint16_t, content_length : uint16_t, mode : uint8_t)
+    + serialize() : virtual std::vector<uint8_t>
+    + deserialize(dataconst std::vector<uint8_t>&) : virtual void
+}
+
+class "WriteMessage" as C4 {
+    - variable_name_ : string
+    - var_value_ : string
+    + WriteMessage( message_id : uint16_t, variable_name : const string&,value : string& )
+    + serialize() : std::vector<uint8_t> 
+}
+
+class "ReadMessage" as C5 {
+    - string variable_name_
+    + ReadMessage(message_id : uint16_t, variable_name : const string&)
+    + serialize() : std::vector<uint8_t> 
+}
+
+class "ResponseMessage" as C6 {
+    - variable_value_ : string
+    - status_code_ : uint32_t
+    + ResponseMessage()
+    + deserialize(data : const std::vector<uint8_t>& ) : void
+
+}
+
+C1 -left-* C2
+C1 ..> C3 : <<use>>
+C4 -up-|> C3
+C5 -up-|> C3
+C6 -up-|> C3
 
 @enduml
