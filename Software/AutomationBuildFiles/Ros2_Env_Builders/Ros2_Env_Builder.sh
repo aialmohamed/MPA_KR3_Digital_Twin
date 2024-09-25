@@ -186,7 +186,7 @@ show_help() {
 }
 
 # Main script logic
-if [ "$1" == "install" ]; then
+if [[ "$1" == "install" ]]; then
   echo "Starting installation process..."
 
   # Step 1: Install ROS 2 Humble if necessary
@@ -207,7 +207,7 @@ if [ "$1" == "install" ]; then
 
   echo "Installation process completed."
 
-elif [ "$1" == "remove" ]; then
+elif [[ "$1" == "remove" ]]; then
   echo "Starting removal process..."
 
   # Step 1: Remove ROS 2 Humble and associated packages
@@ -218,7 +218,7 @@ elif [ "$1" == "remove" ]; then
 
   echo "Removal process completed."
 
-elif [ "$1" == "help" ] || [ -z "$1" ]; then
+elif [[ "$1" == "help" ]] || [[ -z "$1" ]]; then
   show_help
 else
   echo "Invalid option: $1"
