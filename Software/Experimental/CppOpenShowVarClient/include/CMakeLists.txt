@@ -1,1 +1,6 @@
 add_subdirectory(TcpClient)
+add_subdirectory(Message)
+add_subdirectory(WriteMessage)
+add_subdirectory(ReadMessage)
+add_subdirectory(ResponseMessage)
+add_subdirectory(KukaClient)

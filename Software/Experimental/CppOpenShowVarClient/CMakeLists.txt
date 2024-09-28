@@ -4,6 +4,11 @@ project(CppOpenShowVarClient VERSION 1.0.0 LANGUAGES C CXX)
 
 set(EXCUTABLE_NAME Excutable)
 set(TCPLIBRARY_NAME TcpClientLibrary)
+set(MESSAGELIBRARY_NAME messageLibrary)
+set(WRTIEMESSAGELIBARAY_NAME writeMessageLibrary)
+set(READMESSAGELIBARAY_NAME readMessageLibrary)
+set(RESPONSEMESSAGELIBARAY_NAME responseMessageLibrary)
+set(KUKACLIENTLIBARAY_NAME kukaClientMessageLibrary)
 
 # Include ExternalProject for fetching libraries via git
 include(ExternalProject)
