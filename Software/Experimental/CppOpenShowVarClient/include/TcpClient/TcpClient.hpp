@@ -13,10 +13,10 @@ public:
     TCPClient(boost::asio::io_context& io_context,const std::string& host_ip,const std::string& port);
     
     // Asynchronous methods for connecting, sending, and receiving
-    void async_tcp_connect(std::function<void(boost::system::error_code,boost::asio::ip::tcp::endpoint)> callback);
-    void async_send(const std::vector<uint8_t>& message, std::function<void(boost::system::error_code , std::size_t)> callback);
-    void async_receive(std::function<void(boost::system::error_code,const std::vector<uint8_t>&,std::size_t)> callback);
-    void close();
+   virtual void async_tcp_connect(std::function<void(boost::system::error_code,boost::asio::ip::tcp::endpoint)> callback);
+   virtual void async_send(const std::vector<uint8_t>& message, std::function<void(boost::system::error_code , std::size_t)> callback);
+   virtual void async_receive(std::function<void(boost::system::error_code,const std::vector<uint8_t>&,std::size_t)> callback);
+   virtual void close();
 
 private:
     boost::asio::ip::tcp::socket socket_; // Socket for communication
