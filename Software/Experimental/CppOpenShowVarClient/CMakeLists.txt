@@ -11,23 +11,6 @@ set(READMESSAGELIBARAY_NAME readMessageLibrary)
 set(RESPONSEMESSAGELIBARAY_NAME responseMessageLibrary)
 set(KUKACLIENTLIBARAY_NAME kukaClientMessageLibrary)
 
-# For Testing 
-
-option(ENABLE_TESTING "Enable Unit Testing" ON)
-
-# Fetch google test
-include(FetchContent)
-FetchContent_Declare(
-    googletest
-    URL https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip
-)
-FetchContent_MakeAvailable(googletest)
-# Include the GoogleTest directories
-include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
-
-# Include ExternalProject for fetching libraries via git
-include(ExternalProject)
-
 # Include custom Boost installation if needed
 set(BOOST_ROOT "/home/robolab/boost_1_82_install")
 set(BOOST_LIBRARIES 
