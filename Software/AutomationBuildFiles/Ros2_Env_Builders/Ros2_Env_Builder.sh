@@ -15,6 +15,19 @@ else
   echo "pip is already installed. Skipping installation..."
 fi
 
+# Check for boost
+
+check_boost_asio_installed() {
+    local boost_dir="$HOME/boost_1_82"
+  if [ -d "$boost_dir" ]; then
+    echo "Boost Asio is already installed at $boost_dir. Skipping installation..."
+    return 0
+  else
+    echo "Boost Asio not found at $boost_dir. Installing Boost Asio..."
+    return 1
+  fi
+}
+
 # Function to check if ROS 2 Humble is installed
 check_ros2_humble_installed() {
   dpkg -l | grep -q "ros-humble-desktop"
@@ -97,7 +110,19 @@ install_ros2_humble() {
     rosdep update
   fi
 }
-
+install_boost_asio() {
+  local boost_dir="$HOME/boost_1_82"
+  if ! check_boost_asio_installed; then
+    cd $HOME
+    wget https://boostorg.jfrog.io/artifactory/main/release/1.82.0/source/boost_1_82_0.tar.gz
+    tar -xvzf boost_1_82_0.tar.gz
+    mv boost_1_82_0 boost_1_82
+    cd boost_1_82
+    ./bootstrap.sh --prefix=$boost_dir
+    ./b2 install
+    echo "Boost Asio installed successfully at $boost_dir."
+  fi
+}
 # Function to remove ROS 2 Humble
 remove_ros2_humble() {
   echo "Checking if ROS 2 Humble is installed..."
@@ -204,6 +229,9 @@ if [[ "$1" == "install" ]]; then
 
   # Step 5 : install vscode_extensions
   install_vscode_extensions
+
+  # Step 6 : install boost asio
+  install_boost_asio
 
   echo "Installation process completed."
 
