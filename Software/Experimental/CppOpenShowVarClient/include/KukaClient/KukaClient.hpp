@@ -12,10 +12,18 @@
 
 class KukaClient {
 private:
+    // Function to attempt reconnection with the KUKA robot
+    void attempt_reconnection();
+
+    // Function to handle disconnection scenarios
+    void handle_disconnection(boost::system::error_code ec);
     TCPClient client_;                 // TCPClient instance for managing TCP connections
     std::string ip_;                   // IP address of the KUKA robot
     std::string port_;                 // Port number for the TCP connection
     boost::asio::io_context& io_context_; // Reference to the I/O context
+    int reconnect_attempts_;                // Number of reconnect attempts
+    const int max_reconnect_attempts_ = 5;  // Maximum number of reconnect attempts
+    std::shared_ptr<boost::asio::steady_timer> reconnect_timer_;  // Timer for scheduling reconnection attempts
 
 public:
     // Constructor to initialize the KukaClient with IP, port, and io_context
