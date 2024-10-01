@@ -36,7 +36,7 @@ bld/
 msbuild.log
 msbuild.err
 msbuild.wrn
-
+**/**/doc
 # Visual Studio 2015
 .vs/
 out/

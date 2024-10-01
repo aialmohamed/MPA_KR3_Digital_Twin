@@ -19,6 +19,8 @@ Boost::thread)
 find_package(Boost 1.82 REQUIRED COMPONENTS system thread)
 
 add_subdirectory(src)
+add_subdirectory(tests)
 add_subdirectory(include)
 add_subdirectory(app)
+add_subdirectory(docs)
 

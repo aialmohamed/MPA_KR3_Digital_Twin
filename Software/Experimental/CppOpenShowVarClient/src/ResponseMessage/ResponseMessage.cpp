@@ -2,61 +2,61 @@
 
 #include "ResponseMessage.hpp"
 #include <iostream>
-#include <iomanip>  // For formatted output
-#include <sstream>  // For string formatting
+#include <iomanip>  
+#include <sstream> 
 
-// Constructor implementation
 ResponseMessage::ResponseMessage()
     : message_id_(0),
       content_length_(0),
       mode_(0),
       variable_value_length_(0),
       variable_value_("") {
-    // Initialize status code with zero values
+
     status_code_[0] = 0;
     status_code_[1] = 0;
     status_code_[2] = 0;
 }
 
-// Method to deserialize the response message from a byte vector (hex array)
+
 void ResponseMessage::deserialize(const std::vector<uint8_t>& data) {
-    // Ensure the data size is at least the minimum size required for deserialization
-    if (data.size() >= MIN_RESPONSE_SIZE) {
-        // Deserialize message ID (2 bytes)
-        message_id_ = static_cast<uint16_t>(data[MESSAGE_ID_OFFSET]) << BYTE_SHIFT | static_cast<uint16_t>(data[MESSAGE_ID_OFFSET + 1]);
-
-        // Deserialize content length (2 bytes)
-        content_length_ = static_cast<uint16_t>(data[CONTENT_LENGTH_OFFSET]) << BYTE_SHIFT | static_cast<uint16_t>(data[CONTENT_LENGTH_OFFSET + 1]);
-
-        // Deserialize mode (1 byte)
-        mode_ = data[MODE_OFFSET];
-
-        // Deserialize variable value length (2 bytes)
-        variable_value_length_ = static_cast<uint16_t>(data[VARIABLE_VALUE_LENGTH_OFFSET]) << BYTE_SHIFT | static_cast<uint16_t>(data[VARIABLE_VALUE_LENGTH_OFFSET + 1]);
-
-        // Calculate the offset where the variable value starts
-        size_t variable_value_offset = VARIABLE_VALUE_OFFSET;
-
-        // Deserialize variable value (N bytes)
-        if (data.size() >= variable_value_offset + variable_value_length_) {
-            variable_value_ = std::string(data.begin() + variable_value_offset, data.begin() + variable_value_offset + variable_value_length_);
-        }
-
-        // Calculate the offset where the status code starts
-        size_t status_code_offset = variable_value_offset + variable_value_length_;
-
-        // Deserialize status code (3 bytes)
-        if (data.size() >= status_code_offset + STATUS_CODE_SIZE) {
-            status_code_[0] = data[status_code_offset];
-            status_code_[1] = data[status_code_offset + 1];
-            status_code_[2] = data[status_code_offset + 2];
-        }
-    } else {
+    if (data.size() < MESSAGE_ID_SIZE + CONTENT_LENGTH_SIZE + MODE_SIZE + VARIABLE_VALUE_LENGTH_SIZE) {
         std::cerr << "Data size is too small for deserialization." << std::endl;
+        return;
+    }
+    message_id_ = static_cast<uint16_t>(data[MESSAGE_ID_OFFSET]) << BYTE_SHIFT | static_cast<uint16_t>(data[MESSAGE_ID_OFFSET + 1]);
+    if (data.size() < CONTENT_LENGTH_OFFSET + CONTENT_LENGTH_SIZE) {
+        std::cerr << "Data size is too small for deserializing content length." << std::endl;
+        return;
+    }
+    content_length_ = static_cast<uint16_t>(data[CONTENT_LENGTH_OFFSET]) << BYTE_SHIFT | static_cast<uint16_t>(data[CONTENT_LENGTH_OFFSET + 1]);
+    if (data.size() < MODE_OFFSET + MODE_SIZE) {
+        std::cerr << "Data size is too small for deserializing mode." << std::endl;
+        return;
+    }
+    mode_ = data[MODE_OFFSET];
+    if (data.size() < VARIABLE_VALUE_LENGTH_OFFSET + VARIABLE_VALUE_LENGTH_SIZE) {
+        std::cerr << "Data size is too small for deserializing variable value length." << std::endl;
+        return;
+    }
+    variable_value_length_ = static_cast<uint16_t>(data[VARIABLE_VALUE_LENGTH_OFFSET]) << BYTE_SHIFT | static_cast<uint16_t>(data[VARIABLE_VALUE_LENGTH_OFFSET + 1]);
+    size_t variable_value_offset = VARIABLE_VALUE_OFFSET;
+    if (data.size() >= variable_value_offset + variable_value_length_) {
+        variable_value_ = std::string(data.begin() + variable_value_offset, data.begin() + variable_value_offset + variable_value_length_);
+    } else {
+        variable_value_ = "";
+    }
+    size_t status_code_offset = variable_value_offset + variable_value_length_;
+    if (data.size() >= status_code_offset + STATUS_CODE_SIZE) {
+        status_code_[0] = data[status_code_offset];
+        status_code_[1] = data[status_code_offset + 1];
+        status_code_[2] = data[status_code_offset + 2];
+    } else {
+        status_code_[0] = 0;
+        status_code_[1] = 0;
+        status_code_[2] = 0;
     }
 }
 
-// Getters for the response attributes
 uint16_t ResponseMessage::getMessageID() const {
     return message_id_;
 }
@@ -77,7 +77,6 @@ std::string ResponseMessage::getVariableValue() const {
     return variable_value_;
 }
 
-// Getter for status code as a formatted string
 std::string ResponseMessage::getStatusCode() const {
     std::stringstream ss;
     ss << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(status_code_[0]) << " "
@@ -86,7 +85,6 @@ std::string ResponseMessage::getStatusCode() const {
     return ss.str();
 }
 
-// Print the ResponseMessage details for debugging
 void ResponseMessage::printMessageDetails() const {
     std::cout << "ResponseMessage Details:" << std::endl;
     std::cout << "Message ID: " << message_id_ << std::endl;

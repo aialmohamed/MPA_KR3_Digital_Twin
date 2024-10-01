@@ -12,33 +12,102 @@
 
 class KukaClient {
 private:
-    // Function to attempt reconnection with the KUKA robot
-    void attempt_reconnection();
+    /**
+     * @brief  TCPClient object to handle the connection to the server
+     * 
+     */
+    TCPClient client_;
 
-    // Function to handle disconnection scenarios
+    /**
+     * @brief  ip address of the server to connect to
+     * 
+     */
+    std::string ip_;
+
+    /**
+     * @brief  port number of the server to connect to
+     * 
+     */
+    std::string port_;
+
+    /**
+     * @brief io_context object to handle the asynchronous operations of TCPClient
+     * 
+     */
+    boost::asio::io_context& io_context_;
+
+    /**
+     * @brief  number of attempts to reconnect to the server after a disconnection
+     * 
+     */
+    int reconnect_attempts_;
+
+    /**
+     * @brief maximum number of attempts to reconnect to the server after a disconnection
+     * 
+     */
+    const int max_reconnect_attempts_ = 5;
+    
+    /**
+     * @brief reconnect timer to schedule reconnection attempts
+     * 
+     */
+    std::shared_ptr<boost::asio::steady_timer> reconnect_timer_;
+
+    /**
+     * @brief Attempt to reconnect to the server after a disconnection
+     * 
+     */
+    void attempt_reconnection();
+    
+    /**
+     * @brief handle the disconnection of the client from the server
+     * 
+     * @param ec error code of the disconnection
+     */
     void handle_disconnection(boost::system::error_code ec);
-    TCPClient client_;                 // TCPClient instance for managing TCP connections
-    std::string ip_;                   // IP address of the KUKA robot
-    std::string port_;                 // Port number for the TCP connection
-    boost::asio::io_context& io_context_; // Reference to the I/O context
-    int reconnect_attempts_;                // Number of reconnect attempts
-    const int max_reconnect_attempts_ = 5;  // Maximum number of reconnect attempts
-    std::shared_ptr<boost::asio::steady_timer> reconnect_timer_;  // Timer for scheduling reconnection attempts
 
 public:
-    // Constructor to initialize the KukaClient with IP, port, and io_context
+    
+    /**
+     * @brief Construct a new Kuka Client object    
+     * 
+     * @param io_context io_context object to handle the asynchronous operations of TCPClient
+     * @param ip ip address of the server to connect to
+     * @param port port number of the server to connect to
+     */
     KukaClient(boost::asio::io_context& io_context, const std::string& ip, const std::string& port);
-
-    // Establish a connection to the KUKA robot asynchronously
+    
+    /**
+     * @brief connect to the server asynchronously
+     * 
+     * @param callback callback function to be called after the connection is established
+     */
     void connect(std::function<void(boost::system::error_code)> callback);
-
-    // Send a read request for a specific variable
+    
+    /**
+     * @brief read the value of a variable from the server asynchronously
+     * 
+     * @param message_id  message id of the request
+     * @param variable_name  name of the variable to read
+     * @param callback  callback function to be called after the response is received
+     */
     void readVariable(uint16_t message_id, const std::string& variable_name, std::function<void(boost::system::error_code, ResponseMessage)> callback);
-
-    // Send a write request for a specific variable
+    
+    /**
+     * @brief  write the value of a variable to the server asynchronously
+     * 
+     * @param message_id  message id of the request
+     * @param variable_name  name of the variable to write
+     * @param value  value to write
+     * @param callback  callback function to be called after the response is received
+     */
     void writeVariable(uint16_t message_id, const std::string& variable_name, const std::string& value, std::function<void(boost::system::error_code, ResponseMessage)> callback);
-
-    // Close the TCP connection
+    
+    /**
+     * @brief  send a custom message to the server
+     * 
+     */
     void close();
 };
 

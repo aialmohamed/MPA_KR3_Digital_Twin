@@ -24,34 +24,101 @@
 // Define bit-shift values
 #define BYTE_SHIFT 8 // Number of bits to shift for higher byte
 
-// Define minimum size for a response message to be considered valid for deserialization
 #define MIN_RESPONSE_SIZE (MESSAGE_ID_SIZE + CONTENT_LENGTH_SIZE + MODE_SIZE + VARIABLE_VALUE_LENGTH_SIZE + STATUS_CODE_SIZE)
 
 class ResponseMessage {
 private:
-    uint16_t message_id_;            // Message ID (2 bytes)
-    uint16_t content_length_;         // Content Length (2 bytes)
-    uint8_t mode_;                    // Mode (1 byte)
-    uint16_t variable_value_length_;  // Length of the variable value (2 bytes)
-    std::string variable_value_;      // Variable value (N bytes)
-    uint8_t status_code_[3];          // Status code (3 bytes)
+    /**
+     * @brief  message id of the message
+     * 
+     */
+    uint16_t message_id_;
+    /**
+     * @brief  content length of the message
+     * 
+     */
+    uint16_t content_length_;
+    /**
+     * @brief  mode of the message (read or write)
+     * 
+     */
+    uint8_t mode_;
+    /**
+     * @brief   length of the variable value
+     * 
+     */
+    uint16_t variable_value_length_;  
+    /**
+     * @brief  value of the variable
+     * 
+     */
+    std::string variable_value_;
+    /**
+     * @brief  status code of the message (000 error or 011 success)
+     * 
+     */
+    uint8_t status_code_[3];          
 
 public:
-    // Constructor
+    /**
+     * @brief Construct a new Response Message object   
+     * 
+     */
     ResponseMessage();
 
-    // Method to deserialize the response message from a byte vector
+    /**
+     * @brief   serialize the ResponseMessage object
+     * 
+     * @param data  data to serialize
+     */
     void deserialize(const std::vector<uint8_t>& data);
 
-    // Getters for the response attributes
+    /**
+     * @brief Get the Message I D object
+     * 
+     * @return uint16_t 
+     */
     uint16_t getMessageID() const;
+
+    /**
+     * @brief Get the Content Length object
+     * 
+     * @return uint16_t 
+     */
     uint16_t getContentLength() const;
+
+    /**
+     * @brief Get the Mode object
+     * 
+     * @return uint8_t 
+     */
     uint8_t getMode() const;
+
+    /**
+     * @brief Get the Variable Value Length object
+     * 
+     * @return uint16_t 
+     */
     uint16_t getVariableValueLength() const;
+
+    /**
+     * @brief Get the Variable Value object
+     * 
+     * @return std::string 
+     */
     std::string getVariableValue() const;
+
+    /**
+     * @brief Get the Status Code object
+     * 
+     * @return std::string 
+     */
     std::string getStatusCode() const;
 
-    // Print the ResponseMessage details for debugging
+    /**
+     * @brief  print the details of the message
+     * 
+     */
     void printMessageDetails() const;
 };
 

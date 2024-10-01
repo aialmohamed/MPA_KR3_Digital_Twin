@@ -10,24 +10,65 @@
 
 class ReadMessage : public Message {
 private:
-    uint16_t variable_name_length_;  // Length of the variable name
-    std::string variable_name_;      // Variable name to be read
+    /**
+     * @brief  length of the variable name
+     * 
+     */
+    uint16_t variable_name_length_;
 
+    /**
+     * @brief  name of the variable to read
+     * 
+     */
+    std::string variable_name_;
 public:
-    // Constructor
+    /**
+     * @brief Construct a new Read Message object
+     * 
+     * @param message_id  message id of the message
+     * @param variable_name  name of the variable to read
+     */
     ReadMessage(uint16_t message_id = 0, const std::string& variable_name = "");
 
-    // Method to serialize the read message into a byte vector
+    /**
+     * @brief  serialize the ReadMessage object (implementing the pure virtual function of the base class "Message")
+     * 
+     * @return std::vector<uint8_t>  serialized data
+     */
     std::vector<uint8_t> serialize() const override;
 
-    // Method to deserialize the read message from a byte vector
+    /**
+     * @brief  deserialize the data into the ReadMessage object (implementing the pure virtual function of the base class "Message")
+     * 
+     * @param data  data to deserialize
+     */
     void deserialize(const std::vector<uint8_t>& data) override;
 
-    // Getters and Setters for variable name
+    /**
+     * @brief Get the Variable Name object
+     * 
+     * @return std::string 
+     */
     std::string getVariableName() const;
+
+    /**
+     * @brief Get the Variable Name Length object
+     * 
+     * @return uint16_t 
+     */
+    uint16_t getVariableNameLength() const;
+
+    /**
+     * @brief Set the Variable Name object
+     * 
+     * @param variable_name 
+     */
     void setVariableName(const std::string& variable_name);
 
-    // Print the ReadMessage details for debugging
+    /**
+     * @brief  print the details of the message (Debugging)
+     * 
+     */
     void printMessageDetails() const;
 };
 
