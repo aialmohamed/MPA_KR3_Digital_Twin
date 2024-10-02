@@ -10,6 +10,12 @@
 #include <boost/asio.hpp>
 #include <functional>
 
+/**
+ * @brief  This class handles communication with the KUKA robot.
+ * 
+ * The `KukaClient` class provides methods for sending and receiving data
+ * to and from a KUKA robot via a specified communication protocol.
+ */
 class KukaClient {
 private:
     /**

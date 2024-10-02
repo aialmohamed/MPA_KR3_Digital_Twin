@@ -26,6 +26,13 @@
 
 #define MIN_RESPONSE_SIZE (MESSAGE_ID_SIZE + CONTENT_LENGTH_SIZE + MODE_SIZE + VARIABLE_VALUE_LENGTH_SIZE + STATUS_CODE_SIZE)
 
+/**
+ * @brief The ResponseMessage class is crucial for interpreting the server’s response and determining whether a read or write operation was successful or encountered an error.
+ * 
+ *  This class extends the Message base class and provides functionality to interpret the server's response, extract relevant data, 
+ *  and determine the success or failure of the operation. The ResponseMessage typically includes fields such as the message ID, 
+ *  content length, read/write mode, variable value, and status code (success or error).
+ */
 class ResponseMessage {
 private:
     /**

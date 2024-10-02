@@ -46,6 +46,10 @@ void TCPClient::async_receive(std::function<void(boost::system::error_code,const
         });
 }
 
+    bool TCPClient::is_open() const {
+        return socket_.is_open();
+    }
+
 void TCPClient::close () {
     if(socket_.is_open())
     {

@@ -8,6 +8,15 @@
 #include <vector>
 #include <cstdint>
 
+
+/**
+ * @brief The ReadMessage class inherits from the Message base class and is specifically designed to handle read requests.
+ * 
+ *  This message type allows clients to request the value of specific variables from the server.
+ *  The format of the ReadMessage includes an identifier, content length, read/write mode, 
+ *  and the name of the variable to be read. This class is responsible for creating and serializing 
+ *  read request messages that comply with the server’s expected format.
+ */
 class ReadMessage : public Message {
 private:
     /**

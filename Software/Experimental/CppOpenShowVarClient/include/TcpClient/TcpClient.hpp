@@ -6,6 +6,16 @@
 #include <string>
 #include <thread>
 
+/**
+ * @brief The TCPClient class is responsible for managing the TCP/IP communication between the client and the server
+ * 
+ * It provides asynchronous methods for connecting, sending, 
+ * and receiving data over a TCP connection. The TCPClient class 
+ * leverages the Boost.Asio library for efficient and scalable asynchronous 
+ * operations, ensuring that the client can handle multiple I/O operations without blocking 
+ * the main thread. This class is used as the foundation for sending ReadMessage and WriteMessage 
+ * objects to the server.
+ */
 class TCPClient{
 
 private:
@@ -63,6 +73,15 @@ public:
     * @param callback  callback function to call after the message is received
     */
    virtual void async_receive(std::function<void(boost::system::error_code,const std::vector<uint8_t>&,std::size_t)> callback);
+
+    /**
+     * @brief  check if the connection is open
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool is_open() const;
+
 
    /**
     * @brief  close the connection

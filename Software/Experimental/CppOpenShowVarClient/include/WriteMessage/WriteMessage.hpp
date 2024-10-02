@@ -8,6 +8,14 @@
 #include <vector>
 #include <cstdint>
 
+/**
+ * @brief The WriteMessage class is derived from the Message base class and is used to handle write requests.
+ * 
+ * This class allows clients to set the value of a specific variable on the server.
+ * The format of the WriteMessage includes fields such as identifier, content length, read/write mode, variable name, 
+ * and the value to be written. 
+ * WriteMessage ensures that all necessary data is properly serialized and sent in accordance with the protocol's specifications.
+ */
 class WriteMessage : public Message {
 private:
     /**

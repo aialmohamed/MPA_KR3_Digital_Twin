@@ -7,6 +7,15 @@
 #include <cstdint>
 #include <string>
 
+/**
+ * @brief The Message class serves as a base structure for different types of messages exchanged between the client and the server.
+ * 
+ *  It provides a consistent interface for creating, 
+ * serializing, and managing message data. 
+ * The Message class typically includes fields such as a unique ID, 
+ * content length, and type. This class ensures that both read and write messages follow a 
+ * standard format, making it easier to manage and interpret data within the communication protocol.
+ */
 class Message {
 protected:
     /**
