@@ -1,0 +1,11 @@
+@startuml "CppOpenShowVarSequenceDiagram"
+
+participant KukaKrc4 as KRC4 order 7 
+participant TcpClient as TcpClient order 6
+participant ReadMessage as Readmsg order 3
+participant WriteMessage as Writemsg order 4
+participant ResponseMessage as Responsemsg order 5
+participant KukaClient as KukaClient order 2
+participant Environment as Env order 1
+
+@enduml
