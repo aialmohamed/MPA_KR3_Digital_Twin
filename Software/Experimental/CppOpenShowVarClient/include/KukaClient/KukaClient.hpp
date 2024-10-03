@@ -22,7 +22,7 @@ private:
      * @brief  TCPClient object to handle the connection to the server
      * 
      */
-    TCPClient client_;
+    std::shared_ptr<TCPClient> client_; 
 
     /**
      * @brief  ip address of the server to connect to
@@ -74,7 +74,22 @@ private:
     void handle_disconnection(boost::system::error_code ec);
 
 public:
-    
+    /**
+     * @brief Set the Client object
+     * 
+     * @param client 
+     */
+    void setClient(std::shared_ptr<TCPClient> client) {
+        client_ = client;
+    }
+    /**
+     * @brief Get the Client object
+     * 
+     * @return TCPClient& 
+     */
+    std::shared_ptr<TCPClient> getClient() const {
+        return client_;
+    }
     /**
      * @brief Construct a new Kuka Client object    
      * 
@@ -84,6 +99,17 @@ public:
      */
     KukaClient(boost::asio::io_context& io_context, const std::string& ip, const std::string& port);
     
+    /**
+     * @brief Construct a new Kuka Client object (only used for testing purposes)
+     * 
+     * @param io_context 
+     * @param ip 
+     * @param port 
+     * @param client 
+     */
+    KukaClient(boost::asio::io_context& io_context, const std::string& ip, const std::string& port,
+               std::shared_ptr<TCPClient> client);
+
     /**
      * @brief connect to the server asynchronously
      * 

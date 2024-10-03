@@ -3,10 +3,18 @@
 #include "KukaClient.hpp"
 
 KukaClient::KukaClient(boost::asio::io_context& io_context, const std::string& ip, const std::string& port)
-    : client_(io_context, ip, port), ip_(ip), port_(port), io_context_(io_context), reconnect_attempts_(0) {}
+    :  ip_(ip), port_(port), io_context_(io_context), reconnect_attempts_(0) {
+            client_ = std::make_shared<TCPClient>(io_context, ip, port);
+    }
+KukaClient::KukaClient(boost::asio::io_context& io_context, const std::string& ip, const std::string& port,
+                       std::shared_ptr<TCPClient> client)
+                       : io_context_(io_context), ip_(ip), port_(port), reconnect_attempts_(0) 
+                       {
+                            client_ = client ? client : std::make_shared<TCPClient>(io_context, ip, port);
+                       }
 
 void KukaClient::connect(std::function<void(boost::system::error_code)> callback) {
-    client_.async_tcp_connect([this, callback](boost::system::error_code ec, boost::asio::ip::tcp::endpoint endpoint) {
+    client_->async_tcp_connect([this, callback](boost::system::error_code ec, boost::asio::ip::tcp::endpoint endpoint) {
         if (!ec) {
             reconnect_attempts_ = 0;
             callback(ec);
@@ -25,8 +33,8 @@ void KukaClient::attempt_reconnection() {
         reconnect_timer_->async_wait([this](boost::system::error_code ec) {
             if (!ec) {
                 std::cout << "Retrying connection to KUKA robot..." << std::endl;
-                client_.close();
-                client_ = TCPClient(io_context_, ip_, port_);
+                client_->close();
+                client_ = std::make_shared<TCPClient>(io_context_, ip_, port_);
                 connect([](boost::system::error_code) {});
             }
         });
@@ -39,9 +47,9 @@ void KukaClient::readVariable(uint16_t message_id, const std::string& variable_n
     ReadMessage read_msg(message_id, variable_name);
     std::vector<uint8_t> serialized_read_msg = read_msg.serialize();
 
-    client_.async_send(serialized_read_msg, [this, callback](boost::system::error_code ec, std::size_t /* length */) {
+    client_->async_send(serialized_read_msg, [this, callback](boost::system::error_code ec, std::size_t /* length */) {
         if (!ec) {
-            client_.async_receive([this, callback](boost::system::error_code ec, const std::vector<uint8_t>& data, std::size_t /* length */) {
+            client_->async_receive([this, callback](boost::system::error_code ec, const std::vector<uint8_t>& data, std::size_t /* length */) {
                 if (!ec) {
                     ResponseMessage response_msg;
                     response_msg.deserialize(data);
@@ -63,9 +71,9 @@ void KukaClient::writeVariable(uint16_t message_id, const std::string& variable_
     WriteMessage write_msg(message_id, variable_name, value);
     std::vector<uint8_t> serialized_write_msg = write_msg.serialize();
 
-    client_.async_send(serialized_write_msg, [this, callback](boost::system::error_code ec, std::size_t /* length */) {
+    client_->async_send(serialized_write_msg, [this, callback](boost::system::error_code ec, std::size_t /* length */) {
         if (!ec) {
-            client_.async_receive([this, callback](boost::system::error_code ec, const std::vector<uint8_t>& data, std::size_t /* length */) {
+            client_->async_receive([this, callback](boost::system::error_code ec, const std::vector<uint8_t>& data, std::size_t /* length */) {
                 if (!ec) {
                     ResponseMessage response_msg;
                     response_msg.deserialize(data);
@@ -91,5 +99,5 @@ void KukaClient::handle_disconnection(boost::system::error_code ec) {
     }
 }
 void KukaClient::close() {
-    client_.close();
+    client_->close();
 }
