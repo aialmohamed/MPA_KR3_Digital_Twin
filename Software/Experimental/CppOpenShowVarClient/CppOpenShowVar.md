@@ -108,5 +108,7 @@ The `ResponseMessage` class deserializes the robot’s response (whether from a 
 - **Role in the Concept Diagram**: It handles deserializing the robot's response and invokes the corresponding **callback** in the **Application Layer** (either `writeCallback` or `readCallback`).
 
 ## Usage
-
+n/a
 ## Tests
+
+This library has been tested (look under tests). maybe more tests needs to be done .
