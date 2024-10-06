@@ -5,7 +5,7 @@
 
     <gazebo>
      <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-          <robot_paramm>robot_description</robot_paramm>
+          <robot_param>robot_description</robot_param>
           <robot_param_node>robot_state_publisher</robot_param_node>
           <parameters></parameters>
      </plugin>
