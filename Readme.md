@@ -59,8 +59,9 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 | Gazebo | Fortress | n/A|
 | Robot | KuKa KR3 R540 | n/A|
 | Robot controller | KRC4| n/A|
-| .NET | 8.0| n/A |
-| Avalonia | latest| n/A|
+|JDK(Java Development Kit)|21|n/A|
+|JavaFX|21 or 22|n/A|
+|Gradle|8.5|n/A|
 |KRC Windows version|WES7 4.0|n/A|
 |KSS | 8.3 | n/A|
 
@@ -155,13 +156,6 @@ Fortunately, the team from last semester has already taken care of the simulatio
 | Lazarus              | Open-source cross-platform IDE similar to Delphi.                           | Object Pascal            | Windows, macOS, Linux       |
 | Uno Platform         | Cross-platform framework for building single-codebase applications.         | C#                       | Windows, macOS, Linux       |
 | Xamarin.Forms        | Framework for building cross-platform mobile and desktop apps.              | C#                       | Windows, macOS              |
-
-
-The Dashboard desktop app shall be developed using Avalonia framework , due to it being a cross-platform and easy to wrap for a web interface or mobile interface.
-The Dashboard shall be defined in the system requirement file , where also is the use cases of this app is defined .
-For Backend we are using Mysql. 
->[!NOTE]
-The Name of the project (app) in avalonia should be short otherwise the previewer wont work
 
 >[!NOTE]
 On this [Gitrepo](https://github.com/ImtsSrl/openshowvar/blob/master/resources/kukavar.txt) you can find all the global variables that we can change with KUKAVARPROXY , we can create our own.
