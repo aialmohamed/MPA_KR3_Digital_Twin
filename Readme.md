@@ -74,12 +74,12 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 - [x] Create a concept for the props
 - [x] Finalize the system setup (on my PC)
 - [x] Set up the lab (lab's PC)
-- [ ] create connections by using UltraVCN and mount a driver to the Robot.
-- [ ] install the KUKAVARPROXY on the Lab PC and test it
+- [x] create connections by using UltraVCN and mount a driver to the Robot.
+- [x] install the KUKAVARPROXY on the Lab PC and test it
 - [x] (Optional) Automate the setup of the system
 
 ### Interface Development
-- [ ] Create the software for the interface between KR3 R540 and a local client (Experimental in c++)
+- [x] Create the software for the interface between KR3 R540 and a local client (Experimental in c++)
 - [ ] Create the software for the interface between ROS2 and KR3 R540
 - [ ] create an OPCUA Server 
 - [ ] create a ROS-OPCUA bridge
