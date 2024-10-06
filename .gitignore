@@ -30,6 +30,8 @@ project.lock.json
 x64/
 x86/
 build/
+install/
+log/
 bld/
 [Bb]in/
 [Oo]bj/

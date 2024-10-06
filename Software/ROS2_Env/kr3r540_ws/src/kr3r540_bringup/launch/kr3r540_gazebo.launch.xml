@@ -1,0 +1,27 @@
+<launch>
+    <!-- set the robot description path -->
+    <let name="urdf_path" 
+         value="$(find-pkg-share kr3r540_description)/urdf/kr3r540.urdf.xacro"/>
+    <!-- set rviz config path -->
+    <let name="rviz_config_path"
+         value="$(find-pkg-share kr3r540_bringup)/rviz/kr3r540_urdf_config.rviz"/>
+         <!-- start the robot state publisher -->
+    <node pkg="robot_state_publisher" exec="robot_state_publisher">
+        <param name="robot_description" 
+               value="$(command 'xacro $(var urdf_path)')"/>
+    </node>
+
+    <!-- start gazebo-->
+    <include file="$(find-pkg-share gazebo_ros)/launch/gazebo.launch.py" >
+        <arg name="world" value="$(find-pkg-share kr3r540_bringup)/world/kr3r540_world.world"/>
+    </include>
+    <!-- spawn the robot in gazebo -->
+     <node pkg="gazebo_ros" exec="spawn_entity.py"
+           args="-topic /robot_description -entity kr3r540 -x 0 -y 0 -z 0 -R 0 -P 0 -Y 0"/>
+    <!-- start the joint state publisher -->
+    <node pkg="joint_state_publisher_gui" exec="joint_state_publisher_gui"/>
+
+    <!-- start the robot model visualizer (rviz) -->
+    <node pkg="rviz2" exec="rviz2" output="screen"
+          args="-d $(var rviz_config_path)"/>
+</launch>

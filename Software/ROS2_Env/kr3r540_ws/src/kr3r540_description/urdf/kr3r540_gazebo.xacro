@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="kr3r540">
+
+    <!-- <xacro:include filename="kr3r540_gazebo.xacro" /> -->
+
+    <gazebo>
+     <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+          <robot_paramm>robot_description</robot_paramm>
+          <robot_param_node>robot_state_publisher</robot_param_node>
+          <parameters></parameters>
+     </plugin>
+    </gazebo>
+    
+    <gazebo reference="base_link">
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <gazebo reference="link_1">
+         <material>Gazebo/White</material>
+    </gazebo>
+
+    <gazebo reference="link_2">
+         <material>Gazebo/White</material>
+    </gazebo>
+
+    <gazebo reference="link_3">
+         <material>Gazebo/White</material>
+    </gazebo>
+    
+     <gazebo reference="link_4">
+         <material>Gazebo/White</material>
+    </gazebo>
+    
+    <gazebo reference="link_5">
+         <material>Gazebo/White</material>
+    </gazebo>
+
+    <gazebo reference="link_6">
+        <material>Gazebo/White</material>
+    </gazebo>
+    
+     <gazebo reference="greifer">
+         <material>Gazebo/DarkGrey</material>
+    </gazebo>
+                
+</robot>    

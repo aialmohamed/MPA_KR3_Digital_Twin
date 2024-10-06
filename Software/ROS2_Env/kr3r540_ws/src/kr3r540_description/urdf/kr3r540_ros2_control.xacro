@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="kr3r540">
+    <xacro:property name="PI" value="3.14159"/>
+    <ros2_control name="Kr3R540System" type="system">
+        <hardware>
+                <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </hardware>
+    </ros2_control>
+
+    <joint name="joint_1">
+        <command_interface name="postion">
+            <param name="min"></param>
+        </command_interface>
+    </joint>
+
+</robot>
