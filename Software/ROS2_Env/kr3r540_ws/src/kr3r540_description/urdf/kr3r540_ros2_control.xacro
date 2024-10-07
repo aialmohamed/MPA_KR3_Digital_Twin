@@ -1,17 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="kr3r540">
+    <!-- Define PI -->
     <xacro:property name="PI" value="3.14159"/>
-    <ros2_control name="Kr3R540System" type="system">
+
+    <ros2_control name="GazeboSystem" type="system">
+
         <hardware>
-                <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+            <plugin>gazebo_ros2_control/GazeboSystem</plugin>
         </hardware>
+
+        <!-- Define all joints with position interfaces using formula directly -->
+        <joint name="joint_1">
+            <command_interface name="position">
+                <param name="min_position">${-170 * PI / 180}</param>
+                <param name="max_position">${170 * PI / 180}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+
+        <joint name="joint_2">
+            <command_interface name="position">
+                <param name="min_position">${-170 * PI / 180}</param>
+                <param name="max_position">${50 * PI / 180}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+
+        <joint name="joint_3">
+            <command_interface name="position">
+                <param name="min_position">${-110 * PI / 180}</param>
+                <param name="max_position">${155 * PI / 180}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+
+        <joint name="joint_4">
+            <command_interface name="position"> 
+                <param name="min_position">${-175 * PI / 180}</param>
+                <param name="max_position">${175 * PI / 180}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+
+        <joint name="joint_5">
+            <command_interface name="position"> 
+                <param name="min_position">${-120 * PI / 180}</param>
+                <param name="max_position">${120 * PI / 180}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+
+        <joint name="joint_6">
+            <command_interface name="position"> 
+                <param name="min_position">${-350 * PI / 180}</param>
+                <param name="max_position">${350 * PI / 180}</param>
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+
     </ros2_control>
 
-    <joint name="joint_1">
-        <command_interface name="postion">
-            <param name="min"></param>
-        </command_interface>
-    </joint>
 
+    <gazebo>
+        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+          <robot_namespace>/kr3r540_sim</robot_namespace>
+          <argument>__log_level:=debug</argument>
+          <robot_param>~/robot_description</robot_param>
+          <robot_param_node>/kr3r540_sim/robot_state_publisher</robot_param_node>
+          <parameters>$(find kr3r540_bringup)/sim_config/kr3r540_sim_controllers.yaml</parameters>
+        </plugin>
+      </gazebo>
+      
 </robot>

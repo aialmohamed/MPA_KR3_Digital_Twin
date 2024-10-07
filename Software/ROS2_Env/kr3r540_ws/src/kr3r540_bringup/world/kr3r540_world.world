@@ -19,7 +19,7 @@
       </spot>
     </light>
     <model name='ground_plane'>
-      <static>1</static>
+      <static>0</static>
       <link name='link'>
         <collision name='collision'>
           <geometry>
@@ -619,7 +619,7 @@
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
-      <static>1</static>
+      <static>0</static>
       <pose>0 0 5 0 -0 0</pose>
       <enable_wind>0</enable_wind>
     </model>
