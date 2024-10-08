@@ -12,6 +12,9 @@
       - [4. ROS 2 Robot Description](#4-ros-2-robot-description)
       - [5. Hardware Components](#5-hardware-components)
       - [Data and Command Flow](#data-and-command-flow)
+    - [Understanding namespaces and our Ros2 core Design](#understanding-namespaces-and-our-ros2-core-design)
+      - [Problem](#problem)
+      - [Solution](#solution)
   - [Packages](#packages)
   - [Plugins](#plugins)
   - [Usage](#usage)
@@ -67,6 +70,31 @@ The Hardware Components section represents the physical robot hardware, which is
 The flow of information and commands starts from the **ROS 2 Robot Description**, which defines the robot’s structure and joints. This information is loaded into the **Resource Manager**, which then initializes the hardware components through the **Robot Hardware Interface**. The **Control Manager** loads and configures the necessary controllers as specified in the bring-up configuration. Controllers then communicate with the **Robot Hardware Interface** to send position commands and receive state data. The state data is published by the **Joint State Broadcaster** and can be used for monitoring and control purposes.
 
 Overall, this architecture provides a clear separation between the robot description, controller management, and hardware interface, making it highly modular and adaptable to various robotic systems and control strategies.
+
+### Understanding namespaces and our Ros2 core Design
+
+![Ros2_Core](/Images/Ros2_core_design.jpg)
+
+#### Problem
+
+In ROS 2, simulations and real robots are inherently treated as separate entities. They each operate with their own set of controllers and hardware interfaces, tailored to their specific environments. The simulated robot typically utilizes virtual hardware interfaces provided by simulation tools like Gazebo, while the real robot relies on physical hardware interfaces to interact with actual sensors and actuators.
+
+This separation means that, by default, they do not share controllers or resources. As a result, integrating them into a cohesive system where they can reflect each other's states or behaviors becomes challenging. This poses a significant obstacle when attempting to create applications like **digital twins**, where synchronization between the real and simulated environments is crucial.
+
+#### Solution
+
+To address this challenge, a practical solution is to instantiate two versions of the robot within the ROS 2 framework, each under a different namespace—one for the real robot and one for the simulation. For example, we might use `/kr3r540_real/` for the real robot and `/kr3r540_sim/` for the simulated robot.
+
+By segregating them into distinct namespaces, we ensure that their controllers, topics, services, and actions remain isolated, preventing any resource conflicts or unintended interactions.
+
+To enable communication and synchronization between the two robots, we can implement **bridge nodes** that facilitate bidirectional data transfer. These nodes act as intermediaries, subscribing to topics in one namespace and publishing the received data to the corresponding topics in the other namespace.
+
+For instance, a bridge node can subscribe to the real robot's joint states under `/kr3r540_real/joint_states` and publish them to the simulated robot's joint states topic under `/kr3r540_sim/joint_states`. This allows the simulated robot to mirror the real robot's movements in real-time.
+
+Conversely, we can have bridge nodes that send control commands from the simulation to the real robot. By carefully managing these communication bridges, we create a linked system where the simulation and the real robot share information and states.
+
+This setup effectively creates a **digital twin**, enabling advanced functionalities such as synchronized testing, real-time monitoring, predictive maintenance, and more. It leverages the strengths of both environments while maintaining the necessary separation to ensure safe and efficient operation.
+
 
 ## Packages
 
