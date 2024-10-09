@@ -4,7 +4,7 @@
     <!-- Define PI -->
     <xacro:property name="PI" value="3.14159"/>
 
-    <ros2_control name="GazeboSystem" type="system">
+    <ros2_control name="kr3r540_sim_robot" type="system">
 
         <hardware>
             <plugin>gazebo_ros2_control/GazeboSystem</plugin>
@@ -62,14 +62,12 @@
     </ros2_control>
 
 
+
     <gazebo>
         <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
-          <robot_namespace>/kr3r540_sim</robot_namespace>
-          <argument>__log_level:=debug</argument>
-          <robot_param>~/robot_description</robot_param>
-          <robot_param_node>/kr3r540_sim/robot_state_publisher</robot_param_node>
-          <parameters>$(find kr3r540_bringup)/sim_config/kr3r540_sim_controllers.yaml</parameters>
+            <robot_namespace>kr3r540_sim</robot_namespace>            
+          <robot_param>robot_description</robot_param>
         </plugin>
-      </gazebo>
+    </gazebo>
       
 </robot>

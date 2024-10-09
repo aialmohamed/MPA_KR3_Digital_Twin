@@ -1,13 +1,13 @@
-/kr3r540_sim/controller_manager:
+controller_manager:
   ros__parameters:
     update_rate: 100  # Hz
     use_sim_time: true
 
-/kr3r540_sim/kr3r540_sim_joint_state_broadcaster:
+kr3r540_sim_joint_state_broadcaster:
   ros__parameters:
     type: joint_state_broadcaster/JointStateBroadcaster
 
-/kr3r540_sim/kr3r540_sim_joint_trajectory_controller:
+kr3r540_sim_joint_trajectory_controller:
   ros__parameters:
     type: joint_trajectory_controller/JointTrajectoryController
     joints:
@@ -22,7 +22,6 @@
     state_interfaces:
       - position
       - velocity
-    open_loop_control: true
     state_publish_rate: 200.0
     action_monitor_rate: 20.0
     allow_partial_joints_goal: true
