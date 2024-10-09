@@ -22,6 +22,7 @@
     state_interfaces:
       - position
       - velocity
+    open_loop_control: true
     state_publish_rate: 200.0
     action_monitor_rate: 20.0
     allow_partial_joints_goal: true
