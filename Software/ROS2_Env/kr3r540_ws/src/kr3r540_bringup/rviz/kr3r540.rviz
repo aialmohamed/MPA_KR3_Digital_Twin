@@ -58,7 +58,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /kr3r540_sim/robot_description
+        Value: /robot_description
       Enabled: true
       Links:
         All Links Enabled: true
@@ -241,5 +241,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1200
-  X: 439
-  Y: 241
+  X: 70
+  Y: 60

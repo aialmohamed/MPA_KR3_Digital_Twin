@@ -95,6 +95,10 @@ Conversely, we can have bridge nodes that send control commands from the simulat
 
 This setup effectively creates a **digital twin**, enabling advanced functionalities such as synchronized testing, real-time monitoring, predictive maintenance, and more. It leverages the strengths of both environments while maintaining the necessary separation to ensure safe and efficient operation.
 
+> [!IMPORTANT]
+> It seems that using namespaces with the gazebo_ros2_control is bugged according to [this](https://github.com/ros-controls/ros2_control/issues/213).
+> instead of using gazebo classic we are moving to gazebo ignition which works better with namespaces and the controller of it dose not break.
+
 
 ## Packages
 

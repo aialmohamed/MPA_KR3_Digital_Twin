@@ -3,8 +3,9 @@ packages:
     - xacro
     - ros2-control
     - ros2-controllers
-    - gazebo-ros
-    - gazebo-ros2-control
+    - ros-ign-bridge
+    - ign-ros2-control
+    - ros-gz
     - moveit
 vscode_extensions:
     - ms-python.python

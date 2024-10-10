@@ -15,6 +15,7 @@ install(
   DIRECTORY
     meshes
     urdf
+    world
   DESTINATION share/${PROJECT_NAME}
 )
 

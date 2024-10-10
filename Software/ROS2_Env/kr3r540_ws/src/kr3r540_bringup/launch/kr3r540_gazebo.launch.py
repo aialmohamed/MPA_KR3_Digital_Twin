@@ -14,18 +14,10 @@ from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
     # Launch configurations
-    namespace = LaunchConfiguration("namespace", default="kr3r540_sim")
     urdf_path = LaunchConfiguration("urdf_path")
-    yaml_config_path = LaunchConfiguration("yaml_config_path")
     rviz_config_path = LaunchConfiguration("rviz_config_path")
     world_path = LaunchConfiguration("world_path")
 
-    # Declare arguments
-    declare_namespace = DeclareLaunchArgument(
-        "namespace",
-        default_value="kr3r540_sim",
-        description="Namespace for the robot",
-    )
 
     declare_urdf_path = DeclareLaunchArgument(
         "urdf_path",
@@ -66,7 +58,7 @@ def generate_launch_description():
     declare_world_path = DeclareLaunchArgument(
         "world_path",
         default_value=PathJoinSubstitution(
-            [get_package_share_directory("kr3r540_bringup"), "world", "default_world.world"]
+            [get_package_share_directory("kr3r540_bringup"), "world", "kr3r540_world.world"]
         ),
         description="Path to the Gazebo world file.",
     )
@@ -90,24 +82,18 @@ def generate_launch_description():
         launch_arguments={"world": world_path, "verbose": "true"}.items(),
     )
 
+    print("Starting robot_state_publisher_node ...")
     # Robot State Publisher Node
     robot_state_publisher_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
-        namespace=namespace,
         parameters=[robot_description],
     )
-
-    # Controller Manager Node
-    controller_manager_node = Node(
-        package="controller_manager",
-        executable="ros2_control_node",
-        namespace=namespace,
-        parameters=[robot_description, yaml_config_path],
-        output="screen",
-    )
-
+    print("robot_state_publisher_node is started ")
+    
+    
     # Spawn Robot
+    print("Spawning robot ...")
     spawn_robot_node = Node(
         package="gazebo_ros",
         executable="spawn_entity.py",
@@ -115,9 +101,7 @@ def generate_launch_description():
             "-entity",
             "kr3r540",
             "-topic",
-            ["/", namespace, "/robot_description"],
-            "-robot_namespace",
-            ["/", namespace],
+            "/robot_description",
             "-x",
             "0",
             "-y",
@@ -133,16 +117,16 @@ def generate_launch_description():
         ],
         output="screen",
     )
+    print("Robot is spawned ")
 
     # Spawn Controllers
     spawn_joint_state_broadcaster = Node(
         package="controller_manager",
         executable="spawner",
-        namespace=namespace,
         arguments=[
             "kr3r540_sim_joint_state_broadcaster",
             "--controller-manager",
-            ["/", namespace, "/controller_manager"],
+            "/controller_manager",
         ],
         output="screen",
     )
@@ -150,37 +134,33 @@ def generate_launch_description():
     spawn_joint_trajectory_controller = Node(
         package="controller_manager",
         executable="spawner",
-        namespace=namespace,
         arguments=[
             "kr3r540_sim_joint_trajectory_controller",
             "--controller-manager",
-            ["/", namespace, "/controller_manager"],
+            "/controller_manager",
         ],
         output="screen",
     )
 
     # RViz Node (optional)
+    print("Starting RViz ...")
     rviz_node = Node(
         package="rviz2",
         executable="rviz2",
-        namespace="kr3r540_sim",
-        arguments=["-d", rviz_config_path],
         output="screen",
     )
+    print("RViz is started ")
 
     return LaunchDescription(
         [
-            declare_namespace,
             declare_urdf_path,
             declare_yaml_config_path,
             declare_rviz_config_path,
             declare_world_path,
-            gazebo_launch,
             robot_state_publisher_node,
+            gazebo_launch,
             spawn_robot_node,
-            controller_manager_node,
             spawn_joint_state_broadcaster,
             spawn_joint_trajectory_controller,
-            rviz_node,
         ]
     )

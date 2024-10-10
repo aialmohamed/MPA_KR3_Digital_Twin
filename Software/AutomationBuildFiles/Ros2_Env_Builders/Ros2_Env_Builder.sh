@@ -41,7 +41,10 @@ check_colcon_installed() {
 check_vscode_installed() {
   command -v code &> /dev/null
 }
-
+# Check gazebo fortress installed
+check_gazebo_fortress_installed() {
+  command -v ign &> /dev/null
+}
 install_vscode() {
   echo "Checking if vscode is installed..."
 
@@ -70,6 +73,23 @@ install_colcon() {
         sudo apt update 
         sudo apt install -y python3-colcon-common-extensions
     fi
+}
+
+install_ignition()
+{
+  echo "Checking if Gazebo Fortress is installed..."
+  if check_gazebo_fortress_installed; then
+    echo "Gazebo Fortress is already installed. Skipping installation..."
+  else
+    echo "Gazebo Fortress not found. Installing Gazebo Fortress..."
+    sudo apt-get update
+    sudo apt-get install lsb-release gnupg
+    sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
+    sudo apt-get update
+    sudo apt-get install -y ignition-fortress
+    
+  fi
 }
 
 
@@ -232,6 +252,9 @@ if [[ "$1" == "install" ]]; then
 
   # Step 6 : install boost asio
   install_boost_asio
+
+  #Step 7 : install ignition fortress
+  install_ignition
 
   echo "Installation process completed."
 

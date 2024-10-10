@@ -1,6 +1,6 @@
 controller_manager:
   ros__parameters:
-    update_rate: 100  # Hz
+    update_rate: 50.0
     use_sim_time: true
 
 kr3r540_sim_joint_state_broadcaster:

@@ -27,7 +27,10 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 > The bug with binding the controller with the Simulation (solved using by adding use_sim_time flag in the launches.py of the movit_config)
 
 >[!NOTE]
-> The Interfaces between the real robot and ROS2 might require some kind of multiTasking/Threading due to the slow rate of the tcp connection in compare to the control loop of the ROS2  
+> The Interfaces between the real robot and ROS2 might require some kind of multiTasking/Threading due to the slow rate of the tcp connection in compare to the control loop of the ROS2
+  
+>[!NOTE]
+> we are moving from normal gazebo  (gazebo classic) to ignition
 ## Index
 
 - [Digital Twin KR3](#digital-twin-kr3)

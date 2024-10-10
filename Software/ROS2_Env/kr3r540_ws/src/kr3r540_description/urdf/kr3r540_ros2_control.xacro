@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+    <gazebo>
+        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+            <parameters>$(find kr3r540_bringup)/sim_config/kr3r540_sim_controllers.yaml</parameters>
+        </plugin>
+    </gazebo>
+
     <!-- Define PI -->
     <xacro:property name="PI" value="3.14159"/>
 
@@ -60,14 +66,5 @@
         </joint>
 
     </ros2_control>
-
-
-
-    <gazebo>
-        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
-            <robot_namespace>kr3r540_sim</robot_namespace>            
-          <robot_param>robot_description</robot_param>
-        </plugin>
-    </gazebo>
       
 </robot>
