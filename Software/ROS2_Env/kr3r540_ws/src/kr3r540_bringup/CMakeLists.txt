@@ -15,7 +15,6 @@ install(
     launch
     rviz
     sim_config
-    test_node
   DESTINATION share/${PROJECT_NAME}
 )
 

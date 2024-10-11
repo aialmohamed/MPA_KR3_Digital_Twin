@@ -1,36 +1,43 @@
-<?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="kr3r540">
+<?xml version="1.0" encoding="UTF-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+    <gazebo>
+        <plugin filename="libign_ros2_control-system.so" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+            <parameters>$(find kr3r540_bringup)/sim_config/kr3r540_sim_controllers.yaml</parameters>
+        </plugin>
+    </gazebo>
     
     <gazebo reference="base_link">
-        <material>Gazebo/Grey</material>
-    </gazebo>
-
-    <gazebo reference="link_1">
+        <material>Gazebo/Red</material>
+      </gazebo>
+      
+      <gazebo reference="link_1">
          <material>Gazebo/White</material>
-    </gazebo>
-
-    <gazebo reference="link_2">
+      </gazebo>
+      
+      <gazebo reference="link_2">
          <material>Gazebo/White</material>
-    </gazebo>
-
-    <gazebo reference="link_3">
+      </gazebo>
+      
+      <gazebo reference="link_3">
          <material>Gazebo/White</material>
-    </gazebo>
-    
-     <gazebo reference="link_4">
+      </gazebo>
+      
+      <gazebo reference="link_4">
          <material>Gazebo/White</material>
-    </gazebo>
-    
-    <gazebo reference="link_5">
+      </gazebo>
+      
+      <gazebo reference="link_5">
          <material>Gazebo/White</material>
-    </gazebo>
-
-    <gazebo reference="link_6">
+      </gazebo>
+      
+      <gazebo reference="link_6">
         <material>Gazebo/White</material>
-    </gazebo>
-    
-     <gazebo reference="greifer">
+      </gazebo>
+      
+      <gazebo reference="greifer">
          <material>Gazebo/DarkGrey</material>
-    </gazebo>
+      </gazebo>
                 
 </robot>    
