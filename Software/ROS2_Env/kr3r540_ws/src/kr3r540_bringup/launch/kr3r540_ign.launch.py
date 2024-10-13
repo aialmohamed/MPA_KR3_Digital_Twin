@@ -13,6 +13,7 @@ import xacro
 def generate_launch_description():
     urdf_path = LaunchConfiguration("urdf_path")
     world_path = LaunchConfiguration("world_path")
+    use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     rviz_config_path = LaunchConfiguration("rviz_config_path")
 
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
@@ -20,11 +21,16 @@ def generate_launch_description():
     pkg_kr3r540_bringup = get_package_share_directory("kr3r540_bringup")
 
     
+    declare_sim_time = DeclareLaunchArgument(
+        'use_sim_time',
+        default_value='true',
+        description='Use simulation (Gazebo) clock if true'
+    )
 
     declare_urdf_path = DeclareLaunchArgument(
         "urdf_path",
         default_value=PathJoinSubstitution(
-            [pkg_kr3r540_description, "urdf", "kr3r540.urdf"]
+            [pkg_kr3r540_description, "urdf", "kr3r540.urdf.xacro"]
         ),
         description="Path to the URDF file of the robot."
     )
@@ -44,12 +50,16 @@ def generate_launch_description():
 
 
     SetEnvironmentVariable('GZ_SIM_RESOURCE_PATH', PathJoinSubstitution([get_package_share_directory('kr3r540_description'),"meshes"]))
-
     
+    doc = xacro.process(os.path.join(pkg_kr3r540_description, "urdf", "kr3r540.urdf.xacro"))
+    print(doc)
+    with open(os.path.join(pkg_kr3r540_description, "urdf", "kr3r540.urdf"), "w+") as f:
+        f.write(doc)
+    params = {"use_sim_time": True}
+    urdf_path = PathJoinSubstitution([pkg_kr3r540_description, "urdf", "kr3r540.urdf"])
     robot_state_publisher_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
-        parameters=[{"use_sim_time": True}],
         arguments=[urdf_path],
         output='screen',
     )
@@ -74,7 +84,7 @@ def generate_launch_description():
     ignition_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([PathJoinSubstitution([pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py'])]),
         launch_arguments={
-            'gz_args': world_path,
+            'gz_args': ['-v4 ', world_path],
             'on_exit_shutdown': 'true'
             }.items(),
     )
@@ -119,6 +129,7 @@ def generate_launch_description():
         )
 
     return LaunchDescription([
+        declare_sim_time,
         declare_urdf_path,
         declare_world_path,
         declare_rviz_config_path,
