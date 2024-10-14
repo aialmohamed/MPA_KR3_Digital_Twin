@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://wiki.ros.org/xacro" name="kr3r540">
+
+
+<xacro:include filename="kr3r540_gazebo.xacro"/>
+<xacro:include filename="kr3r540_ros2_control.xacro"/>
  <link name="world_link">
 </link>
 
@@ -236,7 +240,5 @@
   <origin xyz="0.032 0 -0.02" rpy="0 0 1.5708"/>
 </joint>
 
-<xacro:include filename="kr3r540_gazebo.xacro"/>
-<xacro:include filename="kr3r540_ros2_control.xacro"/>
  
 </robot>
