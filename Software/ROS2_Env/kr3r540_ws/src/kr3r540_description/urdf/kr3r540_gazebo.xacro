@@ -5,6 +5,9 @@
     <gazebo>
         <plugin filename="libign_ros2_control-system.so" name="ign_ros2_control::IgnitionROS2ControlPlugin">
             <parameters>$(find kr3r540_bringup)/sim_config/kr3r540_sim_controllers.yaml</parameters>
+            <ros>
+               <namespace>kr3r540_sim</namespace>
+            </ros>
         </plugin>
     </gazebo>
     

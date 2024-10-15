@@ -44,13 +44,14 @@ def generate_launch_description():
 
     declare_rviz_config_path = DeclareLaunchArgument(
         "rviz_config_path",
-        default_value=PathJoinSubstitution([pkg_kr3r540_bringup, "rviz", "kr3r540.rviz"]),
+        default_value=PathJoinSubstitution([pkg_kr3r540_bringup, "rviz", "kr3r540_sim.rviz"]),
         description="Path to the RViz config file."
     )
 
     params = {"robot_description" : robot_description,"use_sim_time": True}
     robot_state_publisher_node = Node(
         package="robot_state_publisher",
+        namespace="kr3r540_sim",
         executable="robot_state_publisher",
         parameters=[params],
         output='screen',
@@ -59,6 +60,7 @@ def generate_launch_description():
 
     joint_state_publisher_node = Node(
         package="joint_state_publisher",
+        namespace="kr3r540_sim",
         executable="joint_state_publisher",
         output="screen",
     )
@@ -67,6 +69,7 @@ def generate_launch_description():
     rviz_node = Node(
         package="rviz2",
         executable="rviz2",
+        namespace="kr3r540_sim",
         parameters=[{"use_sim_time": True}],
         arguments=['-d', rviz_config_path ,'use_sim_time','true'],
         output="screen",
@@ -86,6 +89,7 @@ def generate_launch_description():
     gazebo_bridge=Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
+        namespace="kr3r540_sim",
         arguments=[
             "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
         ]
@@ -95,9 +99,10 @@ def generate_launch_description():
     spawn_entity = Node(
     package='ros_gz_sim',
     executable='create',
+    namespace='kr3r540_sim',
     output='screen',
     arguments=[
-        "-topic", "robot_description",
+        "-topic", "/kr3r540_sim/robot_description",
         "-name","kr3r540",
     ]
     )

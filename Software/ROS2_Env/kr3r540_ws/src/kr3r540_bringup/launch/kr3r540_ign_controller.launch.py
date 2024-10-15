@@ -32,6 +32,7 @@ def generate_launch_description():
     params = {"robot_description" : robot_description,"use_sim_time": True}
     robot_state_publisher_node = Node(
         package="robot_state_publisher",
+        namespace="kr3r540_sim",
         executable="robot_state_publisher",
         parameters=[params],
         output='screen',
@@ -40,21 +41,19 @@ def generate_launch_description():
 
     joint_state_broadcaster_spawner=Node(
         package="controller_manager",
+        namespace="kr3r540_sim",
         executable="spawner",
         arguments=[
-            "joint_state_broadcaster",
-            "--controller-manager",
-            "/controller_manager"
+            "joint_state_broadcaster","-c","/kr3r540_sim/controller_manager"
         ]
     )
 
     arm_controller_spawner=Node(
         package="controller_manager",
         executable="spawner",
+        namespace="kr3r540_sim",
         arguments=[
-            "arm_controller",
-            "--controller-manager",
-            "/controller_manager"
+            "arm_controller","-c","/kr3r540_sim/controller_manager"
         ]
     )
     
