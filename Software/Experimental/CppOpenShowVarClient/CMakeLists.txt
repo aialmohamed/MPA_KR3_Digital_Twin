@@ -10,6 +10,7 @@ set(WRTIEMESSAGELIBARAY_NAME writeMessageLibrary)
 set(READMESSAGELIBARAY_NAME readMessageLibrary)
 set(RESPONSEMESSAGELIBARAY_NAME responseMessageLibrary)
 set(KUKACLIENTLIBARAY_NAME kukaClientMessageLibrary)
+set(MYAXISTYPELIBRARY_NAME myAxisTypeLibrary)
 
 # Include custom Boost installation if needed
 set(BOOST_ROOT "/home/robolab/boost_1_82_install")

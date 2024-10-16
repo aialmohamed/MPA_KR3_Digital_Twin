@@ -1,0 +1,5 @@
+set(LIBRARY_SOURCES 
+    "MYAXIS_type.cpp" )
+
+add_library(${MYAXISTYPELIBRARY_NAME} STATIC
+    ${LIBRARY_SOURCES})

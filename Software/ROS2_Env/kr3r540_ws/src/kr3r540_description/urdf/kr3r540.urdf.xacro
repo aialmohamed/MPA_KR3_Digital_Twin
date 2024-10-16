@@ -4,7 +4,7 @@
 
 <xacro:include filename="kr3r540_gazebo.xacro"/>
 <xacro:include filename="kr3r540_ros2_control.xacro"/>
- <link name="world_link">
+ <link name="world">
 </link>
 
 <link name="base_link">
@@ -181,7 +181,7 @@
 <!-- Define Joints -->
 
 <joint name="world_to_base" type="fixed">
-  <parent link="world_link"/>
+  <parent link="world"/>
   <child link="base_link"/>
   <origin xyz="0 0 0" rpy="0 0 0"/>
 </joint>

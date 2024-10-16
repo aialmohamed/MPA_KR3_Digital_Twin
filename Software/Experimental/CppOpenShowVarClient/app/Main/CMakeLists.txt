@@ -5,5 +5,6 @@ target_include_directories(${EXCUTABLE_NAME} PUBLIC
  "include/Message"
  "include/WriteMessage"
  "include/ReadMessage"
- "include/ResponseMessage")
-target_link_libraries(${EXCUTABLE_NAME} PUBLIC ${KUKACLIENTLIBARAY_NAME})
+ "include/ResponseMessage"
+ "include/MYAXIS_type")
+target_link_libraries(${EXCUTABLE_NAME} PUBLIC ${KUKACLIENTLIBARAY_NAME} ${MYAXISTYPELIBRARY_NAME})

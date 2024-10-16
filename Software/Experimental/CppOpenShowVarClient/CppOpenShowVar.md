@@ -24,6 +24,7 @@
     - [6. **ResponseMessage**](#6-responsemessage)
   - [Usage](#usage)
   - [Tests](#tests)
+  - [Update](#update)
 
 ## Concept 
 
@@ -112,3 +113,7 @@ n/a
 ## Tests
 
 This library has been tested (look under tests). maybe more tests needs to be done .
+
+## Update
+
+Adding new types (MYAXIS -> read/write the axsis)
