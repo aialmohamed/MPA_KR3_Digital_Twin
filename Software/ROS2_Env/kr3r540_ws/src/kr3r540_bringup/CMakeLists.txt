@@ -15,6 +15,7 @@ install(
     launch
     rviz
     sim_config
+    real_config
   DESTINATION share/${PROJECT_NAME}
 )
 

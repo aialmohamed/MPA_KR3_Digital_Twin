@@ -106,7 +106,7 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        world_link:
+        world:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -139,7 +139,7 @@ Visualization Manager:
           Value: true
         link_6:
           Value: true
-        world_link:
+        world:
           Value: true
       Marker Scale: 1
       Name: TF
@@ -147,7 +147,7 @@ Visualization Manager:
       Show Axes: true
       Show Names: false
       Tree:
-        world_link:
+        world:
           base_link:
             link_1:
               link_2:
@@ -162,7 +162,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: world_link
+    Fixed Frame: world
     Frame Rate: 30
   Name: root
   Tools:

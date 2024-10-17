@@ -1,16 +1,23 @@
 import os
 from launch import LaunchDescription
 from pathlib import Path
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription,SetEnvironmentVariable,ExecuteProcess,RegisterEventHandler
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription,SetEnvironmentVariable
 from launch_ros.actions import Node
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
-from launch.substitutions import PathJoinSubstitution, Command, LaunchConfiguration, FindExecutable
+from launch.substitutions import PathJoinSubstitution, Command, LaunchConfiguration
 from launch.event_handlers import OnProcessExit
 from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
-    
+
+    is_sim_arg = DeclareLaunchArgument(
+        "is_sim",
+        default_value="True",
+        description="Launch simulation"
+    )
+
+    is_sim = LaunchConfiguration("is_sim")
     rviz_config_path = LaunchConfiguration("rviz_config_path")
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
     pkg_kr3r540_description = get_package_share_directory("kr3r540_description")
@@ -31,7 +38,7 @@ def generate_launch_description():
 
     robot_description = ParameterValue(
         Command(
-            ["xacro ",LaunchConfiguration("model")]
+            ["xacro ",LaunchConfiguration("model")," is_sim:=True"]
         ),
         value_type=str,
     )
@@ -108,6 +115,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        is_sim_arg,
         model_args,
         gazebo_resource_path,
         declare_sim_time,

@@ -2,6 +2,8 @@
 <robot xmlns:xacro="http://wiki.ros.org/xacro" name="kr3r540">
 
 
+  <xacro:arg name="is_sim" default="true"/>
+
 <xacro:include filename="kr3r540_gazebo.xacro"/>
 <xacro:include filename="kr3r540_ros2_control.xacro"/>
  <link name="world">
