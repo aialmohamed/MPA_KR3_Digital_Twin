@@ -1,7 +1,6 @@
 <library path="kr3r540_hardware_interface">
     <class name="kr3r540_hardware_interface/Kr3r540Interface"
             type="kr3r540_hardware_interface::Kr3r540Interface"
-            
             base_class_type="hardware_interface::SystemInterface">
         <description>
             A hardware interface for controlling a KR3R540 robot arm via KukaVarProxy using Boost asio.

@@ -17,6 +17,21 @@
 #define INITIAL_A5 0.0
 #define INITIAL_A6 0.0
 
+/* Limits  this shall break the robot ! it needs to be 3 degrees blow this*/
+#define A1_MIN_  -27.0
+#define A1_MAX_  60.0
+#define A2_MIN_  -110.0
+#define A2_MAX_  50.0
+#define A3_MIN_ 25.0
+#define A3_MAX_  155.0
+#define A4_MIN_  -175.0
+#define A4_MAX_ 175.0
+#define A5_MIN_  -120.0
+#define A5_MAX_  120.0
+#define A6_MIN_  -350.0
+#define A6_MAX_  350.0
+#define TOLERANCE 3.0
+
 namespace kr3r540_hardware_interface
 {
 
@@ -56,6 +71,7 @@ namespace kr3r540_hardware_interface
         std::string postion_commands_to_string(const std::vector<double> &position_commands);
         bool setup_ip_and_port(const hardware_interface::HardwareInfo &hardware_info);
         void init_positions();
+        void limit_check(std::vector<double> &position_commands);
     };
 
 }

@@ -2,7 +2,6 @@
 #include <hardware_interface/types/hardware_interface_type_values.hpp>
 #include <angles/angles.h>
 #include <regex>
-#include "MYAXIS_type/MYAXIS_type.hpp"
 #include <pluginlib/class_list_macros.hpp>
 
 namespace kr3r540_hardware_interface
@@ -163,7 +162,7 @@ namespace kr3r540_hardware_interface
         }
 
         std::string command_data = postion_commands_to_string(position_commands_);
-        // Write the joint positions to the robot (use appropriate message ID and variable name)
+
         kuka_client_->writeVariable(2, "MYAXIS", command_data, [this](boost::system::error_code ec, ResponseMessage response)
                                     {
             if (!ec) {
@@ -202,12 +201,15 @@ namespace kr3r540_hardware_interface
 
     std::string Kr3r540Interface::postion_commands_to_string(const std::vector<double> &position_commands)
     {
+        std::vector<double> position_commands_copy = position_commands;
+        limit_check(position_commands_copy);
         std::vector<double> position_commands_deg(info_.joints.size(), 0.0);
         for (size_t position_idx = 0; position_idx < position_commands.size(); ++position_idx)
         {
-            position_commands_deg[position_idx] = angles::to_degrees(position_commands[position_idx]);
+            position_commands_deg[position_idx] = angles::to_degrees(position_commands_copy[position_idx]);
         }
-
+        
+        
         std::stringstream ss;
         ss << std::fixed << std::setprecision(3) << "{A1 " << position_commands_deg[0] << ", "
            << "A2 " << position_commands_deg[1] << ", "
@@ -252,6 +254,32 @@ namespace kr3r540_hardware_interface
         position_commands_[3] = angles::from_degrees(INITIAL_A4);
         position_commands_[4] = angles::from_degrees(INITIAL_A5);
         position_commands_[5] = angles::from_degrees(INITIAL_A6);
+    }
+
+    void Kr3r540Interface::limit_check(std::vector<double> &position_commands)
+    {
+        const double min_limits[] = {A1_MIN_, A2_MIN_, A3_MIN_, A4_MIN_, A5_MIN_, A6_MIN_};
+        const double max_limits[] = {A1_MAX_, A2_MAX_, A3_MAX_, A4_MAX_, A5_MAX_, A6_MAX_};
+
+        for (size_t joint_idx = 0; joint_idx < position_commands.size(); ++joint_idx)
+        {
+            double command_in_degrees = angles::to_degrees(position_commands[joint_idx]);
+
+            if (command_in_degrees < min_limits[joint_idx] + TOLERANCE)
+            {
+                RCLCPP_WARN_ONCE(rclcpp::get_logger("Kr3r540Interface"),
+                            "Joint %zu command %.2f is below the minimum limit %.2f. Clamping to minimum + tolerance %.2f.",
+                            joint_idx + 1, command_in_degrees, min_limits[joint_idx], min_limits[joint_idx] + TOLERANCE);
+                position_commands[joint_idx] = angles::from_degrees(min_limits[joint_idx] + TOLERANCE);
+            }
+            else if (command_in_degrees > max_limits[joint_idx] - TOLERANCE)
+            {
+                RCLCPP_WARN_ONCE(rclcpp::get_logger("Kr3r540Interface"),
+                            "Joint %zu command %.2f is above the maximum limit %.2f. Clamping to maximum - tolerance %.2f.",
+                            joint_idx + 1, command_in_degrees, max_limits[joint_idx], max_limits[joint_idx] - TOLERANCE);
+                position_commands[joint_idx] = angles::from_degrees(max_limits[joint_idx] - TOLERANCE);
+            }
+        }
     }
 #pragma endregion
 }

@@ -1,7 +1,7 @@
 kr3r540_sim:
   controller_manager:
     ros__parameters:
-      update_rate: 1000
+      update_rate: 70
       use_sim_time: true
 
 
