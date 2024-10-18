@@ -5,100 +5,56 @@
 #include "MYAXIS_type/MYAXIS_type.hpp"
 #include <pluginlib/class_list_macros.hpp>
 
-namespace kr3r540_hardware_interface 
+namespace kr3r540_hardware_interface
 {
+#pragma region Ros2_interface_methods
     Kr3r540Interface::Kr3r540Interface()
-    : work_guard_(boost::asio::make_work_guard(io_context_))
-    , io_context_thread_(nullptr)
-    , kuka_client_(nullptr)
+        : io_context_(),
+          work_guard_(boost::asio::make_work_guard(io_context_))
     {
-            // Create a node handle for managing ROS 2 callback groups
-        node_ = std::make_shared<rclcpp::Node>("kr3r540_interface_node");
-
-        // Create a callback group for KUKA client
-        kuka_callback_group_ = node_->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-
-        // Assign a separate thread executor for the callback group
-        executor_.add_callback_group(kuka_callback_group_, node_->get_node_base_interface());
-
-        kuka_client_ = std::make_unique<KukaClient>(io_context_, "172.31.1.197", "7000");
-        RCLCPP_INFO(node_->get_logger(), "created kuka client ");
-        io_context_thread_ = std::make_unique<std::thread>([this]() {
-            try {
-                RCLCPP_INFO(node_->get_logger(), "Starting io_context thread.");
-                io_context_.run();
-                RCLCPP_INFO(node_->get_logger(), "io_context run() has exited.");
-            }
-            catch (const std::exception &e) {
-                RCLCPP_ERROR(node_->get_logger(), "Exception in io_context thread: %s", e.what());
-            }
-        });
-        
+        io_thread_ = std::thread([this]()
+                                 {
+                RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Starting io_context in a separate thread...");
+                io_context_.run(); });
     }
 
     Kr3r540Interface::~Kr3r540Interface()
     {
-        try 
-        {
-            if (kuka_client_) {
-                kuka_client_->close();
-            }
-            // Remove the work guard to allow io_context.run() to exit
-            work_guard_.reset();
-            // Stop the io_context and join the thread
-            io_context_.stop();
-            if (io_context_thread_ && io_context_thread_->joinable()) {
-                io_context_thread_->join();
-            }
-        } catch(...) {
-            RCLCPP_FATAL_STREAM(rclcpp::get_logger("Kr3r540Interface"), "Error while closing the KukaClient " << ip__ << ":" << port__);
-        }
+        RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Stopping io_context...");
+        io_context_.stop();
     }
 
-    CallbackReturn Kr3r540Interface::on_init(const hardware_interface::HardwareInfo & hardware_info)
+    CallbackReturn Kr3r540Interface::on_init(const hardware_interface::HardwareInfo &hardware_info)
     {
         CallbackReturn result = hardware_interface::SystemInterface::on_init(hardware_info);
-        if (result != CallbackReturn::SUCCESS) {
-            return result;
-        }
-        
-
-
-
-        // Retrieve 'ip' parameter
-        if (info_.hardware_parameters.find("ip") != info_.hardware_parameters.end())
-            ip__ = info_.hardware_parameters.at("ip");
-        else
+        bool res = setup_ip_and_port(hardware_info);
+        if (!res)
         {
-            RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "'ip' parameter is missing.");
-            return hardware_interface::CallbackReturn::ERROR;
+            return CallbackReturn::ERROR;
         }
+        init_positions();
 
-        // Retrieve 'port' parameter
-        if (info_.hardware_parameters.find("port") != info_.hardware_parameters.end())
-            port__ = info_.hardware_parameters.at("port");
-        else
+        try
         {
-            RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "'port' parameter is missing.");
-            return hardware_interface::CallbackReturn::ERROR;
+            kuka_client_ = std::make_unique<KukaClient>(io_context_, ip_address_, port_);
+            RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "KukaClient initialized with IP: %s, Port: %s", ip_address_.c_str(), port_.c_str());
         }
-         RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Initialized with IP: %s, Port: %s", ip__.c_str(), port__.c_str());
-        std::thread([this]() {
-                executor_.spin();
-            }).detach(); // Detach to let the executor run independently
-
-        position_commands_.reserve(hardware_info.joints.size());
-        prev_position_commands_.reserve(hardware_info.joints.size());
-        position_state_.reserve(hardware_info.joints.size());
+        catch (const std::exception &e)
+        {
+            RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "Failed to initialize KukaClient: %s", e.what());
+            return CallbackReturn::ERROR;
+        }
 
         return result;
     }
 
-    std::vector<hardware_interface::StateInterface> Kr3r540Interface::export_state_interfaces() 
-    
+    std::vector<hardware_interface::StateInterface> Kr3r540Interface::export_state_interfaces()
+
     {
-        std::vector<hardware_interface::StateInterface> state_interfaces; 
-        for(size_t joint_idx =0; joint_idx < info_.joints.size(); ++joint_idx) {
+        std::vector<hardware_interface::StateInterface> state_interfaces;
+        for (size_t joint_idx = 0; joint_idx < info_.joints.size(); ++joint_idx)
+        {
+            RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Joint name: %s", info_.joints[joint_idx].name.c_str());
             state_interfaces.emplace_back(hardware_interface::StateInterface(info_.joints[joint_idx].name, hardware_interface::HW_IF_POSITION, &position_state_[joint_idx]));
         }
         return state_interfaces;
@@ -107,209 +63,197 @@ namespace kr3r540_hardware_interface
     std::vector<hardware_interface::CommandInterface> Kr3r540Interface::export_command_interfaces()
     {
         std::vector<hardware_interface::CommandInterface> command_interfaces;
-        for(size_t joint_idx = 0; joint_idx < info_.joints.size(); ++joint_idx) {
+        for (size_t joint_idx = 0; joint_idx < info_.joints.size(); ++joint_idx)
+        {
             command_interfaces.emplace_back(hardware_interface::CommandInterface(info_.joints[joint_idx].name, hardware_interface::HW_IF_POSITION, &position_commands_[joint_idx]));
         }
         return command_interfaces;
-
     }
-    
-    CallbackReturn Kr3r540Interface::on_activate(const rclcpp_lifecycle::State & previous_state) 
+
+    CallbackReturn Kr3r540Interface::on_activate(const rclcpp_lifecycle::State &previous_state)
     {
-            RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Activating the Kr3r540Interface");
-                    RCLCPP_INFO(node_->get_logger(), "Activating the Kr3r540Interface");
 
-            // Start the callback group processing
-            //executor_.spin_some();
+        prev_position_commands_ = position_commands_;
 
-            // Proceed with connecting to the KUKA client
-            kuka_client_->connect([this](boost::system::error_code ec) {
-                if (!ec) {
-                    RCLCPP_INFO(node_->get_logger(), "Successfully connected to KUKA robot.");
-                    is_connected_ = true;
-                }
-                else {
-                    RCLCPP_ERROR(node_->get_logger(), "Error while connecting to KUKA robot");
-                    is_connected_ = false;
-                    return CallbackReturn::FAILURE;
-                }
-            });
-        position_commands_ = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-        prev_position_commands_ = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-        position_state_ = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+        kuka_client_->connect([this](boost::system::error_code ec)
+                              {
+            if (!ec) {
+                RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Connected to KUKA robot successfully.");
+                is_connected_ = true;
+            } else {
+                RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "Failed to connect to KUKA robot: %s", ec.message().c_str());
+                is_connected_ = false;
+            } });
 
-    
+        // Wait for the connection to be established (add a timeout if necessary)
+        while (!is_connected_)
+        {
+            rclcpp::sleep_for(std::chrono::milliseconds(100));
+        }
+
         return CallbackReturn::SUCCESS;
     }
 
-    CallbackReturn Kr3r540Interface::on_deactivate(const rclcpp_lifecycle::State & previous_state) 
+    CallbackReturn Kr3r540Interface::on_deactivate(const rclcpp_lifecycle::State &previous_state)
     {
-        RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Deactivating the Kr3r540Interface");
-        try
+        RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Deactivating Kr3r540Interface...");
+
+        if (kuka_client_ && is_connected_)
         {
             kuka_client_->close();
             is_connected_ = false;
-        } catch (const std::exception& e) {
-            RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "Error while closing the KukaClient:");
-            return CallbackReturn::ERROR;
+            RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "KUKA client connection closed.");
         }
-        RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Successfully disconnected from KUKA robot.");
-        return CallbackReturn::SUCCESS;
 
+        // Stop the io_context
+        io_context_.stop();
+        RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "io_context stopped.");
+
+        // Join the io_context thread to ensure it shuts down cleanly
+        if (io_thread_.joinable())
+        {
+            io_thread_.join();
+            RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "io_context thread joined successfully.");
+        }
+        RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "io_context stopped.");
+        work_guard_.reset();
+        RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Work guard stopped.");
+
+        position_commands_.clear();
+        prev_position_commands_.clear();
+        position_state_.clear();
+        RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Command and state vectors cleared.");
+        return CallbackReturn::SUCCESS;
     }
 
-
-    hardware_interface::return_type Kr3r540Interface::read(const rclcpp::Time & time, const rclcpp::Duration & period)
+    hardware_interface::return_type Kr3r540Interface::read(const rclcpp::Time &time, const rclcpp::Duration &period)
     {
         if (!is_connected_)
         {
-            RCLCPP_WARN(rclcpp::get_logger("Kr3r540Interface"), "Not connected to robot. Skipping read.");
-            return hardware_interface::return_type::OK;
+            RCLCPP_WARN_ONCE(rclcpp::get_logger("Kr3r540Interface"), "KUKA robot is not connected yet. Waiting for connection...");
+            return hardware_interface::return_type::ERROR;
         }
 
-        std::string variable_name = "$AXIS_ACT"; 
-        kuka_client_->readVariable(0, variable_name,
-            [this](boost::system::error_code ec, ResponseMessage response) {
-                if (!ec)
-                {
-                    std::string value = response.getVariableValue();
-                    try
-                    {
-                        
-                        parse_axis_act_data(value);
-                    }
-                    catch (const std::exception &e)
-                    {
-                        RCLCPP_ERROR(
-                            rclcpp::get_logger("Kr3r540Interface"), "Exception while parsing joint positions: %s", e.what());
-                    }
-                }
-                else
-                {
-                    RCLCPP_ERROR(
-                        rclcpp::get_logger("Kr3r540Interface"), "Failed to read joint positions: %s", ec.message().c_str());
-                }
-            });
+        kuka_client_->readVariable(1, "$AXIS_ACT", [this](boost::system::error_code ec, ResponseMessage response)
+                                   {
+        if (!ec) {
+            std::string axis_data = response.getVariableValue();
+            //RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Successfully received joint data: %s", axis_data.c_str());
 
-    return hardware_interface::return_type::OK;
+            previous_position_state_ = position_state_;
+            try {
+                parse_axis_data(axis_data);
+            } catch (const std::exception& e) {
+                //RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "Error parsing joint data: %s", e.what());
+                position_state_ = previous_position_state_;
+            }
+        } else {
+            RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "Failed to read joint data: %s", ec.message().c_str());
+            } });
 
-    }
-    hardware_interface::return_type Kr3r540Interface::write(const rclcpp::Time & time, const rclcpp::Duration & period)
-    {
-         if (!is_connected_)
-    {
-        RCLCPP_WARN(
-            rclcpp::get_logger("Kr3r540Interface"), "Not connected to robot. Skipping write.");
         return hardware_interface::return_type::OK;
     }
 
-    // Check if commands have changed significantly
-    bool commands_changed = false;
+    hardware_interface::return_type Kr3r540Interface::write(const rclcpp::Time &time, const rclcpp::Duration &period)
     {
-        std::lock_guard<std::mutex> lock(command_mutex_);
-        for (size_t i = 0; i < 6; ++i) // Only A1 to A6
+        if (!is_connected_)
         {
-            if (std::abs(position_commands_[i] - prev_position_commands_[i]) > command_threshold_)
+            RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "KUKA robot is not connected. Cannot send commands.");
+            return hardware_interface::return_type::ERROR;
+        }
+
+        std::string command_data = postion_commands_to_string(position_commands_);
+        // Write the joint positions to the robot (use appropriate message ID and variable name)
+        kuka_client_->writeVariable(2, "MYAXIS", command_data, [this](boost::system::error_code ec, ResponseMessage response)
+                                    {
+            if (!ec) {
+                //RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Successfully wrote joint positions to KUKA robot.");
+                prev_position_commands_ = position_commands_;
+            } else {
+                //RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "Failed to write joint positions: %s", ec.message().c_str());
+                position_commands_ = prev_position_commands_;
+            } });
+        return hardware_interface::return_type::OK;
+    }
+#pragma endregion
+#pragma region private_methods
+    void Kr3r540Interface::parse_axis_data(const std::string &axis_data)
+    {
+
+        // Regular expression to capture the A1 through A6 values
+        std::regex axis_regex(R"(A1\s*(-?\d+\.\d+),\s*A2\s*(-?\d+\.\d+),\s*A3\s*(-?\d+\.\d+),\s*A4\s*(-?\d+\.\d+),\s*A5\s*(-?\d+\.\d+),\s*A6\s*(-?\d+\.\d+))");
+        std::smatch matches;
+
+        // Use regex to search for A1 through A6 values
+        if (std::regex_search(axis_data, matches, axis_regex) && matches.size() == 7)
+        {
+            // Extract and convert the joint values (A1 to A6) to doubles
+            for (size_t i = 1; i <= 6; ++i)
             {
-                commands_changed = true;
-                break;
+                double angle_in_degrees = std::stod(matches[i].str());
+                position_state_[i - 1] = angles::from_degrees(angle_in_degrees);
             }
         }
+        else
+        {
+            throw std::runtime_error("Failed to parse joint data with regex.");
+        }
     }
 
-    if (commands_changed)
+    std::string Kr3r540Interface::postion_commands_to_string(const std::vector<double> &position_commands)
     {
-        // Update previous commands
+        std::vector<double> position_commands_deg(info_.joints.size(), 0.0);
+        for (size_t position_idx = 0; position_idx < position_commands.size(); ++position_idx)
         {
-            std::lock_guard<std::mutex> lock(command_mutex_);
-            for (size_t i = 0; i < 6; ++i)
-            {
-                prev_position_commands_[i] = position_commands_[i];
-            }
+            position_commands_deg[position_idx] = angles::to_degrees(position_commands[position_idx]);
         }
 
-        // Construct the command using MYAXIS_type
-        MYAXIS_type axis_cmd;
-        {
-            std::lock_guard<std::mutex> lock(command_mutex_);
-            // Convert radians to degrees before setting values
-            axis_cmd.setA1(angles::to_degrees(position_commands_[0]));
-            axis_cmd.setA2(angles::to_degrees(position_commands_[1]));
-            axis_cmd.setA3(angles::to_degrees(position_commands_[2]));
-            axis_cmd.setA4(angles::to_degrees(position_commands_[3]));
-            axis_cmd.setA5(angles::to_degrees(position_commands_[4]));
-            axis_cmd.setA6(angles::to_degrees(position_commands_[5]));
-        }
+        std::stringstream ss;
+        ss << std::fixed << std::setprecision(3) << "{A1 " << position_commands_deg[0] << ", "
+           << "A2 " << position_commands_deg[1] << ", "
+           << "A3 " << position_commands_deg[2] << ", "
+           << "A4 " << position_commands_deg[3] << ", "
+           << "A5 " << position_commands_deg[4] << ", "
+           << "A6 " << position_commands_deg[5] << "}";
 
-        std::string value = axis_cmd.toString(); // Get the command string
-
-        // Variable name to write joint commands
-        std::string variable_name = "MYAXIS"; // As per your robot's configuration
-
-        // Initiate asynchronous write without blocking
-        kuka_client_->writeVariable(0, variable_name, value,
-            [this](boost::system::error_code ec, ResponseMessage response) {
-                if (!ec)
-                {
-                    RCLCPP_DEBUG(
-                        rclcpp::get_logger("Kr3r540Interface"), "Successfully wrote joint commands");
-                }
-                else
-                {
-                    RCLCPP_ERROR(
-                        rclcpp::get_logger("Kr3r540Interface"), "Failed to write joint commands");
-                }
-            });
+        std::string command_data = ss.str();
+        return command_data;
     }
 
-    // Return immediately without blocking
-    return hardware_interface::return_type::OK;
-
-    }
-
-    void Kr3r540Interface::parse_axis_act_data(const std::string& data)
+    bool Kr3r540Interface::setup_ip_and_port(const hardware_interface::HardwareInfo &hardware_info)
     {
-        // Regular expression to match A1 to A6 values
-        std::regex axis_regex(R"(A(\d+)\s*([-+]?\d*\.?\d+))");
-        std::smatch match;
-        std::string::const_iterator search_start(data.cbegin());
-
-        // Temporary map to hold axis values
-        std::map<int, double> axis_values;
-
-        while (std::regex_search(search_start, data.cend(), match, axis_regex))
+        bool are_set = false;
+        try
         {
-            int axis_number = std::stoi(match[1].str());
-            if (axis_number >= 1 && axis_number <= 6) // Only consider A1 to A6
-            {
-                double axis_value = std::stod(match[2].str());
-                axis_values[axis_number] = axis_value;
-            }
-
-            // Move to the next position in the string
-            search_start = match.suffix().first;
+            ip_address_ = hardware_info.hardware_parameters.at("ip");
+            port_ = hardware_info.hardware_parameters.at("port");
+            RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "IP address:port : %s:%s", ip_address_.c_str(), port_.c_str());
+            are_set = true;
         }
-
-        // Check if we have all expected joint values
-        if (axis_values.size() != 6) // Expecting 6 axes
+        catch (const std::out_of_range &e)
         {
-            RCLCPP_ERROR(
-                rclcpp::get_logger("Kr3r540Interface"), "Received joint positions do not match expected size.");
-            return;
+            RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "Missing hardware parameters: %s", e.what());
+            are_set = false;
         }
-
-        {
-            std::lock_guard<std::mutex> lock(state_mutex_);
-                // Update position_state_
-                for (size_t i = 0; i < 6; ++i)
-                {
-                    int axis_number = static_cast<int>(i) + 1; // A1 to A6
-                    double degrees = axis_values[axis_number];
-                    double radians = angles::from_degrees(degrees);
-                    position_state_[i] = radians;
-                }
-        }
+        return are_set;
     }
+    void Kr3r540Interface::init_positions()
+    {
+        RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Activating the Kr3r540Interface");
+        position_commands_.resize(info_.joints.size(), 0.0);
+        prev_position_commands_.resize(info_.joints.size(), 0.0);
+        position_state_.resize(info_.joints.size(), 0.0);
+        previous_position_state_.resize(info_.joints.size(), 0.0);
+        RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Initialized command and state vectors.");
+
+        position_commands_[0] = angles::from_degrees(INITIAL_A1);
+        position_commands_[1] = angles::from_degrees(INITIAL_A2);
+        position_commands_[2] = angles::from_degrees(INITIAL_A3);
+        position_commands_[3] = angles::from_degrees(INITIAL_A4);
+        position_commands_[4] = angles::from_degrees(INITIAL_A5);
+        position_commands_[5] = angles::from_degrees(INITIAL_A6);
+    }
+#pragma endregion
 }
 
 PLUGINLIB_EXPORT_CLASS(kr3r540_hardware_interface::Kr3r540Interface, hardware_interface::SystemInterface)

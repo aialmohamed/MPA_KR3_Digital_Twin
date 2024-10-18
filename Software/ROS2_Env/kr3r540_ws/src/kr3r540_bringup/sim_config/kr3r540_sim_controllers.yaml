@@ -26,7 +26,6 @@ kr3r540_sim:
       
       state_interfaces:
         - position
-        - velocity
       
       allow_integration_in_goal_trajectories: true
       open_loop_control: true

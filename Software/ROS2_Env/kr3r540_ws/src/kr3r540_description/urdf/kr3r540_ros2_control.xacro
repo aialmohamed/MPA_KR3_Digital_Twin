@@ -14,8 +14,8 @@
             </xacro:if>
             <xacro:unless value="$(arg is_sim)">
                 <plugin>kr3r540_hardware_interface/Kr3r540Interface</plugin>
-                    <param name="ip">"172.31.1.197"</param>
-                    <param name="port">"7000"</param>
+                    <param name="ip">172.31.1.197</param>
+                    <param name="port">7000</param>
             </xacro:unless>
         </hardware>
 

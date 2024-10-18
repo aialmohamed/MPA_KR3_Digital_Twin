@@ -12,7 +12,7 @@ class JointTrajectorySender(Node):
         super().__init__('joint_trajectory_sender')
 
         # Publisher für den JointTrajectory-Befehl
-        self.publisher = self.create_publisher(JointTrajectory, '/kr3r540_sim/arm_controller/joint_trajectory', 10)
+        self.publisher = self.create_publisher(JointTrajectory, '/kr3r540_real/arm_controller/joint_trajectory', 10)
 
         # Liste der Gelenknamen (für 6 Gelenke)
         self.joint_names = [f'joint_{i+1}' for i in range(6)]
