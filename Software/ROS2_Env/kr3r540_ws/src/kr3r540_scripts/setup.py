@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-             'joint_trajectory_sender = kr3r540_scripts.joint_trajectory_sender:main'
+             'joint_trajectory_sender = kr3r540_scripts.joint_trajectory_sender:main',
+             "digital_shadow = kr3r540_scripts.digital_shadow:main",
         ],
     },
 )

@@ -10,6 +10,7 @@ kr3r540_sim:
       
       joint_state_broadcaster:
         type: joint_state_broadcaster/JointStateBroadcaster
+        publish_rate: 50
 
   arm_controller:
     ros__parameters:
@@ -26,7 +27,4 @@ kr3r540_sim:
       
       state_interfaces:
         - position
-      
-      allow_integration_in_goal_trajectories: true
-      open_loop_control: true
       

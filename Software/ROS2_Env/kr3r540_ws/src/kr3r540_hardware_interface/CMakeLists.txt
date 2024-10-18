@@ -82,14 +82,6 @@ target_link_libraries(${KUKACLIENTLIBRARY_NAME}
 # Enable position-independent code
 set_target_properties(${KUKACLIENTLIBRARY_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
-# 7. myAxisTypeLibrary
-set(MYAXISTYPELIBRARY_NAME myAxisTypeLibrary)
-add_library(${MYAXISTYPELIBRARY_NAME} STATIC
-    src/MYAXIS_type/MYAXIS_type.cpp)
-target_include_directories(${MYAXISTYPELIBRARY_NAME} PUBLIC include)
-# Enable position-independent code
-set_target_properties(${MYAXISTYPELIBRARY_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
-
 # Now, build your shared library (kr3r540_hardware_interface)
 add_library(${PROJECT_NAME} SHARED
     src/kr3r540_interface.cpp)
