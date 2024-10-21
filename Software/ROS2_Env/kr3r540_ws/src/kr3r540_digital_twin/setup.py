@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'kr3r540_scripts'
+package_name = 'kr3r540_digital_twin'
 
 setup(
     name=package_name,
@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-             'joint_trajectory_sender = kr3r540_scripts.joint_trajectory_sender:main',
+            "digital_twin_data = kr3r540_digital_twin.digital_twin_data:main",
+            "digital_twin_information = kr3r540_digital_twin.digital_twin_information:main",
         ],
     },
 )

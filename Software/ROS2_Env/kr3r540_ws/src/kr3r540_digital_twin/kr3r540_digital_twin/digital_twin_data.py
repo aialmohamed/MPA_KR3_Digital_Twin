@@ -1,12 +1,22 @@
+#!/usr/bin/env python3
+"""
+File: digital_twin_data.py
+Author: Ahmed Ibrahim Almohamed
+Email: ibraah03@thu.de
+Date: 16.10.2024
+Description: a node to pass data of the digital twin from the real robot to the simulated robot
+            
+"""
+
 import rclpy
 from rclpy.node import Node
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sensor_msgs.msg import JointState
 
 
-class DigitalShadow(Node):
+class DigitalTwinData(Node):
     def __init__(self):
-        super().__init__('digital_shadow')
+        super().__init__('digital_twin_data')
 
         self.real_joint_state_sub = self.create_subscription(
             JointState,
@@ -29,15 +39,9 @@ class DigitalShadow(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-
-    # Initialize the digital shadow node
-    digital_shadow = DigitalShadow()
-
-    # Spin to keep the node alive and listening
-    rclpy.spin(digital_shadow)
-
-    # Shutdown on exit
-    digital_shadow.destroy_node()
+    digital_twin_data = DigitalTwinData()
+    rclpy.spin(digital_twin_data)
+    digital_twin_data.destroy_node()
     rclpy.shutdown()
 
 

@@ -239,7 +239,7 @@
 <joint name="flange" type="fixed">
   <parent link="link_6"/>
   <child link="greifer"/>
-  <origin xyz="0.032 0 -0.02" rpy="0 0 1.5708"/>
+  <origin xyz="0.032 0 0.02" rpy="0 ${2*1.5708} 1.5708"/>
 </joint>
 
  
