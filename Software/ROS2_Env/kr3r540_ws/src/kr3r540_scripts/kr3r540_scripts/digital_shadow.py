@@ -25,7 +25,7 @@ class DigitalShadow(Node):
         point.time_from_start = rclpy.time.Duration(seconds=0.05).to_msg() 
         trajectory_msg.points.append(point)
         self.sim_trajectory_command_pub.publish(trajectory_msg)
-        self.get_logger().info('Published updated trajectory command to the simulation')
+
 
 def main(args=None):
     rclpy.init(args=args)
