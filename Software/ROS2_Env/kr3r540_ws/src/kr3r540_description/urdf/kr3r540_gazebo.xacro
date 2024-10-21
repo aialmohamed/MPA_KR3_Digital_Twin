@@ -8,6 +8,8 @@
             <parameters>$(find kr3r540_bringup)/sim_config/kr3r540_sim_controllers.yaml</parameters>
             <ros>
                <namespace>kr3r540_sim</namespace>
+               <remapping>/tf:=/kr3r540_sim/tf</remapping>
+               <remapping>/tf_static:=/kr3r540_sim/tf_static</remapping>
             </ros>
         </plugin>
     </gazebo>

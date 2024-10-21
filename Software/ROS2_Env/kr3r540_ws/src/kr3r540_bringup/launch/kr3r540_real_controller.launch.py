@@ -8,7 +8,8 @@ def generate_launch_description():
         executable="spawner",
         arguments=[
             "joint_state_broadcaster","-c","/kr3r540_real/controller_manager"
-        ]
+        ],
+        remappings=[('/tf','tf'),('/tf_static','tf_static')],
     )
 
     arm_controller_spawner=Node(
@@ -17,7 +18,8 @@ def generate_launch_description():
         namespace="kr3r540_real",
         arguments=[
             "arm_controller","-c","/kr3r540_real/controller_manager"
-        ]
+        ],
+        remappings=[('/tf','tf'),('/tf_static','tf_static')],
     )
     return LaunchDescription([
         joint_state_broadcaster_spawner,

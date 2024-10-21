@@ -22,8 +22,6 @@
         <!-- Define all joints with position interfaces using formula directly -->
         <joint name="joint_1">
             <command_interface name="position" > 
-                <param name="min">${-170 * PI / 180}</param>
-                <param name="max">${170 * PI / 180}</param>
             </command_interface>
             <state_interface name="position">
                 <param name="initial_value">${initial_positions.initial_positions.joint_1}</param>
@@ -32,8 +30,6 @@
 
         <joint name="joint_2">
             <command_interface name="position">
-                <param name="min">${-170 * PI / 180}</param>
-                <param name="max">${50 * PI / 180}</param>
             </command_interface>
             <state_interface name="position">
                 <param name="initial_value">${initial_positions.initial_positions.joint_2}</param>
@@ -42,8 +38,6 @@
 
         <joint name="joint_3">
             <command_interface name="position">
-                <param name="min">${-110 * PI / 180}</param>
-                <param name="max">${155 * PI / 180}</param>
             </command_interface>
             <state_interface name="position">
                 <param name="initial_value">${initial_positions.initial_positions.joint_3}</param>
@@ -52,8 +46,6 @@
 
         <joint name="joint_4">
             <command_interface name="position"> 
-                <param name="min">${-175 * PI / 180}</param>
-                <param name="max">${175 * PI / 180}</param>
             </command_interface>
             <state_interface name="position">
                 <param name="initial_value">${initial_positions.initial_positions.joint_4}</param>
@@ -62,8 +54,6 @@
 
         <joint name="joint_5">
             <command_interface name="position"> 
-                <param name="min">${-120 * PI / 180}</param>
-                <param name="max">${120 * PI / 180}</param>
             </command_interface>
             <state_interface name="position">
                 <param name="initial_value">${initial_positions.initial_positions.joint_5}</param>
@@ -72,8 +62,6 @@
 
         <joint name="joint_6">
             <command_interface name="position"> 
-                <param name="min">${-350 * PI / 180}</param>
-                <param name="max">${350 * PI / 180}</param>
             </command_interface>
             <state_interface name="position">
                 <param name="initial_value">${initial_positions.initial_positions.joint_6}</param>

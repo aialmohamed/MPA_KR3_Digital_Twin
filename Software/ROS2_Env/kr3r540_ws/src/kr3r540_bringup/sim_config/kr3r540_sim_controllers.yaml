@@ -1,7 +1,7 @@
 kr3r540_sim:
   controller_manager:
     ros__parameters:
-      update_rate: 70
+      update_rate: 1000
       use_sim_time: true
 
 
@@ -10,7 +10,7 @@ kr3r540_sim:
       
       joint_state_broadcaster:
         type: joint_state_broadcaster/JointStateBroadcaster
-        publish_rate: 50
+        publish_rate: 100
 
   arm_controller:
     ros__parameters:

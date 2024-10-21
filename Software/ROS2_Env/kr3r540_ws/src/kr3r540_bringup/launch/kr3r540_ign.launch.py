@@ -61,6 +61,7 @@ def generate_launch_description():
         namespace="kr3r540_sim",
         executable="robot_state_publisher",
         parameters=[params],
+        remappings=[('/tf','tf'),('/tf_static','tf_static')],
         output='screen',
     )
 
@@ -70,6 +71,8 @@ def generate_launch_description():
         namespace="kr3r540_sim",
         executable="joint_state_publisher",
         output="screen",
+        remappings=[('/tf','tf'),('/tf_static','tf_static')],
+
     )
 
 
@@ -79,6 +82,7 @@ def generate_launch_description():
         namespace="kr3r540_sim",
         parameters=[{"use_sim_time": True}],
         arguments=['-d', rviz_config_path ,'use_sim_time','true'],
+        remappings=[('/tf','tf'),('/tf_static','tf_static')],
         output="screen",
     )
 
@@ -99,7 +103,8 @@ def generate_launch_description():
         namespace="kr3r540_sim",
         arguments=[
             "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
-        ]
+        ],
+        remappings=[('/tf','tf'),('/tf_static','tf_static')],
     )
 
 
@@ -111,7 +116,8 @@ def generate_launch_description():
     arguments=[
         "-topic", "/kr3r540_sim/robot_description",
         "-name","kr3r540",
-    ]
+    ],
+    remappings=[('/tf','tf'),('/tf_static','tf_static')],
     )
 
     return LaunchDescription([

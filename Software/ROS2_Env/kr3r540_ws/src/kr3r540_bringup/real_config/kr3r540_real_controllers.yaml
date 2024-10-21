@@ -9,7 +9,7 @@ kr3r540_real:
       
       joint_state_broadcaster:
         type: joint_state_broadcaster/JointStateBroadcaster
-        publish_rate: 50
+        publish_rate: 100
 
   arm_controller:
     ros__parameters:

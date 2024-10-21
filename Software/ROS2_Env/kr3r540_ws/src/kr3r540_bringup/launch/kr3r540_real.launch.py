@@ -33,6 +33,7 @@ def generate_launch_description():
         namespace="kr3r540_real",
         executable="robot_state_publisher",
         parameters=[params],
+        remappings=[('/tf','tf'),('/tf_static','tf_static')],
         output='screen',
     )
 
@@ -48,7 +49,7 @@ def generate_launch_description():
                  "kr3r540_real_controllers.yaml"
              )
         ],
-        remappings=[('~/robot_description','/kr3r540_real/robot_description'),],
+        remappings=[('~/robot_description','/kr3r540_real/robot_description'),('/tf','tf'),('/tf_static','tf_static')],
         output='screen',
     )
 
