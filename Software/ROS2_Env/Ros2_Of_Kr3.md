@@ -15,6 +15,7 @@
     - [Understanding namespaces and our Ros2 core Design](#understanding-namespaces-and-our-ros2-core-design)
       - [Problem](#problem)
       - [Solution](#solution)
+  - [Digital Twin in Ros2 Nodes](#digital-twin-in-ros2-nodes)
   - [Packages](#packages)
   - [Plugins](#plugins)
   - [Usage](#usage)
@@ -100,6 +101,19 @@ Conversely, we can have bridge nodes that send control commands from the simulat
 This setup effectively creates a **digital twin**, enabling advanced functionalities such as synchronized testing, real-time monitoring, predictive maintenance, and more. It leverages the strengths of both environments while maintaining the necessary separation to ensure safe and efficient operation.
 
 
+
+## Digital Twin in Ros2 Nodes 
+![Concept](/Images/Digital_Twin_Ros2_Node_concept.jpg)
+
+After creating the Real and Simulation namespaces of the Ros2 and adding the resources **(URDF , Gazebo and HardwarePlugins)** now we create a namespace **kr3r540_digital_twin** that mainly contains two topics **digital_twin_data** and the **digital_twin_information** .
+
+The **digital_twin_data** is the  main part of the **Digital Shadow** where we send the **Joint_state** of the real robot to the **arm_controller command** of the Simulation.With this we achieve a mirroring of the real robot movement into the simulation.
+
+The **digital_twin_information** has the responsibly of matching the commands aka.**Information** from the Simulation to the real Robot so that we achieve a full digital twin of the kr3r540.
+
+In order to manage the system in cartesian coordinates we need to apply some **Inverse Kinematics** and that is the point of the **Action Server : Kinematics** , where an **Action Client** sends a point in **(x,y,z)** as a request to the server , and the server applies the **Inverse Kinematics** to get the joints angles and push it to the **digital_Twin_information**.
+
+At the same time the **Action Server** sends a continues **feedback** to the  **Action Client** with the current coordinates of the robot **in (x,y,z)** format.
 
 
 ## Packages
