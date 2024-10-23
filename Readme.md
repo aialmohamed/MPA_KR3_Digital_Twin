@@ -84,7 +84,7 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 
 ### Interface Development
 - [x] Create the software for the interface between KR3 R540 and a local client (Experimental in c++)
-- [ ] Create the software for the interface between ROS2 and KR3 R540
+- [x] Create the software for the interface between ROS2 and KR3 R540
 - [ ] create an OPCUA Server 
 - [ ] create a ROS-OPCUA bridge
 - [ ] create a start Dashboard (Web?)
