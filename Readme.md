@@ -112,7 +112,8 @@ This allows us to constantly change the controllers and easily switch off the ha
 
 For the digital twin to work on the KuKa KR3, we need to develop the following 
 * a hardware interface 
-* a ROS2 controller 
+* a ROS2 controller layer
+* a ROS2 Digital Twin Layer
 * a ROS2-OPCUA-Bridge
 
 This is only the side of the real robot. For the simulation or digital twin, we need to develop the simulation environment (Gazebo), so we need a dedicated BringUp ROS2 workspace for that.
