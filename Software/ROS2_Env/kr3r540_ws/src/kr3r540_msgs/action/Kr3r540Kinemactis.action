@@ -2,7 +2,7 @@
 float32[] cartesian_goal
 ---
 #Result
-int32[] joints_result
+float32[] joints_result
 ---
 #Feedback
 float32[] joints_cartesian_feedback

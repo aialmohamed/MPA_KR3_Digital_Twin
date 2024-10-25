@@ -17,6 +17,7 @@
   <depend>orocos_kdl</depend>
   <depend>kdl_parser</depend>
   <depend>sensor_msgs</depend>
+  <depend></depend>
 
 
   <test_depend>ament_lint_auto</test_depend>

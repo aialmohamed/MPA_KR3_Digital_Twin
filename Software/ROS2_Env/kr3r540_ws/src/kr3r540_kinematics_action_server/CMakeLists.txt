@@ -16,14 +16,16 @@ find_package(rclcpp_components REQUIRED)
 find_package(orocos_kdl REQUIRED)
 find_package(kdl_parser REQUIRED)
 find_package(sensor_msgs REQUIRED)
-
+find_package(trajectory_msgs REQUIRED)
 
 
 add_library(kr3r540_kinematics_action_server SHARED
   src/kr3r540_kinematics_action_server.cpp
+  src/kinematics_solver.cpp
 )
 target_include_directories(kr3r540_kinematics_action_server
   PUBLIC
+  include
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
@@ -36,6 +38,7 @@ ament_target_dependencies(kr3r540_kinematics_action_server
   "rclcpp_action"
   "rclcpp_components"
   "sensor_msgs"
+  "trajectory_msgs"
 )
 rclcpp_components_register_node(kr3r540_kinematics_action_server
   PLUGIN "kr3r540_kinematics_action_server::Kr3r540KinematicsActionServer"
