@@ -30,21 +30,20 @@ bool KinematicsSolver::solveIK(const std::vector<double> &cartesian_goal, std::v
 {
     KDL::Frame p_in(KDL::Vector(cartesian_goal[0], cartesian_goal[1], cartesian_goal[2]));
     KDL::JntArray q_out(chain_.getNrOfJoints());
+    
     joint_positions_last_.resize(chain_.getNrOfJoints());
-    joint_positions_last_(0) =0.0;
-    joint_positions_last_(1) =-1,57;
-    joint_positions_last_(2) =1,57;
-    joint_positions_last_(3) =0.0;
-    joint_positions_last_(4) =0.0;
-    joint_positions_last_(5) =0.0;
-
-
     int result = solver_->CartToJnt(joint_positions_last_, p_in, q_out);
 
-    if (result < 0 )
+    if (result < 0)
     {
-        RCLCPP_ERROR(rclcpp::get_logger("KinematicsSolver"), "IK solution not found or out of joint limits");
+        RCLCPP_ERROR(rclcpp::get_logger("KinematicsSolver"), "IK solution not found.");
         return false;
+    }
+
+    if (!areJointsWithinLimits(q_out))
+    {
+        RCLCPP_WARN(rclcpp::get_logger("KinematicsSolver"), "Joint angles out of bounds, clamping to limits.");
+        clampJointsToLimits(q_out);
     }
 
     joint_positions.resize(q_out.rows());
@@ -60,5 +59,63 @@ bool KinematicsSolver::solveIK(const std::vector<double> &cartesian_goal, std::v
 void KinematicsSolver::setJointPositions(const std::vector<double> &joint_positions) {
     for (size_t i = 0; i < joint_positions.size() && i < joint_positions_last_.rows(); ++i) {
         joint_positions_last_(i) = joint_positions[i];
+    }
+}
+
+bool KinematicsSolver::computeForwardKinematics(const KDL::JntArray &joint_positions, KDL::Frame &end_effector_pose)
+{
+    KDL::ChainFkSolverPos_recursive fk_solver(chain_);
+    int result = fk_solver.JntToCart(joint_positions, end_effector_pose);
+    return result >= 0;
+}
+
+void KinematicsSolver::set_joint_positions_last_(const std::vector<double> &joint_positions)
+{
+    for (size_t i = 0; i < joint_positions.size() && i < joint_positions_last_.rows(); ++i)
+    {
+        joint_positions_last_(i) = joint_positions[i];
+    }
+}
+
+bool KinematicsSolver::areJointsWithinLimits(const KDL::JntArray &joint_positions)
+{
+    std::vector<double> min_limits = {A1_MIN_, A2_MIN_, A3_MIN_, A4_MIN_, A5_MIN_, A6_MIN_};
+    std::vector<double> max_limits = {A1_MAX_, A2_MAX_, A3_MAX_, A4_MAX_, A5_MAX_, A6_MAX_};
+    
+    for (size_t i = 0; i < joint_positions.rows(); ++i)
+    {
+        double position_deg = joint_positions(i) * 180.0 / M_PI; // Convert to degrees
+
+        if (position_deg < (min_limits[i] + TOLERANCE) || position_deg > (max_limits[i] - TOLERANCE))
+        {
+            RCLCPP_WARN(rclcpp::get_logger("KinematicsSolver"),
+                        "Joint %ld out of limits: %f (limit: [%f, %f])", i,
+                        position_deg, min_limits[i] + TOLERANCE, max_limits[i] - TOLERANCE);
+            return false;
+        }
+    }
+    return true;
+}
+void KinematicsSolver::clampJointsToLimits(KDL::JntArray &joint_positions)
+{
+    std::vector<double> min_limits = {A1_MIN_, A2_MIN_, A3_MIN_, A4_MIN_, A5_MIN_, A6_MIN_};
+    std::vector<double> max_limits = {A1_MAX_, A2_MAX_, A3_MAX_, A4_MAX_, A5_MAX_, A6_MAX_};
+    
+    for (size_t i = 0; i < joint_positions.rows(); ++i)
+    {
+        double position_deg = joint_positions(i) * 180.0 / M_PI; // Convert to degrees
+
+        if (position_deg < (min_limits[i] + TOLERANCE))
+        {
+            joint_positions(i) = (min_limits[i] + TOLERANCE) * M_PI / 180.0; // Convert back to radians
+            RCLCPP_WARN(rclcpp::get_logger("KinematicsSolver"),
+                        "Clamping Joint %ld to min limit: %f", i, joint_positions(i));
+        }
+        else if (position_deg > (max_limits[i] - TOLERANCE))
+        {
+            joint_positions(i) = (max_limits[i] - TOLERANCE) * M_PI / 180.0; // Convert back to radians
+            RCLCPP_WARN(rclcpp::get_logger("KinematicsSolver"),
+                        "Clamping Joint %ld to max limit: %f", i, joint_positions(i));
+        }
     }
 }

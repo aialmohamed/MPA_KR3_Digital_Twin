@@ -7,7 +7,7 @@ namespace kr3r540_kinematics_action_server
 {
     Kr3r540KinematicsActionServer::Kr3r540KinematicsActionServer(const rclcpp::NodeOptions &options)
         : Node("kr3r540_kinematics_action_server", options),
-          kinematics_solver_("base_link", "link_6")
+          kinematics_solver_("base_link", "greifer")
     {
         action_server_ = rclcpp_action::create_server<kr3r540_msgs::action::Kr3r540Kinemactis>(
             this, "kr3r540_kinematics",
@@ -26,7 +26,7 @@ namespace kr3r540_kinematics_action_server
             std::bind(&Kr3r540KinematicsActionServer::jointStateCallback, this, _1));
 
         trajectory_pub_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
-            "/kr3r540_real/arm_controller/joint_trajectory",
+            "/kr3r540_digital_twin/digital_twin_joint_trajectory",
             10);
     }
 
@@ -34,6 +34,7 @@ namespace kr3r540_kinematics_action_server
     {
         std::lock_guard<std::mutex> lock(joint_state_mutex_);
         current_joint_state_ = msg;
+        
     }
 
     void Kr3r540KinematicsActionServer::robotDescriptionCallback(const std_msgs::msg::String &msg)
@@ -53,14 +54,6 @@ namespace kr3r540_kinematics_action_server
         const rclcpp_action::GoalUUID &uuid,
         std::shared_ptr<const kr3r540_msgs::action::Kr3r540Kinemactis::Goal> goal)
     {
-        /*
-        if (goal->cartesian_goal[0] <= -0.4 || goal->cartesian_goal[0] >= 0.4 ||
-            goal->cartesian_goal[1] <= -0.3 || goal->cartesian_goal[1] >= 0.3 ||
-            goal->cartesian_goal[2] <= 0 || goal->cartesian_goal[2] >= 0.8)
-        {
-            RCLCPP_ERROR(get_logger(), "Goal is out of bounds.");
-            return rclcpp_action::GoalResponse::REJECT;
-        }*/
         return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
     }
 
@@ -77,9 +70,7 @@ namespace kr3r540_kinematics_action_server
         auto goal = goal_handle->get_goal();
         std::vector<double> cartesian_goal(goal->cartesian_goal.begin(), goal->cartesian_goal.end());
         std::vector<double> joint_positions;
-
-        RCLCPP_INFO(get_logger(), "Executing goal");
-        rclcpp::Rate loop_rate(1);
+        rclcpp::Rate loop_rate(5);
 
         // Solve IK and check success
         if (!kinematics_solver_.solveIK(cartesian_goal, joint_positions))
@@ -88,6 +79,7 @@ namespace kr3r540_kinematics_action_server
             goal_handle->abort(std::make_shared<kr3r540_msgs::action::Kr3r540Kinemactis::Result>());
             return;
         }
+        
         // Publish joint trajectory to move the arm
         auto trajectory_msg = trajectory_msgs::msg::JointTrajectory();
         trajectory_msg.joint_names = {"joint_1", "joint_2", "joint_3", "joint_4", "joint_5", "joint_6"}; // Replace with actual joint names
@@ -105,14 +97,35 @@ namespace kr3r540_kinematics_action_server
         auto feedback = std::make_shared<kr3r540_msgs::action::Kr3r540Kinemactis::Feedback>();
         {
             std::lock_guard<std::mutex> lock(joint_state_mutex_);
+            
             if (current_joint_state_)
             {
+
                 feedback->joints_cartesian_feedback.clear();
                 for (const auto &position : current_joint_state_->position)
                 {
                     float adjusted_position = (std::abs(position) < 1e-6) ? 0.0f : static_cast<float>(position);
-                    feedback->joints_cartesian_feedback.push_back(adjusted_position);
                 }
+
+                // Compute end-effector position
+                KDL::JntArray joint_array(current_joint_state_->position.size());
+                for (size_t i = 0; i < current_joint_state_->position.size(); ++i)
+                {
+                    joint_array(i) = current_joint_state_->position[i];
+                }
+
+                KDL::Frame end_effector_pose;
+                if (kinematics_solver_.computeForwardKinematics(joint_array, end_effector_pose))
+                {
+                    feedback->joints_cartesian_feedback.push_back(end_effector_pose.p.x());
+                    feedback->joints_cartesian_feedback.push_back(end_effector_pose.p.y());
+                    feedback->joints_cartesian_feedback.push_back(end_effector_pose.p.z());
+                }
+                else
+                {
+                    RCLCPP_WARN(get_logger(), "Failed to compute forward kinematics for end-effector position.");
+                }
+
                 goal_handle->publish_feedback(feedback);
             }
             else
@@ -121,12 +134,13 @@ namespace kr3r540_kinematics_action_server
             }
         }
 
-        // Send the result once the trajectory has been sent
-        auto result = std::make_shared<kr3r540_msgs::action::Kr3r540Kinemactis::Result>();
-        result->joints_result.assign(joint_positions.begin(), joint_positions.end());
-        goal_handle->succeed(result);
-
-        RCLCPP_INFO(get_logger(), "Goal succeeded, result sent.");
+        if (rclcpp::ok())
+        {
+            auto result = std::make_shared<kr3r540_msgs::action::Kr3r540Kinemactis::Result>();
+            result->joints_result.assign(joint_positions.begin(), joint_positions.end());
+            goal_handle->succeed(result);
+            RCLCPP_INFO(get_logger(), "Goal succeeded, result sent.");
+        }
     }
 
     rclcpp_action::CancelResponse Kr3r540KinematicsActionServer::cancelCallback(

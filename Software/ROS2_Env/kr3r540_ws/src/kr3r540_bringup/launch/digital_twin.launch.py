@@ -9,9 +9,9 @@ def generate_launch_description():
     )
 
     digital_twin_information_launcher=Node(
-    package="kr3r540_kinematics_action_server",
+    package="kr3r540_digital_twin",
     namespace="kr3r540_digital_twin",
-    executable="kr3r540_kinematics_action_server_node",
+    executable="digital_twin_information",
     )
 
     return LaunchDescription([
