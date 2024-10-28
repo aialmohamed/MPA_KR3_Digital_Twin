@@ -113,17 +113,17 @@ void KinematicsSolver::clampJointsToLimits(KDL::JntArray &joint_positions)
     
     for (size_t i = 0; i < joint_positions.rows(); ++i)
     {
-        double position_deg = joint_positions(i) * 180.0 / M_PI; // Convert to degrees
+        double position_deg = joint_positions(i) * 180.0 / M_PI; 
 
         if (position_deg < (min_limits[i] + TOLERANCE))
         {
-            joint_positions(i) = (min_limits[i] + TOLERANCE) * M_PI / 180.0; // Convert back to radians
+            joint_positions(i) = (min_limits[i] + TOLERANCE) * M_PI / 180.0; 
             RCLCPP_WARN(rclcpp::get_logger("KinematicsSolver"),
                         "Clamping Joint %ld to min limit: %f", i, joint_positions(i));
         }
         else if (position_deg > (max_limits[i] - TOLERANCE))
         {
-            joint_positions(i) = (max_limits[i] - TOLERANCE) * M_PI / 180.0; // Convert back to radians
+            joint_positions(i) = (max_limits[i] - TOLERANCE) * M_PI / 180.0;
             RCLCPP_WARN(rclcpp::get_logger("KinematicsSolver"),
                         "Clamping Joint %ld to max limit: %f", i, joint_positions(i));
         }

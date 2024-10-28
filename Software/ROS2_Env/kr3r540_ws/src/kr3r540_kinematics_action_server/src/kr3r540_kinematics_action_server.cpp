@@ -72,7 +72,7 @@ namespace kr3r540_kinematics_action_server
         std::vector<double> joint_positions;
         rclcpp::Rate loop_rate(5);
 
-        // Solve IK and check success
+
         if (!kinematics_solver_.solveIK(cartesian_goal, joint_positions))
         {
             RCLCPP_ERROR(get_logger(), "Inverse kinematics solver failed.");
@@ -80,13 +80,13 @@ namespace kr3r540_kinematics_action_server
             return;
         }
 
-        // Publish joint trajectory to move the arm
+
         auto trajectory_msg = trajectory_msgs::msg::JointTrajectory();
-        trajectory_msg.joint_names = {"joint_1", "joint_2", "joint_3", "joint_4", "joint_5", "joint_6"}; // Replace with actual joint names
+        trajectory_msg.joint_names = {"joint_1", "joint_2", "joint_3", "joint_4", "joint_5", "joint_6"}; 
 
         trajectory_msgs::msg::JointTrajectoryPoint point;
         point.positions = joint_positions;
-        point.time_from_start = rclcpp::Duration::from_seconds(1.0); // Adjust time as needed
+        point.time_from_start = rclcpp::Duration::from_seconds(1.0); 
 
         trajectory_msg.points.push_back(point);
         trajectory_pub_->publish(trajectory_msg);

@@ -111,15 +111,18 @@ The **digital_twin_data** is the  main part of the **Digital Shadow** where we s
 
 The **digital_twin_information** has the responsibly of matching the commands aka.**Information** from the Simulation to the real Robot so that we achieve a full digital twin of the kr3r540.
 
-In order to manage the system in cartesian coordinates we need to apply some **Inverse Kinematics** and that is the point of the **Action Server : Kinematics** , where an **Action Client** sends a point in **(x,y,z)** as a request to the server , and the server applies the **Inverse Kinematics** to get the joints angles and push it to the **digital_Twin_information**.
+In order to manage the system in cartesian coordinates we need to apply some **Inverse Kinematics** and that is the point of the **Action Server : Kinematics** , where an **Action Client** sends a point in **(x,y,z,roll,pitch)** as a request to the server , and the server applies the **Inverse Kinematics** to get the joints angles and push it to the **digital_Twin_information**.
 
 At the same time the **Action Server** sends a continues **feedback** to the  **Action Client** with the current coordinates of the robot **in (x,y,z)** format.
 
 
 ## Packages
 
+(add Documentation)
+
 ## Plugins 
-
+n/A
 ## Usage
-
+(add a main launcher)
 ## Tests
+TBD
