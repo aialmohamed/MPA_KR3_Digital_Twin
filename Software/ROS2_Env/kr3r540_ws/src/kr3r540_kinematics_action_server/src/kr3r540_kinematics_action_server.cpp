@@ -7,7 +7,7 @@ namespace kr3r540_kinematics_action_server
 {
     Kr3r540KinematicsActionServer::Kr3r540KinematicsActionServer(const rclcpp::NodeOptions &options)
         : Node("kr3r540_kinematics_action_server", options),
-          kinematics_solver_("base_link", "greifer")
+          kinematics_solver_("base_link", "link_6")
     {
         action_server_ = rclcpp_action::create_server<kr3r540_msgs::action::Kr3r540Kinemactis>(
             this, "kr3r540_kinematics",
@@ -25,6 +25,7 @@ namespace kr3r540_kinematics_action_server
             rclcpp::QoS(rclcpp::KeepLast(1)).durability(RMW_QOS_POLICY_DURABILITY_VOLATILE),
             std::bind(&Kr3r540KinematicsActionServer::jointStateCallback, this, _1));
 
+        // "/kr3r540_digital_twin/digital_twin_joint_trajectory",
         trajectory_pub_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
             "/kr3r540_digital_twin/digital_twin_joint_trajectory",
             10);
@@ -34,7 +35,6 @@ namespace kr3r540_kinematics_action_server
     {
         std::lock_guard<std::mutex> lock(joint_state_mutex_);
         current_joint_state_ = msg;
-        
     }
 
     void Kr3r540KinematicsActionServer::robotDescriptionCallback(const std_msgs::msg::String &msg)
@@ -79,25 +79,25 @@ namespace kr3r540_kinematics_action_server
             goal_handle->abort(std::make_shared<kr3r540_msgs::action::Kr3r540Kinemactis::Result>());
             return;
         }
-        
+
         // Publish joint trajectory to move the arm
         auto trajectory_msg = trajectory_msgs::msg::JointTrajectory();
         trajectory_msg.joint_names = {"joint_1", "joint_2", "joint_3", "joint_4", "joint_5", "joint_6"}; // Replace with actual joint names
 
         trajectory_msgs::msg::JointTrajectoryPoint point;
         point.positions = joint_positions;
-        point.time_from_start = rclcpp::Duration::from_seconds(2.0); // Adjust time as needed
+        point.time_from_start = rclcpp::Duration::from_seconds(1.0); // Adjust time as needed
 
         trajectory_msg.points.push_back(point);
         trajectory_pub_->publish(trajectory_msg);
-        loop_rate.sleep();
+        //loop_rate.sleep();
         RCLCPP_INFO(get_logger(), "Published IK solution to arm controller.");
 
         // Publish feedback with the current joint state
         auto feedback = std::make_shared<kr3r540_msgs::action::Kr3r540Kinemactis::Feedback>();
         {
             std::lock_guard<std::mutex> lock(joint_state_mutex_);
-            
+
             if (current_joint_state_)
             {
 

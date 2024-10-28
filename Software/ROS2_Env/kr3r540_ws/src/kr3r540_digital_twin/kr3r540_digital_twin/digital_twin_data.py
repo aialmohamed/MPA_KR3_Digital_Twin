@@ -16,35 +16,33 @@ class DigitalTwinData(Node):
     def __init__(self):
         super().__init__("digital_twin_data")
 
-        # Subscription to the real robot's joint states
+
         self.real_joint_state_sub = self.create_subscription(
             JointState, "/kr3r540_real/joint_states", self.real_joint_state_callback, 10
         )
         
-        # Publisher for the digital twin's joint states
+
         self.dt_state_pub = self.create_publisher(
             JointState, "/kr3r540_digital_twin/digital_twin_joint_state", 10
         )
-        
-        # Subscription to the digital twin joint state updates
+
         self.dt_state_sub = self.create_subscription(
-            JointState, "/kr3r540_real/digital_twin_joint_state", self.dt_state_callback, 10
+            JointState, "/kr3r540_digital_twin/digital_twin_joint_state", self.dt_state_callback, 10
         )
         
-        # Publisher for sending joint trajectories to the simulated robot
         self.sim_trajectory_command_pub = self.create_publisher(
             JointTrajectory, "/kr3r540_sim/arm_controller/joint_trajectory", 10
         )
 
-        self.get_logger().info("Digital shadow node started: syncing real to sim")
+        #self.get_logger().info("Digital shadow node started: syncing real to sim")
 
     def real_joint_state_callback(self, msg):
-        # Publishing received joint states to the digital twin joint state topic
+
         self.dt_state_pub.publish(msg)
-        ##self.get_logger().info("Published joint state to digital twin joint state topic.")
+        #self.get_logger().info("Published joint state to digital twin joint state topic.")
 
     def dt_state_callback(self, msg):
-        # Convert the digital twin joint states to a JointTrajectory and publish to the simulated robot
+
         trajectory_msg = JointTrajectory()
         trajectory_msg.joint_names = msg.name
 
@@ -55,7 +53,7 @@ class DigitalTwinData(Node):
         trajectory_msg.points.append(point)
         self.sim_trajectory_command_pub.publish(trajectory_msg)
         
-        self.get_logger().info("Published trajectory to simulated robot's arm controller.")
+        #self.get_logger().info("Published trajectory to simulated robot's arm controller.")
 
 def main(args=None):
     rclpy.init(args=args)

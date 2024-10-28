@@ -20,6 +20,12 @@ bool KinematicsSolver::initialize(const std::string &urdf)
     joint_positions_min_.resize(nj);
     joint_positions_max_.resize(nj);
     joint_positions_last_.resize(nj);
+    joint_positions_last_(0) = 0;
+    joint_positions_last_(1) = -1.57;
+    joint_positions_last_(2) = 1.57;
+    joint_positions_last_(3) = 0;
+    joint_positions_last_(4) = 0;
+    joint_positions_last_(5) = 0;
 
     solver_ = std::make_unique<KDL::ChainIkSolverPos_LMA>(chain_);
 
@@ -28,7 +34,11 @@ bool KinematicsSolver::initialize(const std::string &urdf)
 
 bool KinematicsSolver::solveIK(const std::vector<double> &cartesian_goal, std::vector<double> &joint_positions)
 {
-    KDL::Frame p_in(KDL::Vector(cartesian_goal[0], cartesian_goal[1], cartesian_goal[2]));
+    double roll = cartesian_goal[3] * M_PI / 180.0;
+    double pitch = cartesian_goal[4] * M_PI / 180.0;
+    KDL::Rotation orientation = KDL::Rotation::RPY(roll, pitch,0);
+    KDL::Vector cart(cartesian_goal[0], cartesian_goal[1], cartesian_goal[2]);
+    KDL::Frame p_in(orientation,cart);
     KDL::JntArray q_out(chain_.getNrOfJoints());
     
     joint_positions_last_.resize(chain_.getNrOfJoints());
