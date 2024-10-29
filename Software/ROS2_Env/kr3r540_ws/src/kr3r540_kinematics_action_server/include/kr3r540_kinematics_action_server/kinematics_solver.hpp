@@ -14,18 +14,18 @@
 #include <rclcpp/rclcpp.hpp>
 
 // Limits and tolerance
-#define A1_MIN_  -27.0
-#define A1_MAX_  60.0
-#define A2_MIN_  -110.0
-#define A2_MAX_  50.0
-#define A3_MIN_  25.0
-#define A3_MAX_  155.0
-#define A4_MIN_  -175.0
-#define A4_MAX_  175.0
-#define A5_MIN_  -120.0
-#define A5_MAX_  120.0
-#define A6_MIN_  -350.0
-#define A6_MAX_  350.0
+#define A1_MIN_ -27.0
+#define A1_MAX_ 60.0
+#define A2_MIN_ -110.0
+#define A2_MAX_ 50.0
+#define A3_MIN_ 25.0
+#define A3_MAX_ 155.0
+#define A4_MIN_ -175.0
+#define A4_MAX_ 175.0
+#define A5_MIN_ -120.0
+#define A5_MAX_ 120.0
+#define A6_MIN_ -350.0
+#define A6_MAX_ 350.0
 #define TOLERANCE 3.0
 
 class KinematicsSolver
@@ -39,6 +39,7 @@ public:
     void set_joint_positions_last_(const std::vector<double> &joint_positions);
 
 private:
+    std::unique_ptr<KDL::ChainFkSolverPos_recursive> fk_solver;
     bool areJointsWithinLimits(const KDL::JntArray &joint_positions);
     void clampJointsToLimits(KDL::JntArray &joint_positions);
     KDL::JntArray joint_positions_last_;

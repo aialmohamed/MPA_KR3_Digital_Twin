@@ -19,17 +19,21 @@ namespace kr3r540_kinematics_action_server
         explicit Kr3r540KinematicsActionServer(const rclcpp::NodeOptions &options = rclcpp::NodeOptions());
 
     private:
-        rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sub_;
+        rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sub_real;
+        rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sub_sim;
         rclcpp::Subscription<std_msgs::msg::String>::SharedPtr robot_description_sub_;
         rclcpp_action::Server<kr3r540_msgs::action::Kr3r540Kinemactis>::SharedPtr action_server_;
         rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr trajectory_pub_;
+        
 
-        sensor_msgs::msg::JointState::SharedPtr current_joint_state_;
-        std::mutex joint_state_mutex_;
+        sensor_msgs::msg::JointState::SharedPtr current_joint_state_sim_;
+        sensor_msgs::msg::JointState::SharedPtr current_joint_state_real_;
+        std::mutex joint_state_mutex_real_;
+        std::mutex joint_state_mutex_sim_;
 
         KinematicsSolver kinematics_solver_;
 
-        void jointStateCallback(const sensor_msgs::msg::JointState::SharedPtr msg);
+
         void robotDescriptionCallback(const std_msgs::msg::String &msg);
         rclcpp_action::GoalResponse goalCallback(
             const rclcpp_action::GoalUUID &uuid,
@@ -40,6 +44,9 @@ namespace kr3r540_kinematics_action_server
             const std::shared_ptr<rclcpp_action::ServerGoalHandle<kr3r540_msgs::action::Kr3r540Kinemactis>> goal_handle);
         rclcpp_action::CancelResponse cancelCallback(
             const std::shared_ptr<rclcpp_action::ServerGoalHandle<kr3r540_msgs::action::Kr3r540Kinemactis>> goal_handle);
+
+            void simJointStateCallback(const sensor_msgs::msg::JointState::SharedPtr msg);
+            void realJointStateCallback(const sensor_msgs::msg::JointState::SharedPtr msg);
     };
 }
 

@@ -28,6 +28,7 @@ bool KinematicsSolver::initialize(const std::string &urdf)
     joint_positions_last_(5) = 0;
 
     solver_ = std::make_unique<KDL::ChainIkSolverPos_LMA>(chain_);
+    fk_solver = std::make_unique<KDL::ChainFkSolverPos_recursive>(chain_);
 
     return true;
 }
@@ -74,8 +75,7 @@ void KinematicsSolver::setJointPositions(const std::vector<double> &joint_positi
 
 bool KinematicsSolver::computeForwardKinematics(const KDL::JntArray &joint_positions, KDL::Frame &end_effector_pose)
 {
-    KDL::ChainFkSolverPos_recursive fk_solver(chain_);
-    int result = fk_solver.JntToCart(joint_positions, end_effector_pose);
+    int result = fk_solver->JntToCart(joint_positions, end_effector_pose);
     return result >= 0;
 }
 
@@ -94,7 +94,7 @@ bool KinematicsSolver::areJointsWithinLimits(const KDL::JntArray &joint_position
     
     for (size_t i = 0; i < joint_positions.rows(); ++i)
     {
-        double position_deg = joint_positions(i) * 180.0 / M_PI; // Convert to degrees
+        double position_deg = joint_positions(i) * 180.0 / M_PI;
 
         if (position_deg < (min_limits[i] + TOLERANCE) || position_deg > (max_limits[i] - TOLERANCE))
         {
