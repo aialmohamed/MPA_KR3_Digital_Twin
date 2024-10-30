@@ -68,6 +68,19 @@
             </state_interface>
         </joint>
 
+        
+        <joint name="flange_finger_1">
+            <command_interface name="position">
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+
+        <joint name="flange_finger_2">
+            <command_interface name="position">
+            </command_interface>
+            <state_interface name="position"/>
+        </joint>
+        
     </ros2_control>
 
 </robot>

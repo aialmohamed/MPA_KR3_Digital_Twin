@@ -159,6 +159,73 @@
 </inertial>
 </link>
 
+
+<link name="greifer_base">
+  <visual>
+    <geometry>
+      <mesh filename="package://kr3r540_description/meshes/visual/Base_visual.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="kuka_black">
+      <color rgba="0.0549 0.0549 0.0627 1.0"/>
+    </material>
+  </visual>
+  <collision>
+    <geometry>
+      <mesh filename="package://kr3r540_description/meshes/collision/Base_collusion.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+  <inertial>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <mass value="0.19"/>
+    <inertia ixx="0.008552" ixy="-0.000097" ixz="0"
+            iyy="0.002908" iyz="0.000004" izz="0.009732"/>
+  </inertial>
+</link>
+
+<link name="greifer_finger_1">
+  <visual>
+    <geometry>
+      <mesh filename="package://kr3r540_description/meshes/visual/Finger_1_visual.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="kuka_pedestal">
+      <color rgba="0.50588 0.47059 0.38824 1.0"/>
+    </material>
+  </visual>
+  <collision>
+    <geometry>
+      <mesh filename="package://kr3r540_description/meshes/collision/Finger_1_collusion.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+  <inertial>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <mass value="0.1"/>
+    <inertia ixx="0.001876" ixy="-0.001122" ixz="0.000392" iyy="0.004166" iyz="0.000374" izz="0.005261"/>
+  </inertial>
+</link>
+
+<link name="greifer_finger_2">
+  <visual>
+    <geometry>
+      <mesh filename="package://kr3r540_description/meshes/visual/Finger_2_visual.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="kuka_pedestal">
+      <color rgba="0.50588 0.47059 0.38824 1.0"/>
+    </material>
+  </visual>
+  <collision>
+    <geometry>
+      <mesh filename="package://kr3r540_description/meshes/collision/Finger_2_collusion.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+  <inertial>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <mass value="0.1"/>
+    <inertia ixx="0.001030" ixy="0.000654" ixz="0.000219" iyy="0.002527" iyz="-0.000204" izz="0.003130"/>
+  </inertial>
+</link>
+
+
+<!-- 
 <link name="greifer">
   <visual>
     <geometry>
@@ -179,7 +246,7 @@
     <inertia ixx="13.106" ixy="-0.034" ixz="0.083" iyy="14.078" iyz="0.17" izz="4.086"/>
   </inertial>
 </link>
-
+-->
 <!-- Define Joints -->
 
 <joint name="world_to_base" type="fixed">
@@ -238,9 +305,24 @@
 
 <joint name="flange" type="fixed">
   <parent link="link_6"/>
-  <child link="greifer"/>
-  <origin xyz="0.032 0 0.02" rpy="0 ${2*1.5708} 1.5708"/>
+  <child link="greifer_base"/>
+  <origin xyz="0.013 0 0.02" rpy="1.57 ${-2*1.5708} -1.57"/>
 </joint>
 
- 
+<joint name="flange_finger_1" type="prismatic">
+  <parent link="greifer_base"/>
+  <child link="greifer_finger_1"/>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+  <axis xyz="1 0 0"/> 
+  <limit lower="0" upper="0.006" effort="10" velocity="0.1"/>
+</joint>
+
+<joint name="flange_finger_2" type="prismatic">
+  <parent link="greifer_base"/>
+  <child link="greifer_finger_2"/>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+  <axis xyz="-1 0 0"/>
+  <limit lower="0" upper="0.006" effort="10" velocity="0.1"/>
+</joint>
+
 </robot>

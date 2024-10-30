@@ -8,9 +8,22 @@ kr3r540_sim:
       arm_controller:
         type: joint_trajectory_controller/JointTrajectoryController
       
+      gripper_controller:
+        type: joint_trajectory_controller/JointTrajectoryController
+
       joint_state_broadcaster:
         type: joint_state_broadcaster/JointStateBroadcaster
         publish_rate: 100
+  
+  gripper_controller:
+    ros__parameters:
+      joints:
+        - flange_finger_1
+        - flange_finger_2
+      command_interfaces:
+        - position
+      state_interfaces:
+        - position
 
   arm_controller:
     ros__parameters:

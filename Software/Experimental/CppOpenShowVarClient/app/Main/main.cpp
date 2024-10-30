@@ -50,6 +50,8 @@ int main() {
               << "read_axis            - to read the MYAXIS data from the robot\n"
               << "modify_axis          - to modify the MYAXIS data locally\n"
               << "write_axis           - to write MYAXIS data to the robot\n"
+              << "open_gripper         - to set GripperFlag to TRUE (open gripper)\n"
+              << "close_gripper        - to set GripperFlag to FALSE (close gripper)\n"
               << "exit                 - to exit the program\n";
 
     // Create a MYAXIS_type object to hold the MYAXIS data
@@ -135,8 +137,26 @@ int main() {
                     std::cerr << "Failed to write MYAXIS data: " << ec.message() << std::endl;
                 }
             });
+        } else if (command == "open_gripper") {
+            // Set GripperFlag to TRUE to open the gripper
+            kukaClient.writeVariable(2, "GripperFlag", "TRUE", [](boost::system::error_code ec, ResponseMessage response) {
+                if (!ec) {
+                    std::cout << "Gripper set to open." << std::endl;
+                } else {
+                    std::cerr << "Failed to set GripperFlag: " << ec.message() << std::endl;
+                }
+            });
+        } else if (command == "close_gripper") {
+            // Set GripperFlag to FALSE to close the gripper
+            kukaClient.writeVariable(2, "GripperFlag", "FALSE", [](boost::system::error_code ec, ResponseMessage response) {
+                if (!ec) {
+                    std::cout << "Gripper set to close." << std::endl;
+                } else {
+                    std::cerr << "Failed to set GripperFlag: " << ec.message() << std::endl;
+                }
+            });
         } else {
-            std::cerr << "Unknown command. Please use 'read_axis', 'modify_axis', 'write_axis', or 'exit'." << std::endl;
+            std::cerr << "Unknown command. Please use 'read_axis', 'modify_axis', 'write_axis', 'open_gripper', 'close_gripper', or 'exit'." << std::endl;
         }
     }
 

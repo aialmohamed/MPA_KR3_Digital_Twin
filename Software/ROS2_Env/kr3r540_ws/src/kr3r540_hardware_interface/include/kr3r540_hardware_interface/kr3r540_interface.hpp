@@ -16,6 +16,10 @@
 #define INITIAL_A4 0.0
 #define INITIAL_A5 0.0
 #define INITIAL_A6 0.0
+#define INITIAL_FINGER_1 0
+#define INITIAL_FINGER_2 0
+#define FINGER_1_OPEN 0.005
+#define FINGER_2_OPEN 0.005
 
 /* Limits  this shall break the robot ! it needs to be 3 degrees blow this*/
 #define A1_MIN_  -27.0

@@ -79,27 +79,45 @@ namespace kr3r540_kinematics_action_server
         const std::shared_ptr<rclcpp_action::ServerGoalHandle<kr3r540_msgs::action::Kr3r540Kinemactis>> goal_handle)
     {
         auto goal = goal_handle->get_goal();
-        std::vector<double> cartesian_goal(goal->cartesian_goal.begin(), goal->cartesian_goal.end());
+
+        // Extract x, y, z, roll, pitch for IK solving
+        std::vector<double> position_goal(goal->cartesian_goal.begin(), goal->cartesian_goal.begin() + 5);
+
+        // Extract gripper positions separately
+        double finger_1_goal = goal->cartesian_goal[5];
+        double finger_2_goal = goal->cartesian_goal[6];
+
+        // Map (1, 1) to (0.005, 0.005)
+        if (finger_1_goal == 1.0 && finger_2_goal == 1.0)
+        {
+            finger_1_goal = 0.005;
+            finger_2_goal = 0.005;
+        }
         std::vector<double> joint_positions;
         rclcpp::Rate loop_rate(20);
 
-        if (!kinematics_solver_.solveIK(cartesian_goal, joint_positions))
+        if (!kinematics_solver_.solveIK(position_goal, joint_positions))
         {
             RCLCPP_ERROR(get_logger(), "Inverse kinematics solver failed.");
             goal_handle->abort(std::make_shared<kr3r540_msgs::action::Kr3r540Kinemactis::Result>());
             return;
         }
 
+        // Prepare the trajectory message
         auto trajectory_msg = trajectory_msgs::msg::JointTrajectory();
-        trajectory_msg.joint_names = {"joint_1", "joint_2", "joint_3", "joint_4", "joint_5", "joint_6"};
+        trajectory_msg.joint_names = {"joint_1", "joint_2", "joint_3", "joint_4", "joint_5", "joint_6", "flange_finger_1", "flange_finger_2"};
 
         trajectory_msgs::msg::JointTrajectoryPoint point;
         point.positions = joint_positions;
+
+        // Add gripper goals to the positions
+        point.positions.push_back(finger_1_goal);
+        point.positions.push_back(finger_2_goal);
         point.time_from_start = rclcpp::Duration::from_seconds(1.0);
 
         trajectory_msg.points.push_back(point);
         trajectory_pub_->publish(trajectory_msg);
-        //loop_rate.sleep();
+
         RCLCPP_INFO(get_logger(), "Published IK solution to arm controller.");
 
         auto feedback = std::make_shared<kr3r540_msgs::action::Kr3r540Kinemactis::Feedback>();
