@@ -198,7 +198,7 @@
   </collision>
   <inertial>
     <origin xyz="0 0 0" rpy="0 0 0"/>
-    <mass value="0.1"/>
+    <mass value="0.01"/>
     <inertia ixx="0.001876" ixy="-0.001122" ixz="0.000392" iyy="0.004166" iyz="0.000374" izz="0.005261"/>
   </inertial>
 </link>
@@ -219,7 +219,7 @@
   </collision>
   <inertial>
     <origin xyz="0 0 0" rpy="0 0 0"/>
-    <mass value="0.1"/>
+    <mass value="0.01"/>
     <inertia ixx="0.001030" ixy="0.000654" ixz="0.000219" iyy="0.002527" iyz="-0.000204" izz="0.003130"/>
   </inertial>
 </link>
@@ -314,7 +314,7 @@
   <child link="greifer_finger_1"/>
   <origin xyz="0 0 0" rpy="0 0 0"/>
   <axis xyz="1 0 0"/> 
-  <limit lower="0" upper="0.006" effort="10" velocity="0.1"/>
+  <limit lower="0" upper="0.006" effort="100" velocity="0.1"/>
 </joint>
 
 <joint name="flange_finger_2" type="prismatic">
@@ -322,7 +322,8 @@
   <child link="greifer_finger_2"/>
   <origin xyz="0 0 0" rpy="0 0 0"/>
   <axis xyz="-1 0 0"/>
-  <limit lower="0" upper="0.006" effort="10" velocity="0.1"/>
+  <limit lower="0" upper="0.006" effort="100" velocity="0.1"/>
+
 </joint>
 
 </robot>

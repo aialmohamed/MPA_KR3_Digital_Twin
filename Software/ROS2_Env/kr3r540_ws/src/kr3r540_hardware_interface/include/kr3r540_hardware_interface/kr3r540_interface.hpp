@@ -18,8 +18,12 @@
 #define INITIAL_A6 0.0
 #define INITIAL_FINGER_1 0
 #define INITIAL_FINGER_2 0
-#define FINGER_1_OPEN 0.005
-#define FINGER_2_OPEN 0.005
+#define FINGER_1_OPEN 1
+#define FINGER_2_OPEN 1
+#define FINGER_1_OPEN_READ 0.004
+#define FINGER_2_OPEN_READ 0.004
+#define FINGER_1_CLOSE 0.001
+#define FINGER_2_CLOSE 0.001
 
 /* Limits  this shall break the robot ! it needs to be 3 degrees blow this*/
 #define A1_MIN_  -27.0
@@ -70,6 +74,7 @@ namespace kr3r540_hardware_interface
         boost::asio::executor_work_guard<boost::asio::io_context::executor_type> work_guard_;
         std::atomic<bool> is_connected_ = false;
         std::thread io_thread_;
+        bool local_gripper_flag_ = false;
 
         void parse_axis_data(const std::string &axis_data);
         std::string postion_commands_to_string(const std::vector<double> &position_commands);

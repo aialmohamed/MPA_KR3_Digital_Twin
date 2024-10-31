@@ -86,13 +86,6 @@ namespace kr3r540_kinematics_action_server
         // Extract gripper positions separately
         double finger_1_goal = goal->cartesian_goal[5];
         double finger_2_goal = goal->cartesian_goal[6];
-
-        // Map (1, 1) to (0.005, 0.005)
-        if (finger_1_goal == 1.0 && finger_2_goal == 1.0)
-        {
-            finger_1_goal = 0.005;
-            finger_2_goal = 0.005;
-        }
         std::vector<double> joint_positions;
         rclcpp::Rate loop_rate(20);
 

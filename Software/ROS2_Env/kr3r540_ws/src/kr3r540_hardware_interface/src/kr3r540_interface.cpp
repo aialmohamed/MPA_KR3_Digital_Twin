@@ -126,40 +126,53 @@ namespace kr3r540_hardware_interface
             return hardware_interface::return_type::ERROR;
         }
 
-        // READ THE GRIPPER
-        kuka_client_->readVariable(2, "GripperFlag", [this](boost::system::error_code ec, ResponseMessage response)
+          // READ THE GRIPPER
+        kuka_client_->readVariable(5, "GripperFlag", [this](boost::system::error_code ec, ResponseMessage response)
                                    {
                 if (!ec) {
                     std::string gripper_flag = response.getVariableValue();
                     //RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Successfully received gripper flag: %s", gripper_flag.c_str());
                     if (gripper_flag == "TRUE") {
-                        position_state_[6] = FINGER_1_OPEN;
-                        position_state_[7] = FINGER_2_OPEN;
-                    } else {
-                        position_state_[6] = INITIAL_FINGER_1;
-                        position_state_[7] = INITIAL_FINGER_2;
+                        position_state_[6] = FINGER_1_OPEN_READ;
+                        position_state_[7] = FINGER_2_OPEN_READ;
+                        local_gripper_flag_ = true;
+                    } else if(gripper_flag == "FALSE") {
+                        position_state_[6] = FINGER_1_CLOSE;
+                        position_state_[7] = FINGER_2_CLOSE;
+                        local_gripper_flag_ = false;
                     }
+                    previous_position_state_[6] = position_state_[6];
+                    previous_position_state_[7] = position_state_[7];
                 } else {
                     RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "Failed to read gripper flag: %s", ec.message().c_str());
+                    position_state_[6] = previous_position_state_[6];          
+                    position_state_[7] = previous_position_state_[7];      
                 } });
+
 
         kuka_client_->readVariable(1, "$AXIS_ACT", [this](boost::system::error_code ec, ResponseMessage response)
                                    {
         if (!ec) {
             std::string axis_data = response.getVariableValue();
             //RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Successfully received joint data: %s", axis_data.c_str());
-
-            previous_position_state_ = position_state_;
+            for(size_t joint_idx = 0; joint_idx < 6; ++joint_idx)
+            {
+                previous_position_state_[joint_idx] = position_state_[joint_idx];
+            }
             try {
                 parse_axis_data(axis_data);
             } catch (const std::exception& e) {
                 //RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "Error parsing joint data: %s", e.what());
-                position_state_ = previous_position_state_;
+                for( size_t joint_idx = 0; joint_idx < 6; ++i)
+                {
+                    position_state_[joint_idx] = previous_position_state_[joint_idx];
+                }
             }
         } else {
             RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "Failed to read joint data: %s", ec.message().c_str());
             } });
 
+      
         return hardware_interface::return_type::OK;
     }
     hardware_interface::return_type Kr3r540Interface::write(const rclcpp::Time &time, const rclcpp::Duration &period)
@@ -170,8 +183,6 @@ namespace kr3r540_hardware_interface
             RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "KUKA robot is not connected. Cannot send commands.");
             return hardware_interface::return_type::ERROR;
         }
-
-
 
         std::vector<double> arm_commands(position_commands_.begin(), position_commands_.begin() + 6);
         std::string command_data = postion_commands_to_string(position_commands_);
@@ -184,15 +195,18 @@ namespace kr3r540_hardware_interface
                 position_commands_ = prev_position_commands_;
             } });
 
-    
-        bool gripper_open = (position_commands_[6] != INITIAL_FINGER_1 && position_commands_[7] != INITIAL_FINGER_2);
-        //RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Gripper open: %s", gripper_open ? "TRUE" : "FALSE");
-        kuka_client_->writeVariable(2, "GripperFlag", gripper_open ? "TRUE" : "FALSE", [this](boost::system::error_code ec, ResponseMessage response)
-                                    {
-        if (ec)
+        bool new_gripper_flag = (position_commands_[6] == FINGER_1_OPEN && position_commands_[7] == FINGER_2_OPEN);
+        if (new_gripper_flag != local_gripper_flag_)
         {
-            RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "Failed to write GripperFlag: %s", ec.message().c_str());
+            kuka_client_->writeVariable(5, "GripperFlag", new_gripper_flag ? "TRUE" : "FALSE", [this, new_gripper_flag](boost::system::error_code ec, ResponseMessage response)
+                                        {
+        if (!ec) {
+            local_gripper_flag_ = new_gripper_flag;
+        } else {
+            RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "Failed to write gripper flag: %s", ec.message().c_str());
         } });
+        }
+
         return hardware_interface::return_type::OK;
     }
 

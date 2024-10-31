@@ -4,10 +4,11 @@
 #include "MYAXIS_type.hpp"
 #include <thread>
 #include <sstream>
-#include <limits>   // For std::numeric_limits
+#include <limits>    // For std::numeric_limits
 #include <stdexcept> // For exception handling
 
-int main() {
+int main()
+{
     // Get the IP address and port from the user
     std::string ip_address;
     std::string port;
@@ -30,20 +31,19 @@ int main() {
     KukaClient kukaClient(io_context, ip_address, port);
 
     // Run io_context.run() on a separate thread
-    std::thread io_context_thread([&io_context]() {
-        io_context.run();
-    });
+    std::thread io_context_thread([&io_context]()
+                                  { io_context.run(); });
 
     std::cout << "Attempting to connect to the KUKA robot..." << std::endl;
 
     // Start the connection asynchronously; connection errors and reconnections are handled internally
-    kukaClient.connect([](boost::system::error_code ec) {
+    kukaClient.connect([](boost::system::error_code ec)
+                       {
         if (!ec) {
             std::cout << "Connected to KUKA robot!" << std::endl;
         } else {
             std::cerr << "Failed to connect initially. Reconnection attempts will continue in the background." << std::endl;
-        }
-    });
+        } });
 
     std::string command;
     std::cout << "\nEnter commands:\n"
@@ -52,22 +52,28 @@ int main() {
               << "write_axis           - to write MYAXIS data to the robot\n"
               << "open_gripper         - to set GripperFlag to TRUE (open gripper)\n"
               << "close_gripper        - to set GripperFlag to FALSE (close gripper)\n"
+              << "read_gripper          - to read the GripperFlag status (open or close)\n"
               << "exit                 - to exit the program\n";
 
     // Create a MYAXIS_type object to hold the MYAXIS data
     MYAXIS_type axisData;
 
     // Command loop
-    while (true) {
+    while (true)
+    {
         std::cout << "\n> ";
         std::getline(std::cin, command);
 
         // Check if the user wants to exit
-        if (command == "exit") {
+        if (command == "exit")
+        {
             break;
-        } else if (command == "read_axis") {
+        }
+        else if (command == "read_axis")
+        {
             // Read the MYAXIS data from the robot
-            kukaClient.readVariable(1, "$AXIS_ACT", [&axisData](boost::system::error_code ec, ResponseMessage response) {
+            kukaClient.readVariable(1, "$AXIS_ACT", [&axisData](boost::system::error_code ec, ResponseMessage response)
+                                    {
                 if (!ec) {
                     std::cout << "MYAXIS Data Received:" << std::endl;
                     std::string axisString = response.getVariableValue();
@@ -80,13 +86,15 @@ int main() {
                     }
                 } else {
                     std::cerr << "Failed to read MYAXIS data: " << ec.message() << std::endl;
-                }
-            });
-        } else if (command == "modify_axis") {
+                } });
+        }
+        else if (command == "modify_axis")
+        {
             // Modify the MYAXIS data locally
             double value;
             bool valid_input = true;
-            try {
+            try
+            {
                 std::cout << "Enter new value for A1 (" << MYAXIS_type::A1_MIN << " to " << MYAXIS_type::A1_MAX << "): ";
                 std::cin >> value;
                 axisData.setA1(value);
@@ -110,10 +118,14 @@ int main() {
                 std::cout << "Enter new value for A6 (" << MYAXIS_type::A6_MIN << " to " << MYAXIS_type::A6_MAX << "): ";
                 std::cin >> value;
                 axisData.setA6(value);
-            } catch (const std::out_of_range& e) {
+            }
+            catch (const std::out_of_range &e)
+            {
                 std::cerr << "Input error: " << e.what() << std::endl;
                 valid_input = false;
-            } catch (const std::exception& e) {
+            }
+            catch (const std::exception &e)
+            {
                 std::cerr << "Unexpected error: " << e.what() << std::endl;
                 valid_input = false;
             }
@@ -121,41 +133,64 @@ int main() {
             // Clear the newline character left in the input stream
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-            if (valid_input) {
+            if (valid_input)
+            {
                 std::cout << "Modified MYAXIS Data:" << std::endl;
                 std::cout << axisData.toString() << std::endl;
-            } else {
+            }
+            else
+            {
                 std::cerr << "Modification failed due to invalid input." << std::endl;
             }
-        } else if (command == "write_axis") {
+        }
+        else if (command == "write_axis")
+        {
             // Write the MYAXIS data back to the robot
             std::string axisString = axisData.toString();
-            kukaClient.writeVariable(2, "MYAXIS", axisString, [](boost::system::error_code ec, ResponseMessage response) {
+            kukaClient.writeVariable(2, "MYAXIS", axisString, [](boost::system::error_code ec, ResponseMessage response)
+                                     {
                 if (!ec) {
                     std::cout << "MYAXIS Data Written Successfully." << std::endl;
                 } else {
                     std::cerr << "Failed to write MYAXIS data: " << ec.message() << std::endl;
-                }
-            });
-        } else if (command == "open_gripper") {
+                } });
+        }
+        else if (command == "read_gripper")
+        {
+            // Read the GripperFlag status from the robot
+            kukaClient.readVariable(2, "GripperFlag", [](boost::system::error_code ec, ResponseMessage response)
+                                    {
+        if (!ec) {
+            std::string gripper_flag = response.getVariableValue();
+            std::cout << "GripperFlag status: " << gripper_flag << std::endl;
+        } else {
+            std::cerr << "Failed to read GripperFlag status: " << ec.message() << std::endl;
+        } });
+        }
+        else if (command == "open_gripper")
+        {
             // Set GripperFlag to TRUE to open the gripper
-            kukaClient.writeVariable(2, "GripperFlag", "TRUE", [](boost::system::error_code ec, ResponseMessage response) {
+            kukaClient.writeVariable(2, "GripperFlag", "TRUE", [](boost::system::error_code ec, ResponseMessage response)
+                                     {
                 if (!ec) {
                     std::cout << "Gripper set to open." << std::endl;
                 } else {
                     std::cerr << "Failed to set GripperFlag: " << ec.message() << std::endl;
-                }
-            });
-        } else if (command == "close_gripper") {
+                } });
+        }
+        else if (command == "close_gripper")
+        {
             // Set GripperFlag to FALSE to close the gripper
-            kukaClient.writeVariable(2, "GripperFlag", "FALSE", [](boost::system::error_code ec, ResponseMessage response) {
+            kukaClient.writeVariable(2, "GripperFlag", "FALSE", [](boost::system::error_code ec, ResponseMessage response)
+                                     {
                 if (!ec) {
                     std::cout << "Gripper set to close." << std::endl;
                 } else {
                     std::cerr << "Failed to set GripperFlag: " << ec.message() << std::endl;
-                }
-            });
-        } else {
+                } });
+        }
+        else
+        {
             std::cerr << "Unknown command. Please use 'read_axis', 'modify_axis', 'write_axis', 'open_gripper', 'close_gripper', or 'exit'." << std::endl;
         }
     }
@@ -169,7 +204,8 @@ int main() {
 
     // Stop the io_context and join the thread
     io_context.stop();
-    if (io_context_thread.joinable()) {
+    if (io_context_thread.joinable())
+    {
         io_context_thread.join();
     }
 
