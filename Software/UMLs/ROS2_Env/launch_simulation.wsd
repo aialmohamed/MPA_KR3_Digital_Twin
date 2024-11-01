@@ -1,0 +1,43 @@
+@startuml "launch_sequence_diagram_with_controller_manager_dependency"
+
+participant Launcher
+participant "robot_state_publisher" as RSP
+participant "joint_state_publisher" as JSP
+participant RVIZ
+participant "ros_gz_sim (gz_sim.launch.py)" as SIM
+participant "ros_gz_bridge" as BRIDGE
+participant "ros_gz_sim (create)" as ENTITY
+participant "Controller Manager" as CM
+
+Launcher -> Launcher: Declare is_sim, model,\nuse_sim_time, rviz_config_path
+Launcher -> Launcher: Set GZ_SIM_RESOURCE_PATH
+alt ROS_DISTRO == "humble"
+    Launcher -> Launcher: physics_engine = ""
+else
+    Launcher -> Launcher: physics_engine = "--physics-engine\n gz-physics-bullet-featherstone-plugin"
+end
+
+Launcher -> Launcher: Define robot_description parameter
+
+Launcher -> RSP: Launch robot_state_publisher
+note right of RSP: Parameters: robot_description, use_sim_time\nNamespace: kr3r540_sim
+
+Launcher -> JSP: Launch joint_state_publisher
+note right of JSP: Namespace: kr3r540_sim
+
+Launcher -> RVIZ: Launch rviz
+note right of RVIZ: Namespace: kr3r540_sim\nArguments: -d rviz_config_path\nuse_sim_time=true
+
+Launcher -> SIM: Launch gz_sim.launch.py
+note right of SIM: Package: ros_gz_sim\nArguments: -v 4 -r empty.sdf\nphysics_engine
+
+Launcher -> BRIDGE: Launch gazebo_bridge
+note right of BRIDGE: Namespace: kr3r540_sim\nArguments: /clock@rosgraph_msgs/msg/Clock
+
+Launcher -> ENTITY: Spawn entity
+note right of ENTITY: Namespace: kr3r540_sim\nArguments: -topic /kr3r540_sim/robot_description\n-name kr3r540
+
+ENTITY -> CM: Initialize controller manager (indirectly via plugin)
+note right of CM: Plugin: ign_ros2_control\nParameters: kr3r540_sim_controllers.yaml\n Namespace: kr3r540_sim
+
+@enduml
