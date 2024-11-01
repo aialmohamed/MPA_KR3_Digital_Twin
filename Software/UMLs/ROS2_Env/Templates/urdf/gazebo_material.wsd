@@ -1,0 +1,14 @@
+@startuml "gazebo_material_template"
+!procedure $gazebo_material($reference,$material_name)
+
+skinparam rectangle<<gazebo_material>> {
+    backgroundColor LightPink
+    Shadowing true
+}
+
+rectangle $reference <<gazebo_material>> [
+    - Reference: $reference
+    - Material_name: $material_name
+]
+!endprocedure
+@enduml

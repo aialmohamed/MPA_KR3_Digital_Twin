@@ -1,0 +1,5 @@
+@startuml "links_to_joints_template"
+!procedure $link_to_joint($link1, $link2,$joint)
+    $link1 <--> $link2 : <<joint_element>> \n $joint
+!endprocedure
+@enduml

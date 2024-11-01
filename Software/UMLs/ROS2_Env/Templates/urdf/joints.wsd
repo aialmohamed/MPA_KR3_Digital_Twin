@@ -3,7 +3,7 @@
 skinparam rectangle<<joint_element>> {
     backgroundColor lightgreen
 }
-rectangle $name<<joint_element>>[
+rectangle $name <<joint_element>>[
     - Joint_name: $name
     - Type: $type
     - Child: $child

@@ -1,0 +1,16 @@
+@startuml "gazebo_control_plugin_template"
+!procedure $gazebo_control_plugin($plugin_file,$plugin_name,$plugin_yaml_file,$plugin_namespace,$plugin_remappings)
+skinparam rectangle<<gazebo_control_plugin>> {
+    backgroundColor MistyRose
+    Shadowing true
+}
+
+rectangle $plugin_name <<gazebo_control_plugin>> [
+    - Plugin_file: $plugin_file
+    - Plugin_name: $plugin_name
+    - Plugin_yaml_file: $plugin_yaml_file
+    - Plugin_namespace: $plugin_namespace
+    - Plugin_remappings: $plugin_remappings
+]
+!endprocedure
+@enduml

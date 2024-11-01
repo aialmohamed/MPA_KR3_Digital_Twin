@@ -3,7 +3,7 @@
 skinparam rectangle<<link_element>> {
     backgroundColor lightblue
 }
-rectangle $name<<link_element>>[
+rectangle $name <<link_element>>[
     - Link_name: $name
     - Origin: $origin
     - Mass: $mass

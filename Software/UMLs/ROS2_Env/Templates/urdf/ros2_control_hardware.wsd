@@ -1,0 +1,13 @@
+@startuml "ros2_control_hardware_template"
+skinparam rectangle<<hardware>> {
+    backgroundColor LavenderBlush
+    Shadowing true
+}
+!procedure $ros2_hardware($name,$param,$is_sim)
+rectangle $name <<hardware>> [
+    - Name: $name
+    - Param: $param
+    - Is_sim: $is_sim
+]
+!endprocedure
+@enduml

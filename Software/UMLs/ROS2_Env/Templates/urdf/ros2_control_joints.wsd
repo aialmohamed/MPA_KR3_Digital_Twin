@@ -1,0 +1,14 @@
+@startuml "ros2_control_joints_template"
+
+skinparam rectangle<<ros2_control_joint>> {
+    backgroundColor LemonChiffon
+    Shadowing true
+}
+!procedure $ros2_control_joints($name,$command_interface,$state_interface)
+rectangle $name <<ros2_control_joint>> [
+    - Name: $name
+    - Command_interface: $command_interface
+    - State_interface: $state_interface
+]
+!endprocedure
+@enduml
