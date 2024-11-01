@@ -1,0 +1,19 @@
+@startuml "links_template"
+!procedure $link($name, $origin, $mass, $ixx, $ixy, $ixz, $iyy, $iyz, $izz)
+skinparam rectangle<<link_element>> {
+    backgroundColor lightblue
+}
+rectangle $name<<link_element>>[
+    - Link_name: $name
+    - Origin: $origin
+    - Mass: $mass
+    - Inertia Matrix:
+        - Ixx: $ixx
+        - Ixy: $ixy
+        - Ixz: $ixz
+        - Iyy: $iyy
+        - Iyz: $iyz
+        - Izz: $izz
+]
+!endprocedure
+@enduml

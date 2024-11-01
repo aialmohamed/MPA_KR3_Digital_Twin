@@ -1,0 +1,22 @@
+@startuml "joints_template"
+!procedure $joint($name, $type, $parent,$child,$origin_xyz, $origin_rpy, $axis, $limit_lower,$limit_upper, $limit_effort, $limit_velocity)
+skinparam rectangle<<joint_element>> {
+    backgroundColor lightgreen
+}
+rectangle $name<<joint_element>>[
+    - Joint_name: $name
+    - Type: $type
+    - Child: $child
+    - Parent: $parent
+    - Origin:
+        - xyz: $origin_xyz
+        - rpy: $origin_rpy
+    - Axis: $axis
+    - Limit:
+        - Lower: $limit_lower
+        - Upper: $limit_upper
+        - Effort: $limit_effort
+        - Velocity: $limit_velocity
+]
+!endprocedure
+@enduml

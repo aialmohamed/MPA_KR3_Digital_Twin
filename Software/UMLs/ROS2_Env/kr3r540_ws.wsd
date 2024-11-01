@@ -1,0 +1,20 @@
+@startuml "kr3r540_ws"
+top to bottom direction
+rectangle "kr3r540_workspace" {
+
+    [kr3r540_bringup] as p1
+    [kr3r540_description] as p2
+    [kr3r540_digital_twin] as p3
+    [kr3r540_hardware_interface] as p4    
+    [kr3r540_kinematics_action_server] as p5
+    [kr3r540_msgs] as p6
+
+    p2 .up.> p1 : <<depends>>
+    p3 .up.> p1 : <<depends>>
+    p5 .up.> p1 : <<depends>>
+    p6 .up.> p5 : <<access>>
+    p4 .up.> p2 : <<access>>
+
+    
+}
+@enduml

@@ -15,7 +15,9 @@
     - [Understanding namespaces and our Ros2 core Design](#understanding-namespaces-and-our-ros2-core-design)
       - [Problem](#problem)
       - [Solution](#solution)
-  - [Digital Twin in Ros2 Nodes](#digital-twin-in-ros2-nodes)
+    - [Digital Twin in Ros2 Nodes](#digital-twin-in-ros2-nodes)
+    - [OPCUA and ROS2](#opcua-and-ros2)
+    - [Visual Commission](#visual-commission)
   - [Packages](#packages)
   - [Plugins](#plugins)
   - [Usage](#usage)
@@ -102,7 +104,7 @@ This setup effectively creates a **digital twin**, enabling advanced functionali
 
 
 
-## Digital Twin in Ros2 Nodes 
+### Digital Twin in Ros2 Nodes 
 ![Concept](/Images/Digital_Twin_Ros2_Node_concept.jpg)
 
 After creating the Real and Simulation namespaces of the Ros2 and adding the resources **(URDF , Gazebo and HardwarePlugins)** now we create a namespace **kr3r540_digital_twin** that mainly contains two topics **digital_twin_data** and the **digital_twin_information** .
@@ -115,6 +117,9 @@ In order to manage the system in cartesian coordinates we need to apply some **I
 
 At the same time the **Action Server** sends a continues **feedback** to the  **Action Client** with the current coordinates of the robot **in (x,y,z)** format.
 
+### OPCUA and ROS2 
+
+### Visual Commission
 
 ## Packages
 
