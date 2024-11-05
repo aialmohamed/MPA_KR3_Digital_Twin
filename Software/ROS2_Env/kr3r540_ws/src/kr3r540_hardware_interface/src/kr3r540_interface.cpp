@@ -163,7 +163,7 @@ namespace kr3r540_hardware_interface
                 parse_axis_data(axis_data);
             } catch (const std::exception& e) {
                 //RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "Error parsing joint data: %s", e.what());
-                for( size_t joint_idx = 0; joint_idx < 6; ++i)
+                for( size_t joint_idx = 0; joint_idx < 6; ++joint_idx)
                 {
                     position_state_[joint_idx] = previous_position_state_[joint_idx];
                 }

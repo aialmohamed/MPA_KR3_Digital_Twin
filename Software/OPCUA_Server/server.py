@@ -1,46 +1,56 @@
-from asyncua import Server, ua, uamethod
+from asyncua import Server, ua
 import rclpy
 from rclpy.node import Node
 import asyncio
-from std_msgs.msg import String
+from std_msgs.msg import Float32
 
+class ROS2Subscriber(Node):
+    def __init__(self, server_variable):
+        super().__init__('ros2_subscriber')
+        self.server_variable = server_variable
+        self.subscription = self.create_subscription(
+            Float32, 'random_number', self.listener_callback, 10
+        )
 
-rclpy.init()
-ros2_publisher_node = Node("ros2_publisher")
-publisher_ = ros2_publisher_node.create_publisher(String, 'example_topic', 10)
-
-@uamethod
-def publish_opcua_message(parent, message):
-
-    msg = String()
-    msg.data = message
-    publisher_.publish(msg)
-    ros2_publisher_node.get_logger().info(f"Published message on /example_topic: {msg.data}")
-    return True  
-
+    async def listener_callback(self, msg):
+        # Update the OPC UA variable with the new value from ROS 2
+        self.get_logger().info(f"Received data: {msg.data}")
+        await self.server_variable.write_value(msg.data)
 
 async def start_opcua_server():
+    # Initialize the OPC UA server
     server = Server()
     await server.init()
     server.set_endpoint("opc.tcp://localhost:4840")
     server.set_security_policy([ua.SecurityPolicyType.NoSecurity])
 
-
+    # Register namespace and create OPC UA variable
     uri = "http://your-opcua-namespace.com"
     idx = await server.register_namespace(uri)
     objects_node = server.nodes.objects
     ros_interface = await objects_node.add_object(idx, "ROS_Interface")
 
+    # Create a variable to hold the random number received from ROS 2
+    random_number_var = await ros_interface.add_variable(idx, "RandomNumber", 0.0)
+    await random_number_var.set_writable()  # Make it writable so we can update it
 
-    await ros_interface.add_method(
-        idx, "PublishMessage", publish_opcua_message, [ua.VariantType.String], [ua.VariantType.Boolean]
-    )
+    # Initialize ROS 2 and create the ROS2Subscriber node
+    rclpy.init()
+    ros2_subscriber_node = ROS2Subscriber(random_number_var)
 
+    # Run the OPC UA server and ROS 2 node in parallel
     async with server:
         print("OPC UA Server with ROS 2 integration running.")
         while rclpy.ok():
-            await asyncio.sleep(1)
+            rclpy.spin_once(ros2_subscriber_node, timeout_sec=0.1)
+            await asyncio.sleep(0.1)  # Allow the server to process other tasks
+
+    # Shutdown ROS 2 when the server stops
+    ros2_subscriber_node.destroy_node()
+    rclpy.shutdown()
+
+# Run the OPC UA server
 try:
     asyncio.run(start_opcua_server())
-finally:
-    rclpy.shutdown()
+except KeyboardInterrupt:
+    print("Server stopped.")

@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
              'joint_trajectory_sender = kr3r540_scripts.joint_trajectory_sender:main',
+             'opcua_pub_example = kr3r540_scripts.opcua_pub_example:main',
         ],
     },
 )
