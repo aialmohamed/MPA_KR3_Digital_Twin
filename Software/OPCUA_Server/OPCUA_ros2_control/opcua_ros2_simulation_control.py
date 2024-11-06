@@ -26,8 +26,7 @@ class ros2_simulation_control(ros2_control):
         self.executor_thread = None
         self.executor = None
         self.launch_process = None
-        self.package = "kr3r540_bringup"
-        self.launch_file = "kr3r540_ign.launch.py"
+        self.launch_file_path = ["kr3r540_bringup", "kr3r540_ign.launch.py"]
         self.launch_thread = None
 
     @uamethod
@@ -42,13 +41,10 @@ class ros2_simulation_control(ros2_control):
 
     def _start_ros2_launch(self):
         try:
-            #os.environ['DISPLAY'] = ':0'
-            # Run the hardcoded ROS 2 launch file path
-
-
-            command = ["./OPCUA_ros2_control/launch_wrapper.sh", self.package, self.launch_file]
+            ros_setup = "~/.bashrc"
+            command = f". {ros_setup} && ros2 launch {' '.join(self.launch_file_path)}"
             self.launch_process = subprocess.Popen(
-                command,
+                ["bash", "-c", command],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 preexec_fn=os.setsid
