@@ -82,7 +82,7 @@ def generate_launch_description():
         executable="rviz2",
         namespace="kr3r540_sim",
         parameters=[{"use_sim_time": True}],
-        arguments=['-d', rviz_config_path ,'use_sim_time','true'],
+        arguments=['-d', rviz_config_path ,],
         remappings=[('/tf','tf'),('/tf_static','tf_static')],
         output="screen",
     )

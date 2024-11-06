@@ -1,0 +1,6 @@
+opcua_server:
+  ip: localhost
+  port: 4840
+  name: Ros2_OPCUA_Server
+  namespace: OpcuaRos2
+  security_policy: ua.SecurityPolicyType.NoSecurity
