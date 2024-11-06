@@ -7,9 +7,11 @@ from asyncua import uamethod
 from rclpy.executors import MultiThreadedExecutor
 import threading
 import subprocess
-
+import os
+import asyncio
 current_dir = Path(__file__).resolve().parent
 sys.path.append(str(current_dir.parent))
+import signal
 
 from OPCUA_ros2_control.opcua_ros2_control import ros2_control
 from OPCUA_ros2_control.ros2_simulation_joint_state import ros2_simulation_joint_state_subscriber
@@ -24,26 +26,56 @@ class ros2_simulation_control(ros2_control):
         self.executor_thread = None
         self.executor = None
         self.launch_process = None
-        self.launch_file_path = ["kr3r540_bringup", "kr3r540_ign.launch.py"]
+        self.package = "kr3r540_bringup"
+        self.launch_file = "kr3r540_ign.launch.py"
+        self.launch_thread = None
 
     @uamethod
     async def launch_ros2_simulation(self,parent):
+        """Starts the ROS 2 launch file in a separate thread."""
+        if self.launch_thread is not None and self.launch_thread.is_alive():
+            return "ROS 2 launch is already running."
+
+        # Start the launch process in a separate thread
+        self.launch_thread = threading.Thread(target=self._start_ros2_launch)
+        self.launch_thread.start()
+
+    def _start_ros2_launch(self):
         try:
+            #os.environ['DISPLAY'] = ':0'
             # Run the hardcoded ROS 2 launch file path
-            ros_setup = "/opt/ros/humble/setup.bash"
-            command = f"source {ros_setup} && ros2 launch {' '.join(self.launch_file_path)}"
+
+
+            command = ["./OPCUA_ros2_control/launch_wrapper.sh", self.package, self.launch_file]
             self.launch_process = subprocess.Popen(
-                ["bash", "-c", command],
+                command,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                start_new_session=True
+                preexec_fn=os.setsid
             )
-            print(f"Started ROS 2 launch file: {' '.join(self.launch_file_path)}")
-            return "ROS 2 launch started successfully."
+
+            self.monitor_process()
+
+            print(f"ROS 2 launch PID: {self.launch_process.pid}")
+
+
+            return self.launch_process.stdout.read().decode()
         except Exception as e:
             print(f"Failed to start ROS 2 launch file: {e}")
             return f"Error: {str(e)}"
-            
+        
+    def monitor_process(self):
+        """Monitors the output of the ROS 2 launch process."""
+        if self.launch_process:
+            while True:
+                line = self.launch_process.stdout.readline()
+                if line == b'':  # Check if process has ended
+                    break
+                print(f"ROS 2 Output: {line.decode().strip()}")
+
+            self.launch_process.wait()
+            print("ROS 2 process finished.")
+            self.launch_process = None
 
     def ros2_execution(self):
         # Initialize rclpy in this thread
@@ -84,12 +116,18 @@ class ros2_simulation_control(ros2_control):
     
     @uamethod
     async def stop_ros2_launch(self, parent):
-        """Stops the ROS 2 launch file."""
+        """Stops the ROS 2 launch file and all its associated processes."""
         if self.launch_process:
-            self.launch_process.terminate()
-            self.launch_process.wait()  # Wait for the process to terminate
-            print("ROS 2 launch stopped.")
-            return "ROS 2 launch stopped successfully."
+            try:
+                # Terminate the entire process group
+                os.killpg(os.getpgid(self.launch_process.pid), signal.SIGTERM)
+                self.launch_process.wait()  # Wait for the process to terminate
+                print("ROS 2 launch stopped.")
+                self.launch_process = None  # Clear the reference to the process
+                return "ROS 2 launch stopped successfully."
+            except Exception as e:
+                print(f"Failed to stop ROS 2 launch file: {e}")
+                return f"Error stopping ROS 2 launch: {str(e)}"
         else:
             return "No ROS 2 launch is running."
 

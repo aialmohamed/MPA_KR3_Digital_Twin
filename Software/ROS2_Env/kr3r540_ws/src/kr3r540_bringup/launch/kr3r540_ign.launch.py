@@ -84,7 +84,6 @@ def generate_launch_description():
         parameters=[{"use_sim_time": True}],
         arguments=['-d', rviz_config_path ,],
         remappings=[('/tf','tf'),('/tf_static','tf_static')],
-        output="screen",
     )
 
     ros_distro = os.environ ['ROS_DISTRO']
