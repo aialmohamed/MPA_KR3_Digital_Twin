@@ -12,6 +12,7 @@ class opcua_paths():
         self.root = current_dir.parent
         self.config = self.root / "config"
         self.opcua_config = self.config / "opcua_server_config.yaml"
+        self.ros2_config = self.config / "ros2_configuration.yaml"
         self.roslibs = "opt/ros/humble/local/lib/python3.8/dist-packages"
     
     def get_root(self):
@@ -22,4 +23,6 @@ class opcua_paths():
         return self.opcua_config
     def get_roslibs(self):
         return self.roslibs        
+    def get_ros2_config(self):
+        return self.ros2_config
 

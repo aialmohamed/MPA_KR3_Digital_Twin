@@ -35,10 +35,19 @@ class joints_state_to_opcua:
         return self.joint_efforts
     def joint_state_to_opcua(self):
         joint_data = {}
-        for name in self.joint_names:
-            joint_data[name] = {
-                "position": self.joint_positions[self.joint_names.index(name)],
-                "velocity": self.joint_velocities[self.joint_names.index(name)],
-                "effort": self.joint_efforts[self.joint_names.index(name)],
-            }
+        for i, name in enumerate(self.joint_names):
+            try:
+                position = self.joint_positions[i] if i < len(self.joint_positions) else None
+                velocity = self.joint_velocities[i] if i < len(self.joint_velocities) else None
+                effort = self.joint_efforts[i] if i < len(self.joint_efforts) else None
+
+                joint_data[name] = {
+                    "position": position if position is not None else float("nan"),
+                    "velocity": velocity if velocity is not None else float("nan"),
+                    "effort": effort if effort is not None else float("nan"),
+                }
+
+            except IndexError as e:
+                print(f"Warning: Data missing for joint '{name}': {e}")
+
         return joint_data

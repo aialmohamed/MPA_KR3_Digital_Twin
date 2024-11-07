@@ -1,0 +1,7 @@
+ros2_configuration:
+  ros2_pkgs:
+    - kr3r540_bringup
+  ros2_launchers:
+    simulation:
+      - kr3r540_ign.launch.py
+      - kr3r540_ign_controller.launch.py
