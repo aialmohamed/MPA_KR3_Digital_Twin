@@ -1,0 +1,23 @@
+@startuml "Opcua_config"
+
+class opcua_configuration {
+    + yaml_path : string 
+    + yaml_data : dict
+    + opcua_ip : string
+    + opcua_port : string
+    + opcua_namespace : string
+    + opcua_name : string
+    + security_policy : SecurityPolicyType
+
+    + load_configuration() :dict
+    + get_opcua_ip() : string
+    + get_opcua_port() : string
+    + get_opcua_namespace() : string
+    + get_opcua_name() : string
+    + get_security_policy() : SecurityPolicyType
+    
+}
+
+
+
+@enduml 

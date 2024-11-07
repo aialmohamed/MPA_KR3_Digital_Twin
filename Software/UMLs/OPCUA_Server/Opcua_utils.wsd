@@ -1,0 +1,15 @@
+@startuml "OPCUA_utils"
+
+class opcua_paths {
+    + root : string const 
+    + config : string const
+    + opcua_config : string const
+    + roslibs : string const
+    + get_root() : string const
+    + get_config() : string const
+    + get_opcua_config() : string const
+    + get_roslibs() : string const
+}
+
+
+@enduml

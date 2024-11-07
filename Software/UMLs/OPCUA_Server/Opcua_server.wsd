@@ -1,0 +1,21 @@
+@startuml "Opcua_server"
+
+class "opcua_ros2_server" {
+    + opcua_server : Server
+    + simulation_control : ros2_simulation_control
+    + config_path : string
+    + opcua_config : opcua_configuration
+    + ip : string
+    + port : string
+    + namespace : string
+    + name : string
+    + security_policy : ua.SecurityPolicyType
+    + endpoints : string
+    + uri : string
+    + opcua_idx : int
+    + async init_opcua_server() : void
+    + async start_opcua_server() : void
+    + async stop_opcua_server() : void
+}
+
+@enduml

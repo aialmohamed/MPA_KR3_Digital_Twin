@@ -18,7 +18,7 @@ class opcua_configuration:
             self.yaml_data = self.data['opcua_server']
         else:
             print("Error: 'opcua_server' key not found in YAML data")
-
+            #TODO : refactor this with if and raise error
     def get_opcua_ip(self):
         if self.yaml_data is not None:
             self.opcua_ip = self.yaml_data['ip']

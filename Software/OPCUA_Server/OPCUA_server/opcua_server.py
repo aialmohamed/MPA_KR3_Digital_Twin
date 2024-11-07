@@ -49,7 +49,7 @@ class opcua_ros2_server():
         await obj.add_method("ns=2;s=StartROS2Subscriber", "StartROS2Subscriber", self.simulation_control.start_ros2_subscriber, [ua.VariantType.String], [ua.VariantType.String])
         await obj.add_method("ns=2;s=StopROS2Subscriber", "StopROS2Subscriber", self.simulation_control.stop_ros2_subscriber, [], [ua.VariantType.String])
         self.opcua_server.set_security_policy([self.security_policy])
-        self.idx = await self.opcua_server.register_namespace(self.uri)
+        self.opcua_idx = await self.opcua_server.register_namespace(self.uri)
 
 
     async def start_opcua_server(self):
