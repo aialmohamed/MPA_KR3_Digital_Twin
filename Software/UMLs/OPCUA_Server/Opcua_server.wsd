@@ -18,7 +18,12 @@ class "opcua_ros2_server" {
     + async stop_opcua_server() : void
 }
 
-class "opcua_ros2_server_simulation_method" {
+class JointStateManager{
+
+}
+class ControlMethodManager{
     
 }
+
+
 @enduml
