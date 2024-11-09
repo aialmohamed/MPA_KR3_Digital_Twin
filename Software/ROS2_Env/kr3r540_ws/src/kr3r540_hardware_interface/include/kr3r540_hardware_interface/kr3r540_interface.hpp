@@ -81,6 +81,8 @@ namespace kr3r540_hardware_interface
         bool setup_ip_and_port(const hardware_interface::HardwareInfo &hardware_info);
         void init_positions();
         void limit_check(std::vector<double> &position_commands);
+        double round_to_thousandth(double value);
+        double round_to_hundredth(double value);
     };
 
 }

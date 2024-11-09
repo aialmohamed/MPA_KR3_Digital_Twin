@@ -2,6 +2,14 @@ ros2_configuration:
   ros2_pkgs:
     - kr3r540_bringup
   ros2_launchers:
+    system:
+      - kr3r540_system.launch.py
     simulation:
       - kr3r540_ign.launch.py
       - kr3r540_ign_controller.launch.py
+      - kr3r540_kinematics_server.launch.py
+    real:
+      - kr3r540_real.launch.py
+      - kr3r540_real_controller.launch.py
+    digital_twin:
+      - digital_twin.launch.py

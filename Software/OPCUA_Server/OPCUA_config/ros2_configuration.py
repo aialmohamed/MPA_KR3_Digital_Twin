@@ -37,3 +37,21 @@ class ros2_configuration:
         catagories = self.get_ros2_launch_files_category()
         self.ros2_simulation_launch_files = catagories['simulation']
         return self.ros2_simulation_launch_files
+    def get_ros2_real_launch_files(self):
+        if self.yaml_data is None:
+            raise ValueError("Error: No data loaded")
+        catagories = self.get_ros2_launch_files_category()
+        self.ros2_real_launch_files = catagories['real']
+        return self.ros2_real_launch_files
+    def get_ros2_system_launch(self):
+        if self.yaml_data is None:
+            raise ValueError("Error: No data loaded")
+        catagories = self.get_ros2_launch_files_category()
+        self.ros2_system_launch = catagories['system']
+        return self.ros2_system_launch
+    def get_ros2_digital_twin_launch(self):
+        if self.yaml_data is None:
+            raise ValueError("Error: No data loaded")
+        catagories = self.get_ros2_launch_files_category()
+        self.ros2_digital_twin_launch = catagories['digital_twin']
+        return self.ros2_digital_twin_launch

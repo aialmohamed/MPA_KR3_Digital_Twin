@@ -1,11 +1,9 @@
-import rclpy
+#!/usr/bin/env python3
 from rclpy.node import Node
 from sensor_msgs.msg import JointState
 from asyncua import ua
 import sys
 from pathlib import Path
-from rclpy.executors import MultiThreadedExecutor
-import json
 
 current_dir = Path(__file__).resolve().parent
 sys.path.append(str(current_dir.parent))
@@ -15,7 +13,7 @@ from OPCUA_messages.JointsStateToOpcua import joints_state_to_opcua
 class ros2_simulation_joint_state_subscriber(Node):
     def __init__(self, server_variable_dict):
         super().__init__(
-            "opuca_ros2_simulation_joint_state_subscriber", namespace="opcua"
+            "simulation_joint_state_subscriber", namespace="opcua"
         )
         self.joint_state_data = None
         self.server_variable_dict = server_variable_dict

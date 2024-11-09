@@ -11,6 +11,8 @@
 #include <mutex>
 #include "kr3r540_kinematics_action_server/kinematics_solver.hpp"
 
+#define FINGER_MAX 0.004
+#define FINGER_MIN 0.001
 namespace kr3r540_kinematics_action_server
 {
     class Kr3r540KinematicsActionServer : public rclcpp::Node

@@ -87,7 +87,7 @@ namespace kr3r540_kinematics_action_server
         double finger_1_goal = goal->cartesian_goal[5];
         double finger_2_goal = goal->cartesian_goal[6];
         std::vector<double> joint_positions;
-        rclcpp::Rate loop_rate(20);
+        rclcpp::Rate loop_rate(5);
 
         if (!kinematics_solver_.solveIK(position_goal, joint_positions))
         {
@@ -104,6 +104,23 @@ namespace kr3r540_kinematics_action_server
         point.positions = joint_positions;
 
         // Add gripper goals to the positions
+        if(finger_1_goal >= 1 )
+        {
+            finger_1_goal = FINGER_MAX;
+        }
+        else if(finger_1_goal <= 0)
+        {
+            finger_1_goal = FINGER_MIN;
+        }
+        if (finger_2_goal >= 1)
+        {
+            finger_2_goal = FINGER_MAX;
+        }
+        else if (finger_2_goal <= 0)
+        {
+            finger_2_goal = FINGER_MIN;
+        }
+        
         point.positions.push_back(finger_1_goal);
         point.positions.push_back(finger_2_goal);
         point.time_from_start = rclcpp::Duration::from_seconds(1.0);

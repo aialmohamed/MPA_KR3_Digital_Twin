@@ -19,10 +19,10 @@ class DigitalTwinInformation(Node):
             JointTrajectory, "/kr3r540_digital_twin/digital_twin_joint_trajectory", self.real_joint_state_callback, 10
         )
         self.real_arm_command_pub = self.create_publisher(
-            JointTrajectory, "/kr3r540_real/arm_controller/joint_trajectory", 10
+            JointTrajectory, "/kr3r540_sim/arm_controller/joint_trajectory", 10
         )
         self.real_gripper_command_pub = self.create_publisher(
-            JointTrajectory, "/kr3r540_real/gripper_controller/joint_trajectory", 10
+            JointTrajectory, "/kr3r540_sim/gripper_controller/joint_trajectory", 10
         )
 
         #self.get_logger().info("Digital shadow node started: syncing digital twin to real robot.")
@@ -39,7 +39,7 @@ class DigitalTwinInformation(Node):
             if msg.points:
                 arm_point = JointTrajectoryPoint()
                 arm_point.positions = [msg.points[0].positions[msg.joint_names.index(name)] for name in arm_joints]
-                arm_point.time_from_start = rclpy.time.Duration(seconds=0.2).to_msg()
+                arm_point.time_from_start = rclpy.time.Duration(seconds=0.5).to_msg()
                 arm_trajectory_msg.points.append(arm_point)
             self.real_arm_command_pub.publish(arm_trajectory_msg)
             #self.get_logger().info("Published arm trajectory to real robot.")
@@ -51,7 +51,7 @@ class DigitalTwinInformation(Node):
             if msg.points:
                 gripper_point = JointTrajectoryPoint()
                 gripper_point.positions = [msg.points[0].positions[msg.joint_names.index(name)] for name in gripper_joints]
-                gripper_point.time_from_start = rclpy.time.Duration(seconds=0.2).to_msg()
+                gripper_point.time_from_start = rclpy.time.Duration(seconds=0.5).to_msg()
                 gripper_trajectory_msg.points.append(gripper_point)
             self.real_gripper_command_pub.publish(gripper_trajectory_msg)
             #self.get_logger().info("Published gripper trajectory to real robot.")

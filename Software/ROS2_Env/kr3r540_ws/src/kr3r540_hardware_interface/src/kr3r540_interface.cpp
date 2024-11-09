@@ -3,6 +3,7 @@
 #include <angles/angles.h>
 #include <regex>
 #include <pluginlib/class_list_macros.hpp>
+#include <cmath>
 
 namespace kr3r540_hardware_interface
 {
@@ -126,7 +127,7 @@ namespace kr3r540_hardware_interface
             return hardware_interface::return_type::ERROR;
         }
 
-          // READ THE GRIPPER
+        // READ THE GRIPPER
         kuka_client_->readVariable(5, "GripperFlag", [this](boost::system::error_code ec, ResponseMessage response)
                                    {
                 if (!ec) {
@@ -148,7 +149,6 @@ namespace kr3r540_hardware_interface
                     position_state_[6] = previous_position_state_[6];          
                     position_state_[7] = previous_position_state_[7];      
                 } });
-
 
         kuka_client_->readVariable(1, "$AXIS_ACT", [this](boost::system::error_code ec, ResponseMessage response)
                                    {
@@ -172,7 +172,6 @@ namespace kr3r540_hardware_interface
             RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "Failed to read joint data: %s", ec.message().c_str());
             } });
 
-      
         return hardware_interface::return_type::OK;
     }
     hardware_interface::return_type Kr3r540Interface::write(const rclcpp::Time &time, const rclcpp::Duration &period)
@@ -186,6 +185,23 @@ namespace kr3r540_hardware_interface
 
         std::vector<double> arm_commands(position_commands_.begin(), position_commands_.begin() + 6);
         std::string command_data = postion_commands_to_string(position_commands_);
+        /*
+        std::ostringstream ss;
+        ss << "position_commands_: [";
+        for (size_t i = 0; i < position_commands_.size(); ++i)
+        {
+            ss << position_commands_[i];
+            if (i < position_commands_.size() - 1)
+            {
+                ss << ", ";
+            }
+        }
+        ss << "]";
+        */
+
+        // Print the formatted vector
+        // RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "%s", ss.str().c_str());
+        // RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Converted command_data: %s", command_data.c_str());
 
         kuka_client_->writeVariable(2, "MYAXIS", command_data, [this](boost::system::error_code ec, ResponseMessage response)
                                     {
@@ -195,7 +211,9 @@ namespace kr3r540_hardware_interface
                 position_commands_ = prev_position_commands_;
             } });
 
-        bool new_gripper_flag = (position_commands_[6] == FINGER_1_OPEN && position_commands_[7] == FINGER_2_OPEN);
+        bool new_gripper_flag = (round_to_thousandth (position_commands_[6])  >= FINGER_1_OPEN_READ);
+        //RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Gripper finger1: %f", position_commands_[6]);
+
         if (new_gripper_flag != local_gripper_flag_)
         {
             kuka_client_->writeVariable(5, "GripperFlag", new_gripper_flag ? "TRUE" : "FALSE", [this, new_gripper_flag](boost::system::error_code ec, ResponseMessage response)
@@ -212,7 +230,15 @@ namespace kr3r540_hardware_interface
 
 #pragma endregion
 #pragma region private_methods
-
+    // Function to round to the nearest thousandth (0.001 precision)
+    double Kr3r540Interface::round_to_thousandth(double value)
+    {
+        return std::round(value * 1000.0) / 1000.0;
+    }
+    double Kr3r540Interface::round_to_hundredth(double value)
+    {
+        return std::round(value * 100.0) / 100.0;
+    }
     void Kr3r540Interface::parse_axis_data(const std::string &axis_data)
     {
 
@@ -242,6 +268,7 @@ namespace kr3r540_hardware_interface
         std::vector<double> position_commands_deg(info_.joints.size(), 0.0);
         for (size_t position_idx = 0; position_idx < position_commands.size(); ++position_idx)
         {
+            position_commands_copy[position_idx] = round_to_hundredth(position_commands_copy[position_idx]);
             position_commands_deg[position_idx] = angles::to_degrees(position_commands_copy[position_idx]);
         }
 
@@ -254,6 +281,8 @@ namespace kr3r540_hardware_interface
            << "A6 " << position_commands_deg[5] << "}";
 
         std::string command_data = ss.str();
+        // RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "position_commands_ (degrees) after conversion: %s", command_data.c_str());
+
         return command_data;
     }
     bool Kr3r540Interface::setup_ip_and_port(const hardware_interface::HardwareInfo &hardware_info)

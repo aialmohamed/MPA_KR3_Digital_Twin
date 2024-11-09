@@ -13,8 +13,8 @@ kr3r540_sim:
 
       joint_state_broadcaster:
         type: joint_state_broadcaster/JointStateBroadcaster
-        publish_rate: 100
-  
+        publish_rate: 70
+
   gripper_controller:
     ros__parameters:
       joints:
