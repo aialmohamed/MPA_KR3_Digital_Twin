@@ -268,7 +268,7 @@ namespace kr3r540_hardware_interface
         std::vector<double> position_commands_deg(info_.joints.size(), 0.0);
         for (size_t position_idx = 0; position_idx < position_commands.size(); ++position_idx)
         {
-            position_commands_copy[position_idx] = round_to_hundredth(position_commands_copy[position_idx]);
+            position_commands_copy[position_idx] = round_to_thousandth(position_commands_copy[position_idx]);
             position_commands_deg[position_idx] = angles::to_degrees(position_commands_copy[position_idx]);
         }
 

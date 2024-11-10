@@ -8,6 +8,7 @@ import threading
 import subprocess
 import os
 import asyncio
+import psutil
 
 current_dir = Path(__file__).resolve().parent
 sys.path.append(str(current_dir.parent))
@@ -18,6 +19,7 @@ from OPCUA_utils.opcua_paths import opcua_paths
 from OPCUA_config.ros2_configuration import ros2_configuration
 import time
 
+import signal
 
 class ros2_simulation_control:
     def __init__(self, opcua_server, joint_state_server_variable):
@@ -48,6 +50,7 @@ class ros2_simulation_control:
         # digital twin 
         self.digital_twin_thread = None
         self.digital_twin_command = None
+        self.digital_twin_process = None
 
     @uamethod
     async def launch_ros2_simulation(self, parent):
@@ -149,22 +152,63 @@ class ros2_simulation_control:
 
     ## digital Twin launcher
     def _start_digital_twin(self):
-        os.system(self.digital_twin_command)
+        try:
+            self.digital_twin_command = f". ~/.bashrc && ros2 launch {self.simulation_pkg} {self.digital_twin_launch}"
+            self.digital_twin_process = subprocess.Popen(
+                ["gnome-terminal", "--","bash", "-c", self.digital_twin_command],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                start_new_session=True,
+                shell=False,
+            )
+            print(f"ROS 2 digital twin PID: {self.digital_twin_process.pid}")
+            return f"ROS 2 digital twin PID: {self.digital_twin_process.pid}"
+        except Exception as e:
+            print(f"Failed to start ROS 2 digital twin: {e}")
+            return f"Error: {str(e)}"
 
     
     @uamethod
     async def launch_ros2_digital_twin(self, parent):
-        self.digital_twin_command = f". ~/.bashrc && ros2 launch {self.simulation_pkg} {self.digital_twin_launch}"
-        self.digital_twin_thread = threading.Thread(target=self._start_digital_twin)
-        self.digital_twin_thread.start()
+        try:
+            self.digital_twin_thread = threading.Thread(target=self._start_digital_twin)
+            self.digital_twin_thread.start()
+            return "ROS 2 digital twin started successfully."
+        except Exception as e:
+            print(f"Failed to start ROS 2 digital twin: {e}")
+            return f"Error starting ROS 2 digital twin: {str(e)}"
         
+
     @uamethod
     async def shutdown_ros2_digital_twin(self, parent):
         """Cleanup method to stop ROS and threads."""
-        # joint thread : 
-        if self.digital_twin_thread:
-            self.digital_twin_thread.join()
-        # stop process on the thread
-        return "ROS 2 digital twin shutdown successfully."
+        try:
+            print(f"pid: {self.digital_twin_process.pid}")
+            if self.digital_twin_process:
+                self.kill_process_and_childern()
+                
+                # Wait for the thread to finish
+                self.digital_twin_thread.join()
+                return "ROS 2 digital twin stopped successfully."
+            else:
+                return "No ROS 2 digital twin process to stop."
+        except Exception as e:
+            print(f"Failed to stop ROS 2 digital twin: {e}")
+            return f"Error stopping ROS 2 digital twin: {str(e)}"
+            
+    def kill_process_and_childern(self):
+        try:
+            parent = psutil.Process(self.digital_twin_process.pid)
+            children = parent.children(recursive=True)
+            for child in children:
+                print(f"Child process {child.name} {child.pid}  have parent : {parent.name} at {parent.pid}.")
+                if "gnome-terminal" in child.name():
+                    child.terminate()
+                    print(f"Child process {child.name} {child.pid} terminated.")
+                    break
+        except psutil.NoSuchProcess:
+            print("No such process")
+
+        
 
 
