@@ -38,7 +38,7 @@ class DigitalTwinData(Node):
             current_positions = [pos for name, pos in zip(msg.name, msg.position) if "joint" in name]
             if self.prev_joint_positions:
                 self.movement_stopped = all(
-                    abs(current - prev) < 1e-3 
+                    abs(current - prev) < 1e-4 
                     for current, prev in zip(current_positions, self.prev_joint_positions)
                 )
             self.prev_joint_positions = current_positions
