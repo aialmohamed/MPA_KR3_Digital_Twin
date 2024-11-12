@@ -16,8 +16,6 @@
       - [Problem](#problem)
       - [Solution](#solution)
     - [Digital Twin in Ros2 Nodes](#digital-twin-in-ros2-nodes)
-    - [OPCUA and ROS2](#opcua-and-ros2)
-    - [Visual Commission](#visual-commission)
   - [Packages](#packages)
   - [Plugins](#plugins)
   - [Usage](#usage)
@@ -116,10 +114,6 @@ The **digital_twin_information** has the responsibly of matching the commands ak
 In order to manage the system in cartesian coordinates we need to apply some **Inverse Kinematics** and that is the point of the **Action Server : Kinematics** , where an **Action Client** sends a point in **(x,y,z,roll,pitch)** as a request to the server , and the server applies the **Inverse Kinematics** to get the joints angles and push it to the **digital_Twin_information**.
 
 At the same time the **Action Server** sends a continues **feedback** to the  **Action Client** with the current coordinates of the robot **in (x,y,z)** format.
-
-### OPCUA and ROS2 
-
-### Visual Commission
 
 ## Packages
 

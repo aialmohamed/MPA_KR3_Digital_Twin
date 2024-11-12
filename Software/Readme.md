@@ -6,34 +6,28 @@
   - [Experimental Software](#experimental-software)
     - [CppOpenShowVar](#cppopenshowvar)
   - [ROS2\_Env](#ros2_env)
-    - [kr3r540\_ws](#kr3r540_ws)
-      - [kr3r540\_bringup](#kr3r540_bringup)
-      - [kr3r540\_description](#kr3r540_description)
-      - [kr3r540\_digital\_twin](#kr3r540_digital_twin)
-      - [kr3r540\_hardware\_interface](#kr3r540_hardware_interface)
-      - [kr3r540\_kinematics\_action\_server](#kr3r540_kinematics_action_server)
-      - [kr3r540\_msgs](#kr3r540_msgs)
-      - [kr3r540\_scripts](#kr3r540_scripts)
+  - [OPCUA\_Server](#opcua_server)
   - [Dashboard](#dashboard)
   - [Automation system Build](#automation-system-build)
 
 
 ## Experimental Software  
 
-### CppOpenShowVar
+### [CppOpenShowVar](../Software/Experimental/CppOpenShowVarClient/CppOpenShowVar.md)
+a Cpp Library using boost.asio to create a communication with the Kukavarproxy server on the Robot .
+This Library is also used to implement the **Hardware-Interface** of the kr3r540 ros2 robot.
+This library contains mainly a tcp layer (lowest layer) that uses a asynchronous tcp communication with the ability to serialize and deserialize the read/write and response messages from and to the robot.
 
-## ROS2_Env
+I have created some test cases (unit/integration tests) (focused for the serialization and deserialization) but doing some more tests would help improve and optimize this library.
 
-### kr3r540_ws
 
-#### kr3r540_bringup 
-#### kr3r540_description
-#### kr3r540_digital_twin
-#### kr3r540_hardware_interface
-#### kr3r540_kinematics_action_server
-#### kr3r540_msgs
-#### kr3r540_scripts
+## [ROS2_Env](../Software/ROS2_Env/Ros2_Of_Kr3.md)
+
+This is the core of the Digital Twin system , here you can find all the ros2 packages that I built in order to create the Digital Twin **(using Gazebo Ignition)** of the kr3r540.
+The packages include all the needed urdf files of the robot , the controllers of the simulated robot and the real robot, hardware interface layer of the real robot, inverse kinematics action server using KDL library, ros2 user defined messages .digital twin nodes and the ros2 launchers.
+
+## OPCUA_Server
 
 ## Dashboard
-
+TBD (Before 15.12.2024)
 ## Automation system Build
