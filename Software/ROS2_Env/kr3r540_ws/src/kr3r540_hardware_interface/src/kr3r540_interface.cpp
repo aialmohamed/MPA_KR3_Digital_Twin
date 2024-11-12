@@ -183,36 +183,47 @@ namespace kr3r540_hardware_interface
             return hardware_interface::return_type::ERROR;
         }
 
+        // Apply threshold to ignore near-zero values
+        for (auto &command : position_commands_)
+        {
+            if (std::abs(command) < 1e-5)
+            {
+                command = 0.0;
+            }
+        }
+        
+
         std::vector<double> arm_commands(position_commands_.begin(), position_commands_.begin() + 6);
         std::string command_data = postion_commands_to_string(position_commands_);
-        /*
+        
         std::ostringstream ss;
+        /*
         ss << "position_commands_: [";
-        for (size_t i = 0; i < position_commands_.size(); ++i)
+        for (size_t i = 0; i < command_data.size(); ++i)
         {
-            ss << position_commands_[i];
-            if (i < position_commands_.size() - 1)
+            ss << command_data[i];
+            if (i < command_data.size() - 1)
             {
                 ss << ", ";
             }
         }
         ss << "]";
         */
-
         // Print the formatted vector
-        // RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "%s", ss.str().c_str());
-        // RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Converted command_data: %s", command_data.c_str());
+        //RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "%s", ss.str().c_str());
+        //RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Converted command_data: %s", command_data.c_str());
 
         kuka_client_->writeVariable(2, "MYAXIS", command_data, [this](boost::system::error_code ec, ResponseMessage response)
                                     {
             if (!ec) {
                 prev_position_commands_ = position_commands_;
             } else {
-                position_commands_ = prev_position_commands_;
+                //position_commands_ = prev_position_commands_;
+                RCLCPP_ERROR(rclcpp::get_logger("Kr3r540Interface"), "Failed to write joint data: %s", ec.message().c_str());
             } });
 
-        bool new_gripper_flag = (round_to_thousandth (position_commands_[6])  >= FINGER_1_OPEN_READ);
-        //RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Gripper finger1: %f", position_commands_[6]);
+        bool new_gripper_flag = (round_to_thousandth(position_commands_[6]) >= FINGER_1_OPEN_READ);
+        // RCLCPP_INFO(rclcpp::get_logger("Kr3r540Interface"), "Gripper finger1: %f", position_commands_[6]);
 
         if (new_gripper_flag != local_gripper_flag_)
         {
@@ -268,7 +279,7 @@ namespace kr3r540_hardware_interface
         std::vector<double> position_commands_deg(info_.joints.size(), 0.0);
         for (size_t position_idx = 0; position_idx < position_commands.size(); ++position_idx)
         {
-            position_commands_copy[position_idx] = round_to_thousandth(position_commands_copy[position_idx]);
+           // position_commands_copy[position_idx] = std::round(position_commands_copy[position_idx] * 10.0) / 10.0;
             position_commands_deg[position_idx] = angles::to_degrees(position_commands_copy[position_idx]);
         }
 

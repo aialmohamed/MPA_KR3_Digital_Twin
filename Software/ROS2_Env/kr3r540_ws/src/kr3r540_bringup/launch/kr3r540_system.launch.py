@@ -84,13 +84,13 @@ def generate_launch_description():
     
     return LaunchDescription(
         [
-            real_robot,
-            real_robot_controller,
             sim_robot,
             sim_robot_controller,
             #digital_twin,
             kinematics_server,
-            digital_twin_information_launcher
+            real_robot,
+            real_robot_controller,
+            digital_twin_information_launcher,
 
         ]
     )
