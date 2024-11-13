@@ -15,22 +15,6 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 > This repository is manged with this [jira](
 >  https://ahmaedibrahim311-1720719768107.atlassian.net/jira/software/projects/DT/boards/2?atlOrigin=eyJpIjoiNjg4YjM5ZjIyYjM2NDUyYjlkYmYzN2RiZTRhMmNkNjUiLCJwIjoiaiJ9) project 
 
->[!NOTE]
->After the meeting with the professor on the 6th of August, we are using the KVP because it is easier to implement and we are not limiting the project to real-time (at least for now). 
->On the other hand, we have some suggestions for future development to improve the real-time aspect of the project, such as using a medium hardware like Revpi as a path for the RSI. so for this project we are using **KVP** (**KUKAVARPROXY**)
-
->[!NOTE]
-> After the meeting on 06 August, we also came to the conclusion that we will implement the remote control use case.
->With this use case, we can then define a dashboard that acts as a control channel for the system, allowing us to control and monitor the robot(s) from a remote device.
-
->[!NOTE]
-> The bug with binding the controller with the Simulation (solved using by adding use_sim_time flag in the launches.py of the movit_config)
-
->[!NOTE]
-> The Interfaces between the real robot and ROS2 might require some kind of multiTasking/Threading due to the slow rate of the tcp connection in compare to the control loop of the ROS2
-  
->[!NOTE]
-> we are moving from normal gazebo  (gazebo classic) to ignition
 ## Index
 
 - [Digital Twin KR3](#digital-twin-kr3)
@@ -42,10 +26,6 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
     - [Interface Development](#interface-development)
     - [Use Case and Evaluation](#use-case-and-evaluation)
   - [Approach](#approach)
-    - [Motivation and Definitions](#motivation-and-definitions)
-    - [Main System-Design](#main-system-design)
-    - [Hardware Interface and connection](#hardware-interface-and-connection)
-    - [Dashboard app](#dashboard-app)
   - [Setup](#setup)
   - [Software/s](#softwares)
   - [Testing](#testing)
@@ -98,82 +78,8 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 
 ## Approach 
 
-### Motivation and Definitions
-
-To create a working digital twin of a robot with ROS2 and Gazebo, we first need to understand the basic concept of ROS2.
-
-ROS2 is a middleware that allows us to control and monitor different types of robots by separating the hardware management layer, the control management layer and the application layer and then dynamically connecting them.
-
-This allows us to constantly change the controllers and easily switch off the hardware, making it easier to use the hardware.
-
-![ros control concept](/Images/ros2_controll_concept.png)
-
-
-For the digital twin to work on the KuKa KR3, we need to develop the following 
-* a hardware interface 
-* a ROS2 controller layer
-* a ROS2 Digital Twin Layer
-* a ROS2-OPCUA-Bridge
-
-This is only the side of the real robot. For the simulation or digital twin, we need to develop the simulation environment (Gazebo), so we need a dedicated BringUp ROS2 workspace for that.
-
-Fortunately, the team from last semester has already taken care of the simulation (and the controllers), so all we have to do now is develop the interfaces between the hardware and the ROS side.
-
-### Main System-Design
-
-
-
-![sytem_init](/Images/DT_concept.jpg) 
-
-### Hardware Interface and connection
-
->[!NOTE]
->According to this [research](https://ntnuopen.ntnu.no/ntnu-xmlui/handle/11250/2561319), the main connection to the robot and the use of this connection as the basis of an OPCUA server is as follows.
-
-| Aspect                   | KVP   (KUKAVARPROXY)                                      | RSI          (RobotSensorInterface)                                 | Implications                                      |
-|--------------------------|---------------------------------------------|----------------------------------------------|---------------------------------------------------|
-| **Time-Delay**           | Average time-delay of 8.75ms                | Average time-delay of 4.0ms                  | RSI has a lower time-delay, suitable for faster response times. |
-| **Communication Protocols** | Uses TCP (Transmission Control Protocol)  | Uses UDP (User Datagram Protocol)            | UDP is faster but less reliable; TCP is more reliable but can have higher latency. |
-| **Real-Time Requirements** | Less stringent real-time requirements      | Harder real-time requirements                | RSI provides faster responses but may be less stable. |
-| **System Requirements**   | Can run in the background on the controller | Requires running on a Linux machine          | KVP offers more flexibility and resource efficiency. |
-| **Reliability**           | More reliable, stable background operation  | Higher likelihood of breakdowns              | KVP is more robust for long-term stability.       |
-| **Functional Requirements** | Requires a specific program for position updates | Requires a specific program for position updates | Both need dedicated resources on the controller for position updates. |
-| **Advantages**            | - Higher reliability<br>- Flexibility<br>- Ease of use | - Lower latency<br>- Better real-time performance | KVP is better for general reliability and flexibility, RSI is better for low-latency applications. |
-| **Drawbacks**             | - Higher latency                            | - Higher risk of breakdowns<br>- More resource intensive | Trade-off between reliability and performance depending on use case. |
-
-### Dashboard app
-
-| Framework/Toolkit    | Description                                                                 | Supported Languages     | Platform Support            |
-|----------------------|-----------------------------------------------------------------------------|-------------------------|-----------------------------|
-| Electron             | Framework for building cross-platform desktop apps using web technologies.  | JavaScript, HTML, CSS    | Windows, macOS, Linux       |
-| Avalonia             | .NET UI framework for building cross-platform applications.                 | C#                       | Windows, macOS, Linux       |
-| .NET MAUI            | Cross-platform framework for building native mobile and desktop apps.       | C#                       | Windows, macOS              |
-| WPF (Windows Presentation Foundation) | UI framework for building Windows desktop applications.     | C#, XAML                 | Windows                     |
-| GTK                  | Toolkit for creating graphical user interfaces.                             | C, Python, Vala          | Windows, macOS, Linux       |
-| Qt                   | Cross-platform application development framework.                           | C++, QML                 | Windows, macOS, Linux       |
-| WinUI                | Latest UI framework for Windows desktop apps.                               | C#, C++, XAML            | Windows                     |
-| JavaFX               | Platform for building rich internet applications with Java.                 | Java, FXML               | Windows, macOS, Linux       |
-| SwiftUI              | UI toolkit by Apple for building user interfaces across all Apple devices.  | Swift                    | macOS                       |
-| Tauri                | Lightweight framework for building cross-platform desktop apps.             | Rust, JavaScript, HTML   | Windows, macOS, Linux       |
-| PyQt                 | Python binding for the Qt toolkit.                                          | Python                   | Windows, macOS, Linux       |
-| Lazarus              | Open-source cross-platform IDE similar to Delphi.                           | Object Pascal            | Windows, macOS, Linux       |
-| Uno Platform         | Cross-platform framework for building single-codebase applications.         | C#                       | Windows, macOS, Linux       |
-| Xamarin.Forms        | Framework for building cross-platform mobile and desktop apps.              | C#                       | Windows, macOS              |
-
->[!NOTE]
-On this [Gitrepo](https://github.com/ImtsSrl/openshowvar/blob/master/resources/kukavar.txt) you can find all the global variables that we can change with KUKAVARPROXY , we can create our own.
 ## Setup 
 
->[!NOTE]
-> Add a step by step tutorial for remote desktop UltraVNC and Sharing files on network locations
-> [This Video](https://www.youtube.com/watch?v=4pO9Pvz3nBQ)
-
-
->[!NOTE]
-> Add a reference to the use guid 
-
->[!NOTE]
-> if KUKAVARPROXY dose not work check this out : https://github.com/ImtsSrl/KUKAVARPROXY/issues/18
 ## Software/s
 
 ## Testing 
