@@ -1,0 +1,30 @@
+@startuml "Local Server Sequence Diagram - ros2 Launch"
+
+participant "opcua_server" as opcua_server order 2
+participant "opcua_client" as opcua_client  order 1
+participant "ros2_system_launcher" as ros2_simualtion order 3
+participant "ros2_kr3r540_system" as ros2_system order 4
+
+opcua_client -> opcua_server: Connect
+activate opcua_server
+
+opcua_client -> opcua_server: LaunchRos2System
+opcua_server -> ros2_simualtion: Start kr3r540_System.launch.py
+activate ros2_simualtion
+ros2_simualtion -> ros2_system: <<start real robot nodes>>
+activate ros2_system
+ros2_simualtion -> ros2_system: <<start real robot controllers nodes>>
+ros2_simualtion -> ros2_system: <<start simulation robot nodes>>
+ros2_simualtion -> ros2_system: <<start simulation robot controllers nodes>>
+ros2_simualtion -> ros2_system: <<set the Inverse kinematics actions server>>
+ros2_simualtion -> ros2_system: <<start Gazebo Ignition>>
+ros2_simualtion -> ros2_system: <<start rviz2>>
+
+deactivate ros2_system
+ros2_simualtion -> opcua_server: << return "ros2 System Started">>
+deactivate ros2_simualtion
+opcua_server -> opcua_client: << return "ros2 System Started">>
+
+
+
+@enduml

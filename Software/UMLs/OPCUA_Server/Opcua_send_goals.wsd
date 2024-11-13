@@ -1,0 +1,41 @@
+@startuml "Local Server Sequence Diagram - Send Goals"
+
+participant "opcua_client" as opcua_client  order 1
+participant "opcua_server" as opcua_server order 2
+participant "CLI_ros2_kinematics_action_client" as CLI_ros2_action_client order 3
+participant "ros2_kinematics_action_server" as ros2_action_server order 4
+participant "ros2_kr3r540_simulation" as ros2_system order 5
+
+
+opcua_client -> opcua_server: Connect
+activate opcua_server
+
+opcua_client -> opcua_server: LaunchRos2System
+
+alt system started 
+    opcua_client -> opcua_server: SendGoal<goal>{x,y,z,roll,pitch,gripper}
+    opcua_server -> CLI_ros2_action_client: SendGoal<goal>
+    activate CLI_ros2_action_client
+    CLI_ros2_action_client -> ros2_action_server: SendGoal<goal>
+    activate ros2_action_server
+    ros2_action_server -> ros2_action_server : get Inverse Kinematics
+    ros2_action_server -> ros2_system: send Joint goal <<JoitnTrajectory>>
+    activate ros2_system
+    ros2_system -> ros2_system: Move robot to goal
+    ros2_system -> ros2_action_server: << return "current Joint state (Simulation)">>
+    deactivate ros2_system
+    ros2_action_server -> CLI_ros2_action_client: << feedback message >>
+    ros2_action_server -> CLI_ros2_action_client: << return "Goal Status">>
+    deactivate ros2_action_server
+    CLI_ros2_action_client -> opcua_server: << feedback message >>
+    CLI_ros2_action_client -> opcua_server: << return "Goal Status">>
+    deactivate CLI_ros2_action_client
+    opcua_server -> opcua_client: << feedback message >>
+    opcua_server -> opcua_client: << return "Goal Status">>
+
+else system not started
+    opcua_server -> opcua_client: << return "System not started">>
+
+end
+
+@enduml

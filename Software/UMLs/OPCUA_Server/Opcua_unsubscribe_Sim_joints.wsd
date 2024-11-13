@@ -1,0 +1,33 @@
+@startuml "Local Server Sequence Diagram - Unsubscribe Joints"
+
+participant "opcua_server" as opcua_server order 2
+participant "opcua_client" as opcua_client  order 1
+participant "simulation_joint_state_subscriber(ros2 node)" as simulation_joint_state_subscriber order 3
+
+opcua_client -> opcua_server: Connect
+activate opcua_server
+opcua_client -> opcua_server: LaunchRos2System
+
+alt system started 
+
+    opcua_client -> opcua_server: UnsubscribeToJointState
+    alt joints are active
+        
+        activate simulation_joint_state_subscriber
+            opcua_server -> simulation_joint_state_subscriber: DeactivateJoints
+            simulation_joint_state_subscriber -> simulation_joint_state_subscriber: stop node
+            simulation_joint_state_subscriber -> opcua_server: << return Unsubscribe message>>
+            opcua_server -> opcua_client: << return Unsubscribe message>>
+        deactivate simulation_joint_state_subscriber
+        else joints are not active
+            opcua_server -> opcua_client: << return "Joints are not active">>
+        end
+
+else system not started
+    opcua_server -> opcua_client: << return "System not started">>
+
+end
+
+
+
+@enduml

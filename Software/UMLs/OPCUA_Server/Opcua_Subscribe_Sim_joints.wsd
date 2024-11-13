@@ -1,0 +1,36 @@
+@startuml "Local Server Sequence Diagram - Activate Joints"
+
+
+participant "opcua_server" as opcua_server order 2
+participant "opcua_client" as opcua_client  order 1
+participant "ros2_kr3r540_system" as ros2_system order 4
+participant "simulation_joint_state_subscriber(ros2 node)" as simulation_joint_state_subscriber order 3
+
+opcua_client -> opcua_server: Connect
+activate opcua_server
+
+opcua_client -> opcua_server: LaunchRos2System
+
+alt system started 
+
+    opcua_client -> opcua_server: SubscribeToJointState
+    loop every 0.5s
+        activate simulation_joint_state_subscriber
+            opcua_server -> simulation_joint_state_subscriber: ActivateJoints
+            activate ros2_system
+                simulation_joint_state_subscriber -> ros2_system: Subscribe To joint states
+                ros2_system -> simulation_joint_state_subscriber: publish joint states
+            deactivate ros2_system
+            simulation_joint_state_subscriber -> opcua_server: <<SimulationJointStates>>
+            opcua_server -> opcua_client: <<SimulationJointStates>>
+        deactivate simulation_joint_state_subscriber
+    end
+
+else system not started
+    opcua_server -> opcua_client: << return "System not started">>
+
+end
+
+
+
+@enduml 

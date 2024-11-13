@@ -9,6 +9,11 @@
     - [Top Level Sequence](#top-level-sequence)
   - [Classes and Structure](#classes-and-structure)
   - [Sequences and connectivity](#sequences-and-connectivity)
+    - [Start System](#start-system)
+    - [Publishing simulation joint state to opcua client](#publishing-simulation-joint-state-to-opcua-client)
+    - [Stop publishing the simulation joint state to opcua client](#stop-publishing-the-simulation-joint-state-to-opcua-client)
+    - [Send Goals (To Simulation)](#send-goals-to-simulation)
+    - [Start Digital Twin](#start-digital-twin)
   - [Usage](#usage)
   - [Tests](#tests)
 
@@ -39,6 +44,42 @@ On the other hand the Robot (real or simulation) can send the data through the *
 ## Classes and Structure
 
 ## Sequences and connectivity  
+
+### Start System 
+
+![startSystem](../../Images/Local%20Server%20Sequence%20Diagram%20-%20ros2%20Launch.png)
+
+The System starts after the opcua client connects to the server and the client triggers the opcua_server method **LaunchRos2System** which starts the **kr3r540_System.launch.py** [file](../ROS2_Env/kr3r540_ws/src/kr3r540_bringup/launch/kr3r540_system.launch.py) that starts the ros2 system .
+
+### Publishing simulation joint state to opcua client
+
+![joitn_state](../../Images/Local%20Server%20Sequence%20Diagram%20-%20Activate%20Joints.png)
+
+After starting the system , by calling the **SubscribeToJointState** the opcua server triggers a ros2 node that is NOT a part of the kr3r540-core but a part of the opcua server , the node is called [**simulation_joint_state_subscriber**](../OPCUA_Server/OPCUA_ros2_control/ros2_simulation_joint_state_node.py) .
+
+This node subscribes to the ros2 specifically to the **/kr3r540_sim/joint_states** and publishes them to the opcua server every (0.5)s 
+
+### Stop publishing the simulation joint state to opcua client
+
+![stop_joint_state](../../Images/Local%20Server%20Sequence%20Diagram%20-%20Unsubscribe%20Joints.png)
+
+Here the Client triggers **UnsubscribToJointState** and if joints are active then the server kills the **simulation_joint_state_subscriber** and thus stops the subscriber to the **ros2-system**.
+
+
+### Send Goals (To Simulation)
+
+![send_goals](../../Images/Local%20Server%20Sequence%20Diagram%20-%20Send%20Goals.png)
+
+now if the system has been started (ros2-system is running) the client can trigger the **ignition simulation** by sending a goal message **[ x , y, z, roll, pitch, gripper_sate]** to a **ros2 kinematics action server** via a **ros2 action client** .
+the **action server** then takes to goal and applies **Inverse Kinematics** to create a **JointTrajectory message** that the **action server** sends to the **ros2_kr3r540_simulation controllers** which then moves the robot to the goal position.
+
+### Start Digital Twin
+
+![digital_twin](../../Images/Local%20Server%20Sequence%20Diagram%20-%20Start%20Digital%20Twin.png)
+
+Here if the system is started (ros2 system) and the joints of the [opcua are active](#publishing-simulation-joint-state-to-opcua-client) then the server starts a ros2 node **inside the opcua server workspace!** that takes the values from the opcua server and publish them to the **real robot controllers**.
+
+
 
 ## Usage
 

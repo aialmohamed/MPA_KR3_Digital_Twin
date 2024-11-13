@@ -1,0 +1,39 @@
+@startuml "Local Server Sequence Diagram - Start Digital Twin"
+
+participant "opcua_client" as opcua_client  order 1
+participant "opcua_server" as opcua_server order 2
+participant "digital_twin_node (ros2 Node)" as digital_twin_node order 3
+participant "ros2_kr3r540_system" as ros2_system order 4
+participant "ros2_kr3r540_real_robot_controller" as ros2_real_robot_controller order 5
+
+opcua_client -> opcua_server: Connect
+activate opcua_server
+opcua_client -> opcua_server: LaunchRos2System
+
+alt system started 
+    opcua_client -> opcua_server: StartDigitalTwin
+    alt joint state are active on opcua server
+        activate digital_twin_node
+        alt client did not stop digtial twin node
+        loop until joints are not changing
+        opcua_server -> digital_twin_node: send current joint states (from simulated robot)
+        digital_twin_node -> ros2_system: send current joint states (from simulated robot)
+        ros2_system -> ros2_real_robot_controller: send current joint states (from simulated robot)
+        ros2_real_robot_controller -> ros2_real_robot_controller: move robot to current joint states
+        end
+        else 
+        opcua_client -> opcua_server: StopDigitalTwin
+        opcua_server -> digital_twin_node: stop node
+        opcua_server -> opcua_client: << return "Digital Twin Stopped">>
+        end
+        else joints are not active
+            digital_twin_node -> opcua_server: no joints are active
+            opcua_server -> opcua_client: << return "Joints are not active">>
+            deactivate digital_twin_node
+        end
+else system not started
+    opcua_server -> opcua_client: << return "System not started">>
+end
+
+
+@enduml
