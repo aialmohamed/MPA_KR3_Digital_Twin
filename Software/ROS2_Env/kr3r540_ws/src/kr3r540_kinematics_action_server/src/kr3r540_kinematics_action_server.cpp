@@ -32,7 +32,7 @@ namespace kr3r540_kinematics_action_server
 
         // "/kr3r540_digital_twin/digital_twin_joint_trajectory",
         trajectory_pub_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
-            "/kr3r540_digital_twin/digital_twin_joint_trajectory",
+            "/kr3r540_sim/digital_twin_joint_trajectory",
             10);
     }
 

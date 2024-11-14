@@ -57,6 +57,7 @@ class opcua_ros2_server():
     async def add_ros2_simulation_methods(self):
         obj = await self.opcua_server.nodes.objects.add_folder("ns=2;s=ControlMethods", "SimulationControlMethods")
         await obj.add_method(ua.NodeId("LaunchRos2Simulation",self.opcua_idx), ua.QualifiedName("LaunchRos2Simulation",self.opcua_idx), self.simulation_control.launch_ros2_simulation, [], [ua.VariantType.String])
+        await obj.add_method(ua.NodeId("KillRos2Simulation",self.opcua_idx), ua.QualifiedName("KillRos2Simulation",self.opcua_idx), self.simulation_control.kill_ros2_simulation, [], [ua.VariantType.String])
         await obj.add_method(ua.NodeId("SubscribeToJointState",self.opcua_idx), ua.QualifiedName("SubscribeToJointState",self.opcua_idx), self.simulation_control.subscribe_to_joint_state, [], [ua.VariantType.String])
         await obj.add_method(ua.NodeId("UnsubscribeToJointState",self.opcua_idx), ua.QualifiedName("UnsubscribeToJointState",self.opcua_idx), self.simulation_control.shutdown_joint_state_subscriber, [], [ua.VariantType.String])
         await obj.add_method(ua.NodeId("SendGoal",self.opcua_idx),ua.QualifiedName("SendGoal",self.opcua_idx),self.simulation_control.send_ros_goal,

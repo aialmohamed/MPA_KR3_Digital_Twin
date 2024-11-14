@@ -14,6 +14,9 @@ class opcua_paths():
         self.opcua_config = self.config / "opcua_server_config.yaml"
         self.ros2_config = self.config / "ros2_configuration.yaml"
         self.roslibs = "opt/ros/humble/local/lib/python3.8/dist-packages"
+        self.shell_path = self.root / "OPCUA_shell_scripts"
+        self.shell_launch = self.shell_path / "System_launch.sh"
+        self.shell_kill = self.shell_path / "System_kill.sh"
     
     def get_root(self):
         return self.root
@@ -25,4 +28,11 @@ class opcua_paths():
         return self.roslibs        
     def get_ros2_config(self):
         return self.ros2_config
+    def get_shell_path(self):
+        return self.shell_path
+    def get_shell_launch(self):
+        return self.shell_launch
+    def get_shell_kill(self):
+        return self.shell_kill
+    
 

@@ -17,6 +17,7 @@ from OPCUA_ros2_control.ros2_simulation_joint_state_node import (
 )
 from OPCUA_utils.opcua_paths import opcua_paths
 from OPCUA_config.ros2_configuration import ros2_configuration
+from OPCUA_ros2_control.ros2_digital_twin import ros2_digital_twin
 import time
 
 import signal
@@ -31,15 +32,15 @@ class ros2_simulation_control:
         ros2_paths = opcua_paths()
         self.ros2_config = ros2_configuration(ros2_paths.get_ros2_config())
         self.ros2_config.loaddata()
-        pkg = self.ros2_config.get_ros2_launch_pkg()
-        self.simulation_pkg = pkg[0]
-        self.system_launch = self.ros2_config.get_ros2_system_launch()[0]
-        self.digital_twin_launch = self.ros2_config.get_ros2_digital_twin_launch()[0]
+        self.ros2_launch_file = ros2_paths.get_shell_launch()
+        self.ros2_kill_file = ros2_paths.get_shell_kill()
+
+
 
 
         ## joint state subscriber
         self.launch_thread = None
-
+        self.kill_thread = None
         self.subscriber_node = None
         self.executor = None
         self.joint_state_data = None
@@ -48,9 +49,10 @@ class ros2_simulation_control:
         self.command = None
 
         # digital twin 
+        self.digital_twin_node = None
+        self.digital_twin_executor = None
         self.digital_twin_thread = None
-        self.digital_twin_command = None
-        self.digital_twin_process = None
+
 
     @uamethod
     async def launch_ros2_simulation(self, parent):
@@ -67,37 +69,64 @@ class ros2_simulation_control:
 
     def _start_ros2_launch(self):
         try:
-            ros_setup = "~/.bashrc"
-            command = f". {ros_setup}  && ros2 launch {self.simulation_pkg} {self.system_launch}"
+            # Path to the shell script
+            shell_script_path = self.ros2_launch_file 
+
+            # Ensure the script is executable
+
+            subprocess.run(["chmod", "+x", shell_script_path], check=True)
+
+            # Run the shell script
             self.launch_process = subprocess.Popen(
-                ["gnome-terminal", "--", "bash", "-c", command],
+                ["bash", "-c", shell_script_path],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 preexec_fn=os.setsid,
             )
-
-            self.monitor_process()
-            return self.launch_process.stdout.read().decode()
+            
+            return "Shell script executed successfully."
         except Exception as e:
-            print(f"Failed to start ROS 2 launch file: {e}")
+            print(f"Failed to run the shell script: {e}")
             return f"Error: {str(e)}"
+    @uamethod
+    def kill_ros2_simulation(self, parent):
+        if self.kill_thread is not None and self.kill_thread.is_alive():
+            return "ROS 2 launch is already running."
+        try:
+            self.kill_thread = threading.Thread(target=self._kill_ros2_launch)
+            self.kill_thread.start()
+            return "ROS 2 launch is killed successfully."
+        except Exception as e:
+            print(f"Failed to kill ROS 2 launch file: {e}")
+            return f"Error killing ROS 2 launch: {str(e)}"
 
-    def monitor_process(self):
-        """Monitors the output of the ROS 2 launch process."""
-        if self.launch_process:
-            while True:
-                line = self.launch_process.stdout.readline()
-                if line == b"":  # Check if process has ended
-                    break
-                print(f"ROS 2 Output: {line.decode().strip()}")
+    def _kill_ros2_launch(self):
+        try:
+            # Path to the shell script
+            shell_script_path = self.ros2_kill_file
 
-            self.launch_process.wait()
-            print("ROS 2 process finished.")
-            print(f"ROS 2 launch PID: {self.launch_process.pid}")
-            self.launch_process = None
+            # Ensure the script is executable
+
+            subprocess.run(["chmod", "+x", shell_script_path], check=True)
+
+            # Run the shell script
+            self.launch_process = subprocess.Popen(
+                ["bash", "-c", shell_script_path],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                preexec_fn=os.setsid,
+            )
+            
+            return "Shell script executed successfully."
+        except Exception as e:
+            print(f"Failed to run the shell script: {e}")
+            return f"Error: {str(e)}"       
+        
+
 
     def ros2_setup(self):
-        rclpy.init()
+        if not rclpy.ok():
+            rclpy.init()
         self.subscriber_node = ros2_simulation_joint_state_subscriber(
             self.joint_state_server_variable
         )
@@ -123,7 +152,9 @@ class ros2_simulation_control:
             self.executor.shutdown()
         if self.subscriber_node:
             self.subscriber_node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()
+        return "ROS 2 joint state subscriber shutdown successfully."
 
     @uamethod
     async def send_ros_goal(
@@ -137,7 +168,7 @@ class ros2_simulation_control:
         finger1: int,
     ):
         self.command = (
-            f"ros2 action send_goal /kr3r540_sim/kr3r540_kinematics kr3r540_msgs/action/Kr3r540Kinemactis "
+            f"ros2 action send_goal /kr3r540_kinematics/kr3r540_kinematics kr3r540_msgs/action/Kr3r540Kinemactis "
             f'"cartesian_goal: [{x},{y},{z},{roll},{pitch},{finger1},{finger1}]" -f'
         )
 
@@ -152,62 +183,32 @@ class ros2_simulation_control:
 
     ## digital Twin launcher
     def _start_digital_twin(self):
-        try:
-            self.digital_twin_command = f". ~/.bashrc && ros2 launch {self.simulation_pkg} {self.digital_twin_launch}"
-            self.digital_twin_process = subprocess.Popen(
-                ["gnome-terminal", "--","bash", "-c", self.digital_twin_command],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                start_new_session=True,
-                shell=False,
-            )
-            print(f"ROS 2 digital twin PID: {self.digital_twin_process.pid}")
-            return f"ROS 2 digital twin PID: {self.digital_twin_process.pid}"
-        except Exception as e:
-            print(f"Failed to start ROS 2 digital twin: {e}")
-            return f"Error: {str(e)}"
+        if not rclpy.ok():
+            rclpy.init()
+        
+        self.digital_twin_node = ros2_digital_twin()
+        self.digital_twin_executor = SingleThreadedExecutor()
+        self.digital_twin_executor.add_node(self.digital_twin_node)
+        self.digital_twin_executor_thread = threading.Thread(target=self.digital_twin_executor.spin)
+        self.digital_twin_executor_thread.start()
 
-    
+
     @uamethod
     async def launch_ros2_digital_twin(self, parent):
-        try:
-            self.digital_twin_thread = threading.Thread(target=self._start_digital_twin)
-            self.digital_twin_thread.start()
-            return "ROS 2 digital twin started successfully."
-        except Exception as e:
-            print(f"Failed to start ROS 2 digital twin: {e}")
-            return f"Error starting ROS 2 digital twin: {str(e)}"
-        
+        self._start_digital_twin()
+        return "ROS 2 Digital Twin started successfully."
+
 
     @uamethod
     async def shutdown_ros2_digital_twin(self, parent):
-        """Cleanup method to stop ROS and threads."""
-        try:
-            print(f"pid: {self.digital_twin_process.pid}")
-            if self.digital_twin_process:
-                self.kill_process_and_childern()
-                
-                # Wait for the thread to finish
-                self.digital_twin_thread.join()
-                return "ROS 2 digital twin stopped successfully."
-            else:
-                return "No ROS 2 digital twin process to stop."
-        except Exception as e:
-            print(f"Failed to stop ROS 2 digital twin: {e}")
-            return f"Error stopping ROS 2 digital twin: {str(e)}"
+        if self.digital_twin_executor:
+            self.digital_twin_executor.shutdown()
+        if self.digital_twin_node:
+            self.digital_twin_node.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()
+        return "ROS 2 Digital Twin shutdown successfully."
             
-    def kill_process_and_childern(self):
-        try:
-            parent = psutil.Process(self.digital_twin_process.pid)
-            children = parent.children(recursive=True)
-            for child in children:
-                print(f"Child process {child.name} {child.pid}  have parent : {parent.name} at {parent.pid}.")
-                if "gnome-terminal" in child.name():
-                    child.terminate()
-                    print(f"Child process {child.name} {child.pid} terminated.")
-                    break
-        except psutil.NoSuchProcess:
-            print("No such process")
 
         
 

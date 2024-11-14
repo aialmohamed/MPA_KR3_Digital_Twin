@@ -16,7 +16,7 @@ class DigitalTwinInformation(Node):
         super().__init__("digital_twin_information")
     
         self.real_joint_state_sub = self.create_subscription(
-            JointTrajectory, "/kr3r540_digital_twin/digital_twin_joint_trajectory", self.real_joint_state_callback, 10
+            JointTrajectory, "/kr3r540_sim/digital_twin_joint_trajectory", self.real_joint_state_callback, 10
         )
         self.real_arm_command_pub = self.create_publisher(
             JointTrajectory, "/kr3r540_sim/arm_controller/joint_trajectory", 10
