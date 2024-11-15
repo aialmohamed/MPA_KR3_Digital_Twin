@@ -15,6 +15,7 @@ namespace kr3r540_forward_kinematics_node
         explicit Kr3r540ForwardKinematicsNode(const rclcpp::NodeOptions &options = rclcpp::NodeOptions());
 
     private:
+        bool is_solver_initialized_ = false;
         void robotDescriptionCallback(const std_msgs::msg::String::SharedPtr msg);
         rclcpp::Subscription<std_msgs::msg::String>::SharedPtr robot_description_sub_;
 

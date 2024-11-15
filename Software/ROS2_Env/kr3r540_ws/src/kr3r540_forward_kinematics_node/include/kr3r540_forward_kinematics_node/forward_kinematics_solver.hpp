@@ -17,6 +17,7 @@ public:
         const std::vector<double> &joint_positions,
         double &x, double &y, double &z,
         double &roll, double &pitch, double &yaw);
+        size_t getNumberOfJoints() const;
 
 private:
     KDL::Chain kdl_chain_;

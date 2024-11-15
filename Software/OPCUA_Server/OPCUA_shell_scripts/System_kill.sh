@@ -20,6 +20,7 @@ for keyword in "${PROCESS_KEYWORDS[@]}"; do
         fi
     done
 done
+
 remaining_processes=$(ps aux | grep -E "ros2|ign" | grep -v grep)
 
 if [ -n "$remaining_processes" ]; then
@@ -27,6 +28,10 @@ if [ -n "$remaining_processes" ]; then
     echo "$remaining_processes"
     echo "Force killing remaining processes..."
     echo "$remaining_processes" | awk '{print $2}' | xargs sudo kill -9
+    ros2 daemon stop
+    wait 5
+    ros2 daemon start
+    wait 5
 else
     echo "All ROS 2 and Ignition Gazebo processes have been stopped."
 fi

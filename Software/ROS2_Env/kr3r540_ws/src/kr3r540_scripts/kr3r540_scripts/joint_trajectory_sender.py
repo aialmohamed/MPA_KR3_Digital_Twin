@@ -12,8 +12,8 @@ class JointTrajectorySender(Node):
         super().__init__('joint_trajectory_sender')
 
         # Publishers for arm and gripper controllers
-        self.arm_publisher = self.create_publisher(JointTrajectory, '/kr3r540_real/arm_controller/joint_trajectory', 10)
-        self.gripper_publisher = self.create_publisher(JointTrajectory, '/kr3r540_real/gripper_controller/joint_trajectory', 10)
+        self.arm_publisher = self.create_publisher(JointTrajectory, '/kr3r540_sim/arm_controller/joint_trajectory', 10)
+        self.gripper_publisher = self.create_publisher(JointTrajectory, '/kr3r540_sim/gripper_controller/joint_trajectory', 10)
 
         # Joint names for arm and gripper
         self.arm_joint_names = [f'joint_{i+1}' for i in range(6)]

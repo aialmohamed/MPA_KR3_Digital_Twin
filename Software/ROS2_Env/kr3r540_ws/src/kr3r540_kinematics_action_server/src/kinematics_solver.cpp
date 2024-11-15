@@ -37,7 +37,8 @@ bool KinematicsSolver::solveIK(const std::vector<double> &cartesian_goal, std::v
 {
     double roll = cartesian_goal[3] * M_PI / 180.0;
     double pitch = cartesian_goal[4] * M_PI / 180.0;
-    KDL::Rotation orientation = KDL::Rotation::RPY(roll, pitch,0);
+    double yaw = cartesian_goal[5] * M_PI / 180.0;
+    KDL::Rotation orientation = KDL::Rotation::RPY(roll, pitch,yaw);
     KDL::Vector cart(cartesian_goal[0], cartesian_goal[1], cartesian_goal[2]);
     KDL::Frame p_in(orientation,cart);
     KDL::JntArray q_out(chain_.getNrOfJoints());

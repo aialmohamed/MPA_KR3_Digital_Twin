@@ -81,11 +81,11 @@ namespace kr3r540_kinematics_action_server
         auto goal = goal_handle->get_goal();
 
         // Extract x, y, z, roll, pitch for IK solving
-        std::vector<double> position_goal(goal->cartesian_goal.begin(), goal->cartesian_goal.begin() + 5);
+        std::vector<double> position_goal(goal->cartesian_goal.begin(), goal->cartesian_goal.begin() + 6);
 
         // Extract gripper positions separately
-        double finger_1_goal = goal->cartesian_goal[5];
-        double finger_2_goal = goal->cartesian_goal[6];
+        double finger_1_goal = goal->cartesian_goal[6];
+        double finger_2_goal = goal->cartesian_goal[7];
         std::vector<double> joint_positions;
         rclcpp::Rate loop_rate(5);
 

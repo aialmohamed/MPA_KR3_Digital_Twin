@@ -20,10 +20,12 @@ def generate_launch_description():
 
     forward_kinematics_server = Node(
         package="kr3r540_forward_kinematics_node",
-        
+        executable="kr3r540_forward_kinematics_node",
+        namespace="kr3r540_kinematics",
     )
 
     return LaunchDescription([
         kinematics_server,
         digital_twin_information_launcher,
+        forward_kinematics_server,
     ])

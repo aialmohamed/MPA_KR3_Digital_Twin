@@ -86,7 +86,6 @@ def generate_launch_description():
         [
             sim_robot,
             sim_robot_controller,
-            #digital_twin,
             kinematics_server,
             real_robot,
             real_robot_controller,

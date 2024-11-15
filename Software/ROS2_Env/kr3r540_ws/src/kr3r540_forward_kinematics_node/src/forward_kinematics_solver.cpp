@@ -30,6 +30,12 @@ bool ForwardKinematicsSolver::initialize(const std::string &base_link, const std
     return true;
 }
 
+size_t ForwardKinematicsSolver::getNumberOfJoints() const
+{
+    return kdl_chain_.getNrOfJoints();
+}
+
+
 bool ForwardKinematicsSolver::computeForwardKinematics(
     const std::vector<double> &joint_positions,
     double &x, double &y, double &z,
@@ -38,31 +44,30 @@ bool ForwardKinematicsSolver::computeForwardKinematics(
     if (joint_positions.size() != kdl_chain_.getNrOfJoints())
     {
         RCLCPP_ERROR(rclcpp::get_logger("ForwardKinematicsSolver"), 
-                     "Mismatch in number of joint positions and KDL chain joints.");
+                     "Mismatch in number of joint positions and KDL chain joints. Expected %d, got %ld.",
+                     kdl_chain_.getNrOfJoints(), joint_positions.size());
         return false;
     }
 
-    // Create a KDL::JntArray from the joint positions
     KDL::JntArray joint_array(kdl_chain_.getNrOfJoints());
     for (size_t i = 0; i < joint_positions.size(); ++i)
     {
         joint_array(i) = joint_positions[i];
     }
 
-    // Compute forward kinematics
+
     KDL::Frame end_effector_frame;
-    if (fk_solver_->JntToCart(joint_array, end_effector_frame) < 0)
+    int fk_result = fk_solver_->JntToCart(joint_array, end_effector_frame);
+    if (fk_result < 0)
     {
-        RCLCPP_ERROR(rclcpp::get_logger("ForwardKinematicsSolver"), "Failed to compute forward kinematics.");
+        RCLCPP_ERROR(rclcpp::get_logger("ForwardKinematicsSolver"),
+                     "KDL solver returned error code: %d", fk_result);
         return false;
     }
 
-    // Extract position
     x = end_effector_frame.p.x();
     y = end_effector_frame.p.y();
     z = end_effector_frame.p.z();
-
-    // Extract orientation (roll, pitch, yaw)
     double r, p, y_rpy;
     end_effector_frame.M.GetRPY(r, p, y_rpy);
     roll = r;
