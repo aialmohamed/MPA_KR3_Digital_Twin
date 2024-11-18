@@ -12,7 +12,7 @@ opcua_client -> opcua_server: LaunchRos2System
 
 alt system started 
     opcua_client -> opcua_server: StartDigitalTwin
-    alt joint state are active on opcua server
+    alt joint state are active on /kr3r540_sim/joint_states
         activate digital_twin_node
         alt client did not stop digtial twin node
         loop until joints are not changing

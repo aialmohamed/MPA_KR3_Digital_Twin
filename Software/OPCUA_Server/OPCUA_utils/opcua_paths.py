@@ -1,8 +1,14 @@
+"""
+Module : OPCUA_utils
+Class: opcua_paths
+Description: This class is used to get the paths of the configuration files and shell scripts.
+Author: Ahmed Ibrahim Almohamed
+Date: 10.11.2024
+"""
 #!/usr/bin/env python3
 import sys 
 
 from pathlib import Path
-# Import the OPCUS_SERVER Folder (parent of the current directory)
 
 current_dir = Path(__file__).resolve().parent
 sys.path.append(str(current_dir.parent))

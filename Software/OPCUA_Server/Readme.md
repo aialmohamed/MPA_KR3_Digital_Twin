@@ -77,7 +77,7 @@ the **action server** then takes to goal and applies **Inverse Kinematics** to c
 
 ![digital_twin](../../Images/Local%20Server%20Sequence%20Diagram%20-%20Start%20Digital%20Twin.png)
 
-Here if the system is started (ros2 system) and the joints of the [opcua are active](#publishing-simulation-joint-state-to-opcua-client) then the server starts a ros2 node **inside the opcua server workspace!** that takes the values from the opcua server and publish them to the **real robot controllers**.
+Here if the system is started (ros2 system) and the joints of the simulation under **/kr3r540_sim/joint_states** then the server starts a ros2 node **inside the opcua server workspace!** that takes the values from the opcua server and publish them to the **real robot controllers**.
 
 
 

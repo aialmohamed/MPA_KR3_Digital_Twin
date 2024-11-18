@@ -17,15 +17,12 @@ class real_robot_cartesian_pose_subscriber(Node):
         )
         self.get_logger().info("RealRobotCartesianPoseSubscriber node has been initialized.")
     async def cartesian_pose_callback(self, msg: CartesianPose):
-        # Apply threshold rounding
         x = self.round_to_zero(msg.x)
         y = self.round_to_zero(msg.y)
         z = self.round_to_zero(msg.z)
         roll = self.round_to_zero(msg.roll)
         pitch = self.round_to_zero(msg.pitch)
         yaw = self.round_to_zero(msg.yaw)
-
-        # Update OPC UA variables
         await self.cartPose_real["x"].set_value(x)
         await self.cartPose_real["y"].set_value(y)
         await self.cartPose_real["z"].set_value(z)
