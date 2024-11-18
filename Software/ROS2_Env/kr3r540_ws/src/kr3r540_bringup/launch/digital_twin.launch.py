@@ -1,3 +1,9 @@
+''' 
+File : digital_twin.launch.py
+Description : This file is used to launch the digital twin data node.
+Author : Ahmed Ibrahim Almohamed
+Date : 15.10.2024
+'''
 from launch import LaunchDescription
 from launch_ros.actions import Node
 def generate_launch_description():

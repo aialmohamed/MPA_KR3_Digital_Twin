@@ -62,7 +62,7 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 | Gazebo | Fortress | n/A|
 | Robot | KuKa KR3 R540 | n/A|
 | Robot controller | KRC4| n/A|
-|JDK(Java Development Kit)|21|n/A|
+|JDK(Java Development Kit)|23|n/A|
 |JavaFX|21 or 22|n/A|
 |Gradle|8.5|n/A|
 |KRC Windows version|WES7 4.0|n/A|

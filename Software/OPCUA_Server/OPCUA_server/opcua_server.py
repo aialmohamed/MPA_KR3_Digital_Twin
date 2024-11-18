@@ -2,7 +2,7 @@
 import sys 
 
 from pathlib import Path
-# Import the OPCUS_SERVER Folder (parent of the current directory)
+# Import the OPCUA_SERVER Folder (parent of the current directory)
 
 current_dir = Path(__file__).resolve().parent
 sys.path.append(str(current_dir.parent))
@@ -14,33 +14,39 @@ import logging
 from asyncua import Server, ua,uamethod
 from OPCUA_ros2_control.opcua_ros2_simulation_methods import ros2_simulation_methods
 from OPCUA_ros2_control.opcua_ros2_digital_twin_methods import ros2_digital_twin_methods
-from OPCUA_ros2_control.opcua_ros2_pose_methods import ros2_pose_methods
+from OPCUA_ros2_control.opcua_ros2_real_pose_methods import ros2_real_pose_methods
 from OPCUA_ros2_control.opcua_ros2_goal_method import ros2_goals_methods
 from OPCUA_ros2_control.opcua_ros2_simulation_joint_state_methods import ros2_simulation_joint_state_methods
+from OPCUA_ros2_control.opcua_ros2_sim_pose_methods import ros2_sim_pose_methods
 from kr3r540_msgs.msg import CartesianPose
 class opcua_ros2_server():
     def __init__(self,config_path):
 
-        # Opcua Server :
+
         self.opcua_server = Server()
         
 
         self.config_path = config_path
-        # load configuration
         self.opcua_config = opcua_configuration(self.config_path)
+
         self.simulation_control = None
         self.digital_twin_control = None
         self.ros2_pose_control = None
         self.ros2_goal_control = None
         self.ros2_joint_state_control = None
+        self.ros2_sim_pose_control = None
+
         self.opcua_config.load_configuration()
         self.ip = self.opcua_config.get_opcua_ip()
         self.port = self.opcua_config.get_opcua_port()
         self.namespace = self.opcua_config.get_opcua_namespace()
         self.name = self.opcua_config.get_opcua_name()
         self.security_policy = self.opcua_config.get_security_policy()
+
         self.joint_state_dict = {}
         self.cartPose_real = None
+        self.cartPose_sim = None
+
         print(self.security_policy)
 
         # Opcua endpoints : 
@@ -54,10 +60,12 @@ class opcua_ros2_server():
         self.opcua_idx = await self.opcua_server.register_namespace(self.uri)
         await self.create_joint_states_ros2_simulation()
         await self.create_cartesian_pose_real()
+        await self.create_cartesian_pose_sim()
         self.simulation_control = ros2_simulation_methods()
         self.digital_twin_control = ros2_digital_twin_methods()
-        self.ros2_pose_control = ros2_pose_methods(self.cartPose_real)
+        self.ros2_pose_control = ros2_real_pose_methods(self.cartPose_real)
         self.ros2_goal_control = ros2_goals_methods()
+        self.ros2_sim_pose_control = ros2_sim_pose_methods(self.cartPose_sim)
         self.ros2_joint_state_control = ros2_simulation_joint_state_methods(self.joint_state_dict)
         await self.add_ros2_simulation_methods()
         await self.add_digital_twin_methods()
@@ -89,7 +97,9 @@ class opcua_ros2_server():
         obj = await self.opcua_server.nodes.objects.add_folder("ns=2;s=CartesianPoseMethods", "CartesianPoseMethods")
         await obj.add_method(ua.NodeId("GetRealCartesianPose",self.opcua_idx), ua.QualifiedName("GetRealCartesianPose",self.opcua_idx), self.ros2_pose_control.get_robot_cartesian_pose, [], [ua.VariantType.String])
         await obj.add_method(ua.NodeId("ShutdownRealCartesianPose",self.opcua_idx), ua.QualifiedName("ShutdownRealCartesianPose",self.opcua_idx), self.ros2_pose_control.shutdown_robot_cartesian_pose, [], [ua.VariantType.String])
-    
+        
+        await obj.add_method(ua.NodeId("GetSimCartesianPose",self.opcua_idx), ua.QualifiedName("GetSimCartesianPose",self.opcua_idx), self.ros2_sim_pose_control.get_robot_cartesian_pose, [], [ua.VariantType.String])
+        await obj.add_method(ua.NodeId("ShutdownSimCartesianPose",self.opcua_idx), ua.QualifiedName("ShutdownSimCartesianPose",self.opcua_idx), self.ros2_sim_pose_control.shutdown_robot_cartesian_pose, [], [ua.VariantType.String])
     async def add_goal_methods(self):
         obj = await self.opcua_server.nodes.objects.add_folder("ns=2;s=GoalMethods", "GoalMethods")
         input_args =self.create_send_goal_input_args()
@@ -98,7 +108,7 @@ class opcua_ros2_server():
                              [ua.VariantType.String])
     
     def create_send_goal_input_args(self):          
-        # Create argument for x
+
         inargx = ua.Argument()
         inargx.Name = "x"
         inargx.DataType = ua.NodeId(ua.ObjectIds.Float)
@@ -106,7 +116,7 @@ class opcua_ros2_server():
         inargx.ArrayDimensions = []
         inargx.Description = ua.LocalizedText("x in meters")
 
-        # Create argument for y
+
         inargy = ua.Argument()
         inargy.Name = "y"
         inargy.DataType = ua.NodeId(ua.ObjectIds.Float)
@@ -114,7 +124,6 @@ class opcua_ros2_server():
         inargy.ArrayDimensions = []
         inargy.Description = ua.LocalizedText("y in meters")
 
-        # Create argument for z
         inargz = ua.Argument()
         inargz.Name = "z"
         inargz.DataType = ua.NodeId(ua.ObjectIds.Float)
@@ -122,7 +131,6 @@ class opcua_ros2_server():
         inargz.ArrayDimensions = []
         inargz.Description = ua.LocalizedText("z in meters")
 
-        # Create argument for roll
         inargroll = ua.Argument()
         inargroll.Name = "roll"
         inargroll.DataType = ua.NodeId(ua.ObjectIds.Float)
@@ -130,7 +138,6 @@ class opcua_ros2_server():
         inargroll.ArrayDimensions = []
         inargroll.Description = ua.LocalizedText("roll in degrees")
 
-        # Create argument for pitch
         inargpitch = ua.Argument()
         inargpitch.Name = "pitch"
         inargpitch.DataType = ua.NodeId(ua.ObjectIds.Float)
@@ -138,7 +145,6 @@ class opcua_ros2_server():
         inargpitch.ArrayDimensions = []
         inargpitch.Description = ua.LocalizedText("pitch in degrees")
 
-        # Create argument for yaw
         inargyaw = ua.Argument()
         inargyaw.Name = "yaw"
         inargyaw.DataType = ua.NodeId(ua.ObjectIds.Float)
@@ -146,7 +152,6 @@ class opcua_ros2_server():
         inargyaw.ArrayDimensions = []
         inargyaw.Description = ua.LocalizedText("yaw in degrees")
 
-        # Create argument for gripper_state
         inarggripper = ua.Argument()
         inarggripper.Name = "gripper_state"
         inarggripper.DataType = ua.NodeId(ua.ObjectIds.Int32)
@@ -180,7 +185,7 @@ class opcua_ros2_server():
         cartesian_pose_folder = await objects_node.add_folder(self.opcua_idx, "CartesianPoseReal")
         cartesian_obj = await cartesian_pose_folder.add_object(self.opcua_idx, "CartesianPose")
         
-        # Create and initialize OPC UA variables
+
         self.x_opcua = await cartesian_obj.add_variable(self.opcua_idx, "x", 0.0)
         self.y_opcua = await cartesian_obj.add_variable(self.opcua_idx, "y", 0.0)
         self.z_opcua = await cartesian_obj.add_variable(self.opcua_idx, "z", 0.0)
@@ -189,7 +194,6 @@ class opcua_ros2_server():
         self.yaw_opcua = await cartesian_obj.add_variable(self.opcua_idx, "yaw", 0.0)
         self.gripper_opcua = await cartesian_obj.add_variable(self.opcua_idx, "gripper",False, ua.VariantType.Boolean)
         
-        # Make them writable
         await self.x_opcua.set_writable()
         await self.y_opcua.set_writable()
         await self.z_opcua.set_writable()
@@ -206,7 +210,36 @@ class opcua_ros2_server():
             "yaw": self.yaw_opcua,
             "gripper": self.gripper_opcua,
         }
+    async def create_cartesian_pose_sim(self):
+        objects_node = self.opcua_server.nodes.objects
+        cartesian_pose_folder = await objects_node.add_folder(self.opcua_idx, "CartesianPoseSimulation")
+        cartesian_obj = await cartesian_pose_folder.add_object(self.opcua_idx, "CartesianPose")
+        
 
+        self.x_opcua_sim = await cartesian_obj.add_variable(self.opcua_idx, "x", 0.0)
+        self.y_opcua_sim = await cartesian_obj.add_variable(self.opcua_idx, "y", 0.0)
+        self.z_opcua_sim = await cartesian_obj.add_variable(self.opcua_idx, "z", 0.0)
+        self.roll_opcua_sim = await cartesian_obj.add_variable(self.opcua_idx, "roll", 0.0)
+        self.pitch_opcua_sim = await cartesian_obj.add_variable(self.opcua_idx, "pitch", 0.0)
+        self.yaw_opcua_sim = await cartesian_obj.add_variable(self.opcua_idx, "yaw", 0.0)
+        self.gripper_opcua_sim = await cartesian_obj.add_variable(self.opcua_idx, "gripper",False, ua.VariantType.Boolean)
+        
+        await self.x_opcua_sim.set_writable()
+        await self.y_opcua_sim.set_writable()
+        await self.z_opcua_sim.set_writable()
+        await self.roll_opcua_sim.set_writable()
+        await self.pitch_opcua_sim.set_writable()
+        await self.yaw_opcua_sim.set_writable()
+        await self.gripper_opcua_sim.set_writable()
+        self.cartPose_sim = {
+            "x": self.x_opcua_sim,
+            "y": self.y_opcua_sim,
+            "z": self.z_opcua_sim,
+            "roll": self.roll_opcua_sim,
+            "pitch": self.pitch_opcua_sim,
+            "yaw": self.yaw_opcua_sim,
+            "gripper": self.gripper_opcua_sim,
+        }
 
 
 

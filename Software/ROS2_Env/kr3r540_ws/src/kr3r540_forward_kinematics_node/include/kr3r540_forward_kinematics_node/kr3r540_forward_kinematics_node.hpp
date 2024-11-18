@@ -22,8 +22,14 @@ namespace kr3r540_forward_kinematics_node
         void jointStateCallback(const sensor_msgs::msg::JointState::SharedPtr msg);
         rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sub_;
 
-        rclcpp::Publisher<kr3r540_msgs::msg::CartesianPose>::SharedPtr cartesian_pose_pub_;
+        void SimJointStateCallback(const sensor_msgs::msg::JointState::SharedPtr msg);
+        rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sim_sub_;
 
+        rclcpp::Publisher<kr3r540_msgs::msg::CartesianPose>::SharedPtr cartesian_pose_pub_;
+        rclcpp::Publisher<kr3r540_msgs::msg::CartesianPose>::SharedPtr cartesian_pose_pub_sim_;
+
+        rclcpp::Time last_time_real_;
+        rclcpp::Time last_time_sim_;
         std::shared_ptr<ForwardKinematicsSolver> solver_;
     };
 } // namespace forward_kinematics_node

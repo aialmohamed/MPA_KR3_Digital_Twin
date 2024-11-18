@@ -4,7 +4,7 @@
   <name>kr3r540_bringup</name>
   <version>1.0.0</version>
   <description>bring up package to start nodes and store ros2 configurations</description>
-  <maintainer email="ahmaedibrahim311@gmail.com">robolab</maintainer>
+  <maintainer email="ahmaedibrahim311@gmail.com">ahmed Ibrahim Almohamed</maintainer>
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
@@ -22,5 +22,6 @@
 
   <export>
     <build_type>ament_cmake</build_type>
+    <rosdoc2>rosdoc2.yaml</rosdoc2>
   </export>
 </package>
