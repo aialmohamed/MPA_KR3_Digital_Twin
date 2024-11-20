@@ -181,6 +181,12 @@ Build System Image:
     cd /path/to/repo
     sudo docker build -it kr3r540_digital_twin .
 
+make sure that the x11 have access to docker : 
+
+  run
+
+    xhost +local:docker
+
 Running the system container :
 
     sudo docker run -it --rm     --gpus all     --net=host     -e NVIDIA_VISIBLE_DEVICES=all     -e NVIDIA_DRIVER_CAPABILITIES=all     -e DISPLAY=$DISPLAY     -v /tmp/.X11-unix:/tmp/.X11-unix   --memory-reservation=1g     kr3r540_digital_twin
