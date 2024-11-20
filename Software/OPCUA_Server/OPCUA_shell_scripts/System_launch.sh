@@ -13,6 +13,7 @@ colcon build
 source install/setup.bash
 echo "source ${KR3R540_WS}/install/setup.bash"
 source ~/.bashrc
+source ./install/setup.bash
 echo "sourcing ~/.bashrc"
 
 ros2 launch kr3r540_bringup kr3r540_ign.launch.py > ${LOGDIR}/kr3r540_ign.log 2>&1 &

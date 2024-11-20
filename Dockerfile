@@ -68,7 +68,7 @@ RUN sudo apt install -y python3-rosdep
 RUN sudo apt install -y python3-colcon-common-extensions
 RUN sudo apt install -y python3-ament-package
 
-## isntall ignition 
+## install ignition 
 RUN sudo apt-get update
 RUN sudo apt-get install -y lsb-release gnupg
 RUN sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
@@ -76,7 +76,12 @@ RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/p
 RUN sudo apt-get update
 RUN sudo apt-get install -y ignition-fortress
 
+## install asyncua
+
+RUN pip install asyncua
 COPY . .
+
+
 
 #RUN rosdep init
 RUN rosdep update
@@ -85,17 +90,20 @@ RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
 WORKDIR /home/robolab/MPA_Repo/MPA_KR3_Digital_Twin/Software/ROS2_Env/kr3r540_ws
 RUN sudo rm -rf build/ install/ log/
 
-RUN echo "export CMAKE_PREFIX_PATH=/opt/ros/humble:$CMAKE_PREFIX_PATH" >> ~/.bashrc
-## set boost :
-RUN echo "export CMAKE_PREFIX_PATH=/home/robolab/boost_1_82:$CMAKE_PREFIX_PATH" >> ~/.bashrc
-RUN echo "export LD_LIBRARY_PATH=/home/robolab/boost_1_82/lib:$LD_LIBRARY_PATH" >> ~/.bashrc
-RUN echo "export CPATH=/home/robolab/boost_1_82/include:$CPATH" >> ~/.bashrc
-RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
-#RUN colcon build
 
+
+ENV USER=robolab
+
+COPY entrypoint.sh /home/robolab/entrypoint.sh
+
+
+WORKDIR /home/robolab
+
+
+RUN sudo chmod +x /home/robolab/entrypoint.sh
 
 
 EXPOSE 4840
 
-# Default command
-CMD ["bash"]
+
+ENTRYPOINT ["/home/robolab/entrypoint.sh"]
