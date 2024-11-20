@@ -62,11 +62,9 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 | Gazebo | Fortress | n/A|
 | Robot | KuKa KR3 R540 | n/A|
 | Robot controller | KRC4| n/A|
-|JDK(Java Development Kit)|23|n/A|
-|JavaFX|21 or 22|n/A|
-|Gradle|8.5|n/A|
 |KRC Windows version|WES7 4.0|n/A|
 |KSS | 8.3 | n/A|
+|cargo|1.82.0|n/A|
 
 
 ## To-do
@@ -143,22 +141,7 @@ Fortunately, the team from last semester has already taken care of the simulatio
 
 ### Dashboard app
 
-| Framework/Toolkit    | Description                                                                 | Supported Languages     | Platform Support            |
-|----------------------|-----------------------------------------------------------------------------|-------------------------|-----------------------------|
-| Electron             | Framework for building cross-platform desktop apps using web technologies.  | JavaScript, HTML, CSS    | Windows, macOS, Linux       |
-| Avalonia             | .NET UI framework for building cross-platform applications.                 | C#                       | Windows, macOS, Linux       |
-| .NET MAUI            | Cross-platform framework for building native mobile and desktop apps.       | C#                       | Windows, macOS              |
-| WPF (Windows Presentation Foundation) | UI framework for building Windows desktop applications.     | C#, XAML                 | Windows                     |
-| GTK                  | Toolkit for creating graphical user interfaces.                             | C, Python, Vala          | Windows, macOS, Linux       |
-| Qt                   | Cross-platform application development framework.                           | C++, QML                 | Windows, macOS, Linux       |
-| WinUI                | Latest UI framework for Windows desktop apps.                               | C#, C++, XAML            | Windows                     |
-| JavaFX               | Platform for building rich internet applications with Java.                 | Java, FXML               | Windows, macOS, Linux       |
-| SwiftUI              | UI toolkit by Apple for building user interfaces across all Apple devices.  | Swift                    | macOS                       |
-| Tauri                | Lightweight framework for building cross-platform desktop apps.             | Rust, JavaScript, HTML   | Windows, macOS, Linux       |
-| PyQt                 | Python binding for the Qt toolkit.                                          | Python                   | Windows, macOS, Linux       |
-| Lazarus              | Open-source cross-platform IDE similar to Delphi.                           | Object Pascal            | Windows, macOS, Linux       |
-| Uno Platform         | Cross-platform framework for building single-codebase applications.         | C#                       | Windows, macOS, Linux       |
-| Xamarin.Forms        | Framework for building cross-platform mobile and desktop apps.              | C#                       | Windows, macOS              |
+
 
 >[!NOTE]
 On this [Gitrepo](https://github.com/ImtsSrl/openshowvar/blob/master/resources/kukavar.txt) you can find all the global variables that we can change with KUKAVARPROXY , we can create our own.
