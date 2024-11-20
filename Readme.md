@@ -47,7 +47,7 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
     - [Hardware Interface and connection](#hardware-interface-and-connection)
     - [Dashboard app](#dashboard-app)
   - [Setup](#setup)
-  - [Software/s](#softwares)
+  - [Usage](#usage)
   - [Testing](#testing)
   - [Results](#results)
 
@@ -174,7 +174,17 @@ On this [Gitrepo](https://github.com/ImtsSrl/openshowvar/blob/master/resources/k
 
 >[!NOTE]
 > if KUKAVARPROXY dose not work check this out : https://github.com/ImtsSrl/KUKAVARPROXY/issues/18
-## Software/s
+## Usage 
+
+Build System Image: 
+    
+    cd /path/to/repo
+    sudo docker build -it kr3r540_digital_twin .
+
+Running the system container :
+
+    sudo docker run -it --rm     --gpus all     --net=host     -e NVIDIA_VISIBLE_DEVICES=all     -e NVIDIA_DRIVER_CAPABILITIES=all     -e DISPLAY=$DISPLAY     -v /tmp/.X11-unix:/tmp/.X11-unix   --memory-reservation=1g     kr3r540_digital_twin
+
 
 ## Testing 
 
