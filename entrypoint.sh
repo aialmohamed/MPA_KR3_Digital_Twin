@@ -2,7 +2,11 @@
 
 # Fix ownership of the script
 sudo groupadd robolab
-sudo chown -R robolab:robolab /home/robolab/MPA_Repo/MPA_KR3_Digital_Twin
+sudo chown -v -R robolab:robolab /home/robolab/MPA_Repo/MPA_KR3_Digital_Twin/Software/OPCUA_Server
+sudo chown -v -R robolab:robolab /home/robolab/MPA_Repo/MPA_KR3_Digital_Twin/Software/ROS2_Env
+echo "changed ownership of the directory to robolab"
+sudo chmod +x /home/robolab/MPA_Repo/MPA_KR3_Digital_Twin/Software/OPCUA_Server/OPCUA_shell_scripts/System_launch.sh
+sudo chmod +x /home/robolab/MPA_Repo/MPA_KR3_Digital_Twin/Software/OPCUA_Server/OPCUA_shell_scripts/System_kill.sh
 
 ## Run OPCUA Server 
 
