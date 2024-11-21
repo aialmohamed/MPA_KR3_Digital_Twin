@@ -19,6 +19,19 @@ RUN apt-get update && apt-get install -y \
     libicu-dev \
     libbz2-dev \
     libboost-all-dev \
+    ros-humble-ros2-control \
+    ros-humble-ros2-controllers \
+    ros-humble-joint-state-publisher-gui \
+    ros-humble-xacro \
+    ros-humble-ros-ign-bridge \
+    ros-humble-ign-ros2-control \
+    ros-humble-ros-gz \
+    python3-rosdep \
+    python3-colcon-common-extensions \
+    python3-ament-package \
+    lsb-release \
+    gnupg \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
  
 # Create a new user "robolab" with passwordless sudo
@@ -34,48 +47,35 @@ WORKDIR /home/robolab
 # Set Boost installation directory
 ENV BOOST_DIR=/home/robolab/boost_1_82_0
 
-RUN sudo apt-get update
-RUN sudo apt-get install -y jq
+RUN sudo apt-get update &&\
+    sudo apt-get install -y jq
 RUN pip install yq
 ENV PATH="$PATH:/home/robolab/.local/bin"
 
-# Download, extract, build, and install Boost in a single step
-RUN wget https://archives.boost.io/release/1.82.0/source/boost_1_82_0.tar.gz
-RUN tar -xf boost_1_82_0.tar.gz
-#RUN chmod +x /home/robolab/boost_1_82_0/b2
-WORKDIR /home/robolab/boost_1_82_0
-RUN /home/robolab/boost_1_82_0/bootstrap.sh --prefix=/home/robolab/boost_1_82
-RUN ./b2
-RUN ./b2 install
+RUN wget https://archives.boost.io/release/1.82.0/source/boost_1_82_0.tar.gz \
+    && tar -xf boost_1_82_0.tar.gz \
+    && cd boost_1_82_0 \
+    && ./bootstrap.sh --prefix=/home/robolab/boost_1_82 \
+    && ./b2 \
+    && ./b2 install \
+    && cd .. \
+    && rm -rf boost_1_82_0 boost_1_82_0.tar.gz
+
 
 
 
 
  
 WORKDIR /home/robolab/MPA_Repo/MPA_KR3_Digital_Twin
-## install dependencies :
+    
+RUN sudo apt-get update \
+    && sudo apt-get install -y lsb-release gnupg wget \
+    && sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null \
+    && sudo apt-get update \
+    && sudo apt-get install -y ignition-fortress \
+    && sudo rm -rf /var/lib/apt/lists/*
 
-RUN sudo apt install -y ros-humble-ros2-control
-RUN sudo apt install -y ros-humble-ros2-controllers
-RUN sudo apt install -y ros-humble-joint-state-publisher-gui
-RUN sudo apt install -y ros-humble-xacro
-RUN sudo apt install -y ros-humble-ros-ign-bridge
-RUN sudo apt install -y ros-humble-ign-ros2-control
-RUN sudo apt install -y ros-humble-ros-gz
-
-## install and setup colcon :
-RUN sudo apt update
-RUN sudo apt install -y python3-rosdep
-RUN sudo apt install -y python3-colcon-common-extensions
-RUN sudo apt install -y python3-ament-package
-
-## install ignition 
-RUN sudo apt-get update
-RUN sudo apt-get install -y lsb-release gnupg
-RUN sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
-RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
-RUN sudo apt-get update
-RUN sudo apt-get install -y ignition-fortress
 
 ## install asyncua
 
@@ -85,25 +85,19 @@ COPY . .
 
 
 #RUN rosdep init
-RUN rosdep update
-RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
-# remove old build :
 WORKDIR /home/robolab/MPA_Repo/MPA_KR3_Digital_Twin/Software/ROS2_Env/kr3r540_ws
-RUN sudo rm -rf build/ install/ log/
+
+RUN rosdep update \
+    && echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc \
+    && sudo rm -rf build/ install/ log/
 
 
 
 ENV USER=robolab
 
 COPY entrypoint.sh /home/robolab/entrypoint.sh
-
-
 WORKDIR /home/robolab
-
-
 RUN sudo chmod +x /home/robolab/entrypoint.sh
-
-
 EXPOSE 4840
 
 
