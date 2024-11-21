@@ -1,5 +1,5 @@
 opcua_server:
-  ip: localhost
+  ip: 0.0.0.0
   port: 4840
   name: Ros2_OPCUA_Server
   namespace: OpcuaRos2

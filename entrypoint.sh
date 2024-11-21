@@ -2,11 +2,10 @@
 
 # Fix ownership of the script
 sudo groupadd robolab
-sudo chown robolab:robolab /home/robolab/MPA_Repo/MPA_KR3_Digital_Twin/Software/OPCUA_Server/OPCUA_shell_scripts/System_kill.sh
-sudo chown robolab:robolab /home/robolab/MPA_Repo/MPA_KR3_Digital_Twin/Software/OPCUA_Server/OPCUA_shell_scripts/System_launch.sh
-
+sudo chown -R robolab:robolab /home/robolab/MPA_Repo/MPA_KR3_Digital_Twin
 
 ## Run OPCUA Server 
+
 source /opt/ros/humble/setup.bash
 
 

@@ -26,12 +26,18 @@ RUN useradd -rm -d /home/robolab -s /bin/bash -g root -G sudo -u 1001 robolab &&
     echo "robolab ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/robolab && \
     chmod 0440 /etc/sudoers.d/robolab
 
+
 USER robolab
 WORKDIR /home/robolab
 
 
 # Set Boost installation directory
 ENV BOOST_DIR=/home/robolab/boost_1_82_0
+
+RUN sudo apt-get update
+RUN sudo apt-get install -y jq
+RUN pip install yq
+ENV PATH="$PATH:/home/robolab/.local/bin"
 
 # Download, extract, build, and install Boost in a single step
 RUN wget https://archives.boost.io/release/1.82.0/source/boost_1_82_0.tar.gz
@@ -43,11 +49,6 @@ RUN ./b2
 RUN ./b2 install
 
 
-WORKDIR /home/robolab
-RUN sudo apt-get update
-RUN sudo apt-get install -y jq
-RUN pip install yq
-ENV PATH="$PATH:/home/robolab/.local/bin"
 
 
  
