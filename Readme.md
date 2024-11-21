@@ -48,6 +48,11 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
     - [Dashboard app](#dashboard-app)
   - [Setup](#setup)
   - [Usage](#usage)
+    - [Build Docker](#build-docker)
+      - [On Linux](#on-linux)
+      - [On Windows :](#on-windows-)
+    - [Run  on Linux](#run--on-linux)
+    - [Run on Windows](#run-on-windows)
   - [Testing](#testing)
   - [Results](#results)
 
@@ -159,14 +164,21 @@ On this [Gitrepo](https://github.com/ImtsSrl/openshowvar/blob/master/resources/k
 > if KUKAVARPROXY dose not work check this out : https://github.com/ImtsSrl/KUKAVARPROXY/issues/18
 ## Usage 
 
-Build System Image: 
+### Build Docker 
+
+
+#### On Linux
     
     cd /path/to/repo
     sudo docker build -it kr3r540_digital_twin .
 
-make sure that the x11 have access to docker : 
+#### On Windows :
 
-  run
+    cd path/to/repo
+    docker build -t digital_twin . 
+
+### Run  on Linux
+make sure that the x11 have access to docker : 
 
     xhost +local:docker
 
@@ -174,6 +186,9 @@ Running the system container :
 
     sudo docker run -it --rm     --gpus all     --net=host     -e NVIDIA_VISIBLE_DEVICES=all     -e NVIDIA_DRIVER_CAPABILITIES=all     -e DISPLAY=$DISPLAY     -v /tmp/.X11-unix:/tmp/.X11-unix   --memory-reservation=1g     kr3r540_digital_twin
 
+### Run on Windows 
+
+      docker run -it -p 4840:4840  -v /run/desktop/mnt/host/wslg/.X11-unix:/tmp/.X11-unix -v /run/desktop/mnt/host/wslg:/mnt/wslg -e DISPLAY=:0 -e WAYLAND_DISPLAY=wayland-0 -e XDG_RUNTIME_DIR=/mnt/wslg/runtime-dir -e PULSE_SERVER=/mnt/wslg/PulseServer --gpus all  kr3r540_digital_twin
 
 ## Testing 
 

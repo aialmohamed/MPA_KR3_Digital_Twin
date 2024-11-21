@@ -7,6 +7,17 @@ OPCUA_SERVER_DIR="${SOFTWARE_DIR}/OPCUA_Server"
 SHELL_SCRIPTS_DIR="${OPCUA_SERVER_DIR}/OPCUA_shell_scripts"
 LOGDIR="${SHELL_SCRIPTS_DIR}/log"
 
+# Create the log directory if it doesn't exist
+mkdir -p "${LOGDIR}"
+
+# Ensure log files exist (create empty files if they do not)
+: > "${LOGDIR}/kr3r540_ign.log"
+: > "${LOGDIR}/kr3r540_ign_controller.log"
+: > "${LOGDIR}/kr3r540_kinematics_server.log"
+: > "${LOGDIR}/kr3r540_real.log"
+: > "${LOGDIR}/kr3r540_real_controller.log"
+: > "${LOGDIR}/kr3r540_pids"
+
 cd "${KR3R540_WS}" || exit
 colcon build
 
@@ -31,7 +42,6 @@ sleep 5
 
 ros2 launch kr3r540_bringup kr3r540_real_controller.launch.py > ${LOGDIR}/kr3r540_real_controller.log 2>&1 &
 REAL_CONTROLLER_PID=$!
-
 
 echo "All processes launched successfully."
 echo "${IGN_PID}" > ${LOGDIR}/kr3r540_pids
