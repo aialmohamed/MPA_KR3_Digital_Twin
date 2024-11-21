@@ -2,6 +2,7 @@
 
 # Fix ownership of the script
 sudo groupadd robolab
+echo "changing ownership of the directory to robolab ......"
 sudo chown -R robolab:robolab /home/robolab/MPA_Repo/MPA_KR3_Digital_Twin/Software/OPCUA_Server
 sudo chown -R robolab:robolab /home/robolab/MPA_Repo/MPA_KR3_Digital_Twin/Software/ROS2_Env
 echo "changed ownership of the directory to robolab"
