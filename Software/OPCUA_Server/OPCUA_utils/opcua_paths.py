@@ -23,6 +23,7 @@ class opcua_paths():
         self.shell_path = self.root / "OPCUA_shell_scripts"
         self.shell_launch = self.shell_path / "System_launch.sh"
         self.shell_kill = self.shell_path / "System_kill.sh"
+        self.rqt_launch = self.shell_path / "rqt_launch.sh"
     
     def get_root(self):
         return self.root
@@ -40,5 +41,6 @@ class opcua_paths():
         return self.shell_launch
     def get_shell_kill(self):
         return self.shell_kill
-    
+    def get_rqt_launch(self):
+        return self.rqt_launch
 

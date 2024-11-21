@@ -18,6 +18,7 @@ from OPCUA_ros2_control.opcua_ros2_real_pose_methods import ros2_real_pose_metho
 from OPCUA_ros2_control.opcua_ros2_goal_method import ros2_goals_methods
 from OPCUA_ros2_control.opcua_ros2_simulation_joint_state_methods import ros2_simulation_joint_state_methods
 from OPCUA_ros2_control.opcua_ros2_sim_pose_methods import ros2_sim_pose_methods
+from OPCUA_ros2_control.opcua_ros2_rqt_launch import ros2_rqt_methods
 from kr3r540_msgs.msg import CartesianPose
 class opcua_ros2_server():
     def __init__(self,config_path):
@@ -35,6 +36,7 @@ class opcua_ros2_server():
         self.ros2_goal_control = None
         self.ros2_joint_state_control = None
         self.ros2_sim_pose_control = None
+        self.ros2_rqt_control = None
 
         self.opcua_config.load_configuration()
         self.ip = self.opcua_config.get_opcua_ip()
@@ -67,11 +69,13 @@ class opcua_ros2_server():
         self.ros2_goal_control = ros2_goals_methods()
         self.ros2_sim_pose_control = ros2_sim_pose_methods(self.cartPose_sim)
         self.ros2_joint_state_control = ros2_simulation_joint_state_methods(self.joint_state_dict)
+        self.ros2_rqt_control = ros2_rqt_methods()
         await self.add_ros2_simulation_methods()
         await self.add_digital_twin_methods()
         await self.add_joint_states_methods()
         await self.add_cartesian_pose_methods()
         await self.add_goal_methods()
+        await self.add_rqt_methods()
 
         self.opcua_server.set_security_policy([self.security_policy])
 
@@ -85,8 +89,9 @@ class opcua_ros2_server():
         obj = await self.opcua_server.nodes.objects.add_folder("ns=2;s=ControlMethods", "SimulationControlMethods")
         await obj.add_method(ua.NodeId("LaunchRos2Simulation",self.opcua_idx), ua.QualifiedName("LaunchRos2Simulation",self.opcua_idx), self.simulation_control.launch_ros2_simulation, [], [ua.VariantType.String])
         await obj.add_method(ua.NodeId("KillRos2Simulation",self.opcua_idx), ua.QualifiedName("KillRos2Simulation",self.opcua_idx), self.simulation_control.kill_ros2_simulation, [], [ua.VariantType.String])
-        
-
+    async def add_rqt_methods(self):
+        obj = await self.opcua_server.nodes.objects.add_folder("ns=2;s=RqtMethods", "RqtMethods")
+        await obj.add_method(ua.NodeId("LaunchRqt",self.opcua_idx), ua.QualifiedName("LaunchRqt",self.opcua_idx), self.ros2_rqt_control.launch_rqt, [], [ua.VariantType.String])
     
     async def add_joint_states_methods(self):
         obj = await self.opcua_server.nodes.objects.add_folder("ns=2;s=JointStateMethods", "JointStateMethods")
