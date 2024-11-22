@@ -7,12 +7,41 @@
              x:DataType="vm:LoginViewModel"
              x:Class="DigitalTwin.Views.LoginView"
              Background="{DynamicResource SecondaryBackground}">
-  <Grid ColumnDefinitions="*,2*,*" RowDefinitions="*,3*,*">
-    <Grid Grid.Column="1" Grid.Row="1" Background="{DynamicResource LoginBackground}">
-      
+
+
+  <Grid ColumnDefinitions="*,3*,*" RowDefinitions="*,3*,*">
+    <Grid RowDefinitions="*,2*" Grid.Column="1" Grid.Row="1" Background="{DynamicResource LoginBackground}" Margin="20" >
+      <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+          <Label Content="Login" FontFamily="{DynamicResource RobotoBold}" Foreground="Black" FontSize="20" HorizontalAlignment="Center"/>
+          <Label Padding="0,0,0,0" FontFamily="{DynamicResource Phosphor-Fill}" FontSize="30" Foreground="Black" Classes="icon" Content="&#xe4c2;" HorizontalAlignment="Center"/>
+          <Line Margin="0,15,0,0" StartPoint="0,0" EndPoint="300,0" Stroke="Black" StrokeThickness="1" HorizontalAlignment="Center"/>
+      </StackPanel>
+      <StackPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" >
+        <StackPanel Margin="0,10,0,0" Orientation="Horizontal"  HorizontalAlignment="Center">
+          <Label  FontFamily="{DynamicResource Phosphor-Fill}" Foreground="Black" FontSize="30" Classes="icon" Content="&#xe4c2;"/>
+          <TextBox Watermark="Username" Text="{Binding Username, Mode=TwoWay}"  Width="200" />
+        </StackPanel>
+        <StackPanel Margin="0,10,0,0" Orientation="Horizontal"  HorizontalAlignment="Center">
+          <Label  FontFamily="{DynamicResource Phosphor-Fill}" Foreground="Black" FontSize="30" Classes="icon" Content="&#xE752;" />
+          <TextBox Watermark="Password" PasswordChar="*" Text="{Binding Password, Mode=TwoWay}" Width="200" />
+        </StackPanel>
+        <Label Content="{Binding OperationResult}" Foreground="{Binding OperationResultColor}" HorizontalAlignment="Center"/>
+        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+        <Button Margin="20,20,0,0" Classes="transparent" HorizontalAlignment="Center" Command="{Binding LoginCommand}">
+            <StackPanel Orientation="Horizontal">
+                <Label  FontFamily="{DynamicResource Phosphor-Fill}" Foreground="Black" Classes="icon" Content="&#xE428;" />
+            </StackPanel>
+        </Button>
+                <Button Margin="0,20,0,0" Classes="transparent" HorizontalAlignment="Center" Command="{Binding RegisterCommand}">
+            <StackPanel Orientation="Horizontal">
+                <Label  FontFamily="{DynamicResource Phosphor-Fill}" Foreground="Black" Classes="icon" Content="&#xE4D0;" />
+            </StackPanel>
+        </Button>
+        </StackPanel>
+               
+      </StackPanel>
     </Grid>
-
-    
-
   </Grid>
+
 </UserControl>
+  

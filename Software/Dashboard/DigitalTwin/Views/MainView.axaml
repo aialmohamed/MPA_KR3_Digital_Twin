@@ -6,6 +6,7 @@
         mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="600"
         Width="1024" Height="600"
         x:Class="DigitalTwin.Views.MainView"
+        x:CompileBindings="True"
         x:DataType="vm:MainViewModel"
         Title="DigitalTwin">
 
@@ -15,15 +16,20 @@
         <vm:MainViewModel/>
     </Design.DataContext>
     <Grid ColumnDefinitions="300,*" Background="{DynamicResource PrimaryBackground}">
+        <!--Context-->
         <ContentControl Grid.Column="1" Content="{Binding CurrentPage}" />
-        <Border Padding="20" Background="{DynamicResource PrimaryGradient}">
+
+        <!-- Menu-->
+        <Border IsEnabled="{Binding LoginViewModel.IsAuthenticated}" Padding="20" Background="{DynamicResource PrimaryGradient}">
             <Grid RowDefinitions="*,Auto,Auto">
                 <StackPanel Grid.Row="0" Spacing="12">
                     <Image Source="{SvgImage /Assets/Images/Logo.svg}" Height="100" Width="100" />
                     <TextBlock Text= "KukaVerse" FontFamily="{DynamicResource RobotoBold}"  Foreground="White" HorizontalAlignment="Center" />
-                    <TextBlock Text= "Dummy User123" FontSize="10" Foreground="White" HorizontalAlignment="Center" />
-                    <TextBlock Text= "Connected" FontSize="10" Foreground="White" HorizontalAlignment="Center" />
-
+                    <TextBlock Text= "{Binding LoginViewModel.AutheticatedUser}" FontSize="10" Foreground="White" HorizontalAlignment="Center" />
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <Label Padding="17,0,5,0" Content="Connected" FontSize="15" Foreground="White" />
+                        <Label FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xeba6;"/>
+                    </StackPanel>
                     <Button HorizontalAlignment="Stretch">
                         <StackPanel Orientation="Horizontal">
                             <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xe2c2;" />

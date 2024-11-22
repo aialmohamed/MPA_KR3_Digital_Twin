@@ -3,20 +3,13 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using DigitalTwin.Services;
 using DigitalTwin.ViewModels;
 using DigitalTwin.Views;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DigitalTwin;
 
-public static class ServiceCollectionExtensions
-{
-    public static void AddCommonServices(this IServiceCollection collection)
-    {
-        collection.AddTransient<MainViewModel>();
-        collection.AddTransient<LoginViewModel>();
-    }
-}
 public partial class App : Application
 {
         public override void Initialize()
@@ -34,7 +27,11 @@ public partial class App : Application
             BindingPlugins.DataValidators.RemoveAt(0);
 
             var collection = new ServiceCollection();
-            collection.AddCommonServices();
+            collection.AddDataBaseServices();
+            collection.AddAuthenticationServices();
+            collection.AddMainViewModelServices();
+
+
             var provider = collection.BuildServiceProvider();
             var vm = provider.GetRequiredService<MainViewModel>();
             desktop.MainWindow = new MainView

@@ -19,6 +19,7 @@
         <SolidColorBrush x:Key="SecondaryBackground">#322f42</SolidColorBrush>
         <SolidColorBrush x:Key="LoginBackground">#b7a2c9</SolidColorBrush>
         <SolidColorBrush x:Key="PrimaryText">#c5c3c4</SolidColorBrush>
+        <SolidColorBrush x:Key="PrimaryLoginHeader">#4b3a70</SolidColorBrush>
         <LinearGradientBrush x:Key="PrimaryGradient" StartPoint="0%,0%" EndPoint="100%,0%">
             <GradientStop Offset="0" Color="#322f42"/>
             <GradientStop Offset="1" Color="#4b3a70"/>
