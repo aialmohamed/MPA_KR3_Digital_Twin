@@ -11,5 +11,36 @@
   
     <Application.Styles>
         <FluentTheme />
+        <StyleInclude Source="Styles/AppDefaultStyles.axaml"/>
     </Application.Styles>
+
+    <Application.Resources>
+        <SolidColorBrush x:Key="PrimaryBackground">#212531</SolidColorBrush>
+        <SolidColorBrush x:Key="SecondaryBackground">#322f42</SolidColorBrush>
+        <SolidColorBrush x:Key="LoginBackground">#b7a2c9</SolidColorBrush>
+        <SolidColorBrush x:Key="PrimaryText">#c5c3c4</SolidColorBrush>
+        <LinearGradientBrush x:Key="PrimaryGradient" StartPoint="0%,0%" EndPoint="100%,0%">
+            <GradientStop Offset="0" Color="#322f42"/>
+            <GradientStop Offset="1" Color="#4b3a70"/>
+        </LinearGradientBrush>
+
+
+        <SolidColorBrush x:Key="PrimaryTextHover">White</SolidColorBrush>
+        <SolidColorBrush x:Key="PrimaryHover">#4b3a70</SolidColorBrush>
+
+        <FontFamily x:Key="Phosphor-Fill">
+            /Assets/Fonts/Phosphor-Fill.ttf#Phosphor-Fill
+        </FontFamily>
+        <FontFamily x:Key="PhosphorReg">
+            /Assets/Fonts/Phosphor.ttf#Phosphor
+        </FontFamily>
+
+        <FontFamily x:Key="RobotoRegular">
+            /Assets/Fonts/Roboto-Regular.ttf#Roboto
+        </FontFamily>
+        <FontFamily x:Key="RobotoBold">
+            /Assets/Fonts/Roboto-Bold.ttf#Roboto
+        </FontFamily>
+    </Application.Resources>
+    
 </Application>
