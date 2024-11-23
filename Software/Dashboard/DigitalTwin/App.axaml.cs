@@ -1,8 +1,11 @@
+using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using DigitalTwin.Data;
+using DigitalTwin.Factories;
 using DigitalTwin.Services;
 using DigitalTwin.ViewModels;
 using DigitalTwin.Views;
@@ -30,7 +33,12 @@ public partial class App : Application
             collection.AddDataBaseServices();
             collection.AddAuthenticationServices();
             collection.AddMainViewModelServices();
-
+            
+            collection.AddSingleton<Func<ApplicationPageNames, PageViewModel>>(x => name => name switch {
+                ApplicationPageNames.Login => x.GetRequiredService<LoginViewModel>(),
+                _ => throw new InvalidOperationException("Unknown page"),
+            });
+            collection.AddSingleton<PageFactory>();
 
             var provider = collection.BuildServiceProvider();
             var vm = provider.GetRequiredService<MainViewModel>();

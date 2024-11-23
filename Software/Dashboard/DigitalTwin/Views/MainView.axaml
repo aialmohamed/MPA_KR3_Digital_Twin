@@ -20,12 +20,12 @@
         <ContentControl Grid.Column="1" Content="{Binding CurrentPage}" />
 
         <!-- Menu-->
-        <Border IsEnabled="{Binding LoginViewModel.IsAuthenticated}" Padding="20" Background="{DynamicResource PrimaryGradient}">
+        <Border IsEnabled="{Binding IsAuthenticated}" Padding="20" Background="{DynamicResource PrimaryGradient}">
             <Grid RowDefinitions="*,Auto,Auto">
                 <StackPanel Grid.Row="0" Spacing="12">
                     <Image Source="{SvgImage /Assets/Images/Logo.svg}" Height="100" Width="100" />
                     <TextBlock Text= "KukaVerse" FontFamily="{DynamicResource RobotoBold}"  Foreground="White" HorizontalAlignment="Center" />
-                    <TextBlock Text= "{Binding LoginViewModel.AutheticatedUser}" FontSize="10" Foreground="White" HorizontalAlignment="Center" />
+                    <TextBlock Text= "{Binding AuthenticatedUser}" FontSize="10" Foreground="White" HorizontalAlignment="Center" />
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <Label Padding="17,0,5,0" Content="Connected" FontSize="15" Foreground="White" />
                         <Label FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xeba6;"/>
