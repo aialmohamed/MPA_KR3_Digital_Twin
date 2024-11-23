@@ -7,13 +7,14 @@ using CommunityToolkit.Mvvm.Input;
 using DigitalTwin.Data;
 using DigitalTwin.Models;
 using DigitalTwin.Services;
-using HarfBuzzSharp;
 
 namespace DigitalTwin.ViewModels;
 
 public partial class LoginViewModel : PageViewModel,IAuthenticationAware
 {
     private readonly IAuthenticationService _authenticationService;
+    private readonly UserSession _userSession;
+
     [ObservableProperty]
     private string _username = string.Empty;
 
@@ -32,38 +33,40 @@ public partial class LoginViewModel : PageViewModel,IAuthenticationAware
     public LoginViewModel()
     {
     }
-    public LoginViewModel(IAuthenticationService authenticationService)
+    public LoginViewModel(IAuthenticationService authenticationService,UserSession userSession)
     {
          PageNames = ApplicationPageNames.Login;
          
         _authenticationService = authenticationService;
+        _userSession = userSession;
     }
 
     [RelayCommand]
     private async Task Login()
     {
+        // we should creat a usersession here and let it authenticate the user
         try
         {
                 var isAuthenticated  = await _authenticationService.AuthenticateUserAsync(Username, Password);
                 if (isAuthenticated)
                 {
-                    IsAuthenticated = true;
-                    AuthenticatedUser = Username;
+                    // Update the shared UserSession
+                    _userSession.Username = Username;
+                    _userSession.IsAuthenticated = true;
                     OperationResult = "Login successful!";
                     OperationResultColor = Brushes.Green;
                 }
                 else
                 {
-                    IsAuthenticated = false;
-                    AuthenticatedUser = "Not authenticated";
+
+                    _userSession.ClearSession(); 
                     OperationResult = "Invalid username or password.";
                     OperationResultColor = Brushes.Red;
                 }
                  
         }catch (System.Exception ex)
         {
-            IsAuthenticated = false;
-            AuthenticatedUser = "Not authenticated";
+            _userSession.ClearSession(); 
             OperationResult = "An error occurred during login.";
             OperationResultColor = Brushes.Yellow;
             Logger.TryGet(LogEventLevel.Error, "DigitalTwin")?.Log(this, $"Error during login: {ex.Message}");

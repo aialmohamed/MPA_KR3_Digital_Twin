@@ -23,14 +23,14 @@
         <Border  Padding="20" Background="{DynamicResource PrimaryGradient}">
             <Grid RowDefinitions="*,Auto,Auto">
                 <StackPanel IsEnabled="{Binding IsAuthenticated}" Grid.Row="0" Spacing="12">
-                    <Image Source="{SvgImage /Assets/Images/Logo.svg}" Height="100" Width="100" />
+                    <Image Source="{SvgImage /Assets/Images/Logo_Light.svg}" Height="100" Width="100" />
                     <TextBlock Text= "KukaVerse" FontFamily="{DynamicResource RobotoBold}"  Foreground="White" HorizontalAlignment="Center" />
                     <TextBlock Text= "{Binding AuthenticatedUser}" FontSize="10" Foreground="White" HorizontalAlignment="Center" />
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <Label Padding="17,0,5,0" Content="Connected" FontSize="15" Foreground="White" />
                         <Label FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xeba6;"/>
                     </StackPanel >
-                    <Button HorizontalAlignment="Stretch">
+                    <Button HorizontalAlignment="Stretch" Command="{Binding GoToHomeCommand}">
                         <StackPanel Orientation="Horizontal">
                             <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xe2c2;" />
                             <Label Content="Home"/>

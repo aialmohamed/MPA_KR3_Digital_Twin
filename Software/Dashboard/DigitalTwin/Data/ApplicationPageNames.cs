@@ -6,5 +6,6 @@ public enum ApplicationPageNames
 {
     Undefined,
     Login,
-    Register
+    Register,
+    Home
 }

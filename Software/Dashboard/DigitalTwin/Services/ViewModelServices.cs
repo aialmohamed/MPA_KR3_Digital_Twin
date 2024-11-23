@@ -1,6 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using DigitalTwin.ViewModels;
 using DigitalTwin.Database;
+using DigitalTwin.Models;
+using System;
 
 
 namespace DigitalTwin.Services;
@@ -12,6 +14,7 @@ public static class ViewModelServiceCollectionExtensions
         collection.AddTransient<MainViewModel>();
         collection.AddTransient<LoginViewModel>();
         collection.AddTransient<RegisterViewModel>();
+        collection.AddTransient<HomeViewModel>();
     }
     public static void AddDataBaseServices(this IServiceCollection collection)
     {
@@ -27,5 +30,8 @@ public static class ViewModelServiceCollectionExtensions
     {
 
         collection.AddSingleton<IAuthenticationService, AuthenticationService>();
+        collection.AddSingleton<UserSession>();
+        collection.AddSingleton<Func<UserSession>>(provider => () => provider.GetRequiredService<UserSession>());
+
     }
 }

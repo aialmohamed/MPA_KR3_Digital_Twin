@@ -37,6 +37,7 @@ public partial class App : Application
             collection.AddSingleton<Func<ApplicationPageNames, PageViewModel>>(x => name => name switch {
                 ApplicationPageNames.Login => x.GetRequiredService<LoginViewModel>(),
                 ApplicationPageNames.Register => x.GetRequiredService<RegisterViewModel>(),
+                ApplicationPageNames.Home => x.GetRequiredService<HomeViewModel>(),
                 _ => throw new InvalidOperationException("Unknown page"),
             });
             collection.AddSingleton<PageFactory>();
