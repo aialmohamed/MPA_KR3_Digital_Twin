@@ -11,6 +11,7 @@ public static class ViewModelServiceCollectionExtensions
     {
         collection.AddTransient<MainViewModel>();
         collection.AddTransient<LoginViewModel>();
+        collection.AddTransient<RegisterViewModel>();
     }
     public static void AddDataBaseServices(this IServiceCollection collection)
     {
@@ -24,6 +25,7 @@ public static class ViewModelServiceCollectionExtensions
 
     public static void AddAuthenticationServices(this IServiceCollection collection)
     {
-        collection.AddTransient<IAuthenticationService, AuthenticationService>();
+
+        collection.AddSingleton<IAuthenticationService, AuthenticationService>();
     }
 }

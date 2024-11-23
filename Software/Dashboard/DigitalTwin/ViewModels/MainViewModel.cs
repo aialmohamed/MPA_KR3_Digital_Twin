@@ -4,6 +4,7 @@ using Avalonia.Data.Converters;
 using Avalonia.Metadata;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
 using DigitalTwin.Data;
 using DigitalTwin.Factories;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,7 @@ namespace DigitalTwin.ViewModels;
 public partial class MainViewModel : ViewModelBase
 {
     private PageFactory _pageFactory;
+    
 
 
     [ObservableProperty]
@@ -27,7 +29,6 @@ public partial class MainViewModel : ViewModelBase
     public MainViewModel(PageFactory pageFactory)
     {
         _pageFactory = pageFactory;
-        GoToLoginPage();
     }
 
 
@@ -37,13 +38,19 @@ public partial class MainViewModel : ViewModelBase
         if (Design.IsDesignMode)
         {
 
-            //CurrentPage = new LoginViewModel();
+            //CurrentPage = new RegisterViewModel();
         }
     }
 
-    public void GoToLoginPage()
+    [RelayCommand]
+    private void GoToRegister()
     {
-        var page = _pageFactory.GetPageViewModel(ApplicationPageNames.Login);
+        CurrentPage = _pageFactory.GetPageViewModel(ApplicationPageNames.Register);
+    }
+    [RelayCommand]
+    private void GoToLogin()
+    {
+       var page = _pageFactory.GetPageViewModel(ApplicationPageNames.Login);
 
         if (page is IAuthenticationAware authAwarePage)
         {
@@ -60,6 +67,11 @@ public partial class MainViewModel : ViewModelBase
 
         CurrentPage = page;
 
+    }
+    [RelayCommand]
+    private void Logout()
+    {
         
     }
+
 }

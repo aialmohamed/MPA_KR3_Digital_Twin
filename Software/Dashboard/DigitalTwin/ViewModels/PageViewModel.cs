@@ -13,5 +13,5 @@ public partial class PageViewModel : ViewModelBase
     private bool _isAuthenticated = false;
 
     [ObservableProperty]
-    private string _authenticatedUser = "Dummy";
+    private string _authenticatedUser = string.Empty;
 }

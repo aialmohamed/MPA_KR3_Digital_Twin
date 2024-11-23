@@ -3,16 +3,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             xmlns:vm ="clr-namespace:DigitalTwin.ViewModels"
-             x:DataType="vm:LoginViewModel"
-             x:Class="DigitalTwin.Views.LoginView"
-             Background="{DynamicResource SecondaryBackground}">
-
-
-  <Grid ColumnDefinitions="*,3*,*" RowDefinitions="*,3*,*">
+            xmlns:vm ="clr-namespace:DigitalTwin.ViewModels"
+             x:DataType="vm:RegisterViewModel"
+             Background="{DynamicResource SecondaryBackground}"
+             x:Class="DigitalTwin.Views.RegisterView">
+<Grid ColumnDefinitions="*,3*,*" RowDefinitions="*,3*,*">
     <Grid RowDefinitions="*,2*" Grid.Column="1" Grid.Row="1" Background="{DynamicResource LoginBackground}" Margin="20" >
       <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-          <Label Content="Login" FontFamily="{DynamicResource RobotoBold}" Foreground="Black" FontSize="20" HorizontalAlignment="Center"/>
+          <Label Content="Register" FontFamily="{DynamicResource RobotoBold}" Foreground="Black" FontSize="20" HorizontalAlignment="Center"/>
           <Label Padding="0,0,0,0" FontFamily="{DynamicResource Phosphor-Fill}" FontSize="30" Foreground="Black" Classes="icon" Content="&#xe4c2;" HorizontalAlignment="Center"/>
           <Line Margin="0,15,0,0" StartPoint="0,0" EndPoint="300,0" Stroke="Black" StrokeThickness="1" HorizontalAlignment="Center"/>
       </StackPanel>
@@ -27,9 +25,9 @@
         </StackPanel>
         <Label Content="{Binding OperationResult}" Foreground="{Binding OperationResultColor}" HorizontalAlignment="Center"/>
         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-        <Button Margin="20,20,0,0" ToolTip.Tip="Login" Classes="transparent" HorizontalAlignment="Center" Command="{Binding LoginCommand}">
+        <Button Margin="20,20,0,0" ToolTip.Tip="Login" Classes="transparent" HorizontalAlignment="Center" Command="{Binding RegisterCommand}">
             <StackPanel Orientation="Horizontal">
-                <Label  FontFamily="{DynamicResource Phosphor-Fill}" Foreground="Black" Classes="icon" Content="&#xE428;" />
+                <Label  FontFamily="{DynamicResource Phosphor-Fill}" Foreground="Black" Classes="icon" Content="&#xE4D0;" />
             </StackPanel>
         </Button>
 
@@ -40,4 +38,3 @@
   </Grid>
 
 </UserControl>
-  

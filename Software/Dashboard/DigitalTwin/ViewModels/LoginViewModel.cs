@@ -25,16 +25,18 @@ public partial class LoginViewModel : PageViewModel,IAuthenticationAware
 
     [ObservableProperty]
     private IBrush _operationResultColor = Brushes.Black;
+
+
+    //deaigner 
+
+    public LoginViewModel()
+    {
+    }
     public LoginViewModel(IAuthenticationService authenticationService)
     {
          PageNames = ApplicationPageNames.Login;
          
         _authenticationService = authenticationService;
-    }
-    [RelayCommand]
-    private async Task Register()
-    {
-        
     }
 
     [RelayCommand]

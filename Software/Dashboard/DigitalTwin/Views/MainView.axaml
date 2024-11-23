@@ -20,16 +20,16 @@
         <ContentControl Grid.Column="1" Content="{Binding CurrentPage}" />
 
         <!-- Menu-->
-        <Border IsEnabled="{Binding IsAuthenticated}" Padding="20" Background="{DynamicResource PrimaryGradient}">
+        <Border  Padding="20" Background="{DynamicResource PrimaryGradient}">
             <Grid RowDefinitions="*,Auto,Auto">
-                <StackPanel Grid.Row="0" Spacing="12">
+                <StackPanel IsEnabled="{Binding IsAuthenticated}" Grid.Row="0" Spacing="12">
                     <Image Source="{SvgImage /Assets/Images/Logo.svg}" Height="100" Width="100" />
                     <TextBlock Text= "KukaVerse" FontFamily="{DynamicResource RobotoBold}"  Foreground="White" HorizontalAlignment="Center" />
                     <TextBlock Text= "{Binding AuthenticatedUser}" FontSize="10" Foreground="White" HorizontalAlignment="Center" />
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <Label Padding="17,0,5,0" Content="Connected" FontSize="15" Foreground="White" />
                         <Label FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xeba6;"/>
-                    </StackPanel>
+                    </StackPanel >
                     <Button HorizontalAlignment="Stretch">
                         <StackPanel Orientation="Horizontal">
                             <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xe2c2;" />
@@ -55,17 +55,28 @@
                         </StackPanel>
                     </Button>             
                 </StackPanel>
-                    <Button Classes="transparent" Grid.Row="1" HorizontalAlignment="Center">
+                <StackPanel Grid.Row="2" HorizontalAlignment="Center">
+                     <Button IsEnabled="{Binding !IsAuthenticated}" Classes="transparent" ToolTip.Tip="Register" Command="{Binding GoToRegisterCommand}" HorizontalAlignment="Center" >
+                        <StackPanel Orientation="Horizontal">
+                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Foreground="Black" Classes="icon" Content="&#xE4D0;" />
+                        </StackPanel>
+                    </Button>
+                    <Button IsEnabled="{Binding !IsAuthenticated}" Classes="transparent" ToolTip.Tip="Login" HorizontalAlignment="Center" Command="{Binding GoToLoginCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xE428;" />
+                        </StackPanel>
+                    </Button>   
+                    <Button IsEnabled="{Binding IsAuthenticated}" Classes="transparent" ToolTip.Tip="Settings" HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
                             <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xe228;" />
                         </StackPanel>
                     </Button>   
-                    <Button Classes="transparent" Grid.Row="2" HorizontalAlignment="Center">
+                    <Button IsEnabled="{Binding IsAuthenticated}" Classes="transparent" ToolTip.Tip="Logout" Command="{Binding LogoutCommand}" HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
                             <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xe42a;" />
                         </StackPanel>
                     </Button>   
-                      
+                    </StackPanel>
             </Grid>
 
         </Border>
