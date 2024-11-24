@@ -40,6 +40,8 @@ public partial class MainViewModel : ViewModelBase
                 OnPropertyChanged(nameof(AuthenticatedUser));
             }
         };
+        // start at home :
+        GoToHome();
     }
     
     public bool IsAuthenticated => CurrentUserSession.IsAuthenticated;
@@ -51,8 +53,8 @@ public partial class MainViewModel : ViewModelBase
     {
         if (Design.IsDesignMode)
         {
-
-            //CurrentPage = new RegisterViewModel();
+            
+            CurrentPage = new HomeViewModel();
         }
     }
 

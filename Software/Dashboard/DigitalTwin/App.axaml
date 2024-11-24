@@ -12,18 +12,25 @@
     <Application.Styles>
         <FluentTheme />
         <StyleInclude Source="Styles/AppDefaultStyles.axaml"/>
-        <StyleInclude Source="avares://Avalonia.Themes.Fluent/Accents/BaseLight.xaml"/>
-      <StyleInclude Source="avares://Aura.UI.FluentTheme/AuraUI.xaml"/>
-      <StyleInclude Source="avares://Avalonia.Themes.Default/Accents/BaseLight.xaml"/>
-      <StyleInclude Source="avares://Avalonia.Themes.Default/DefaultTheme.xaml"/>
     </Application.Styles>
 
     <Application.Resources>
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Controls/HomeCard.axaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            
+        </ResourceDictionary>
+        
+        
+        
         <SolidColorBrush x:Key="PrimaryBackground">#212531</SolidColorBrush>
         <SolidColorBrush x:Key="SecondaryBackground">#322f42</SolidColorBrush>
         <SolidColorBrush x:Key="LoginBackground">#b7a2c9</SolidColorBrush>
         <SolidColorBrush x:Key="PrimaryText">#c5c3c4</SolidColorBrush>
         <SolidColorBrush x:Key="PrimaryLoginHeader">#4b3a70</SolidColorBrush>
+        <SolidColorBrush x:Key="HomeCard">#413a40</SolidColorBrush>
         <LinearGradientBrush x:Key="PrimaryGradient" StartPoint="0%,0%" EndPoint="100%,0%">
             <GradientStop Offset="0" Color="#322f42"/>
             <GradientStop Offset="1" Color="#4b3a70"/>

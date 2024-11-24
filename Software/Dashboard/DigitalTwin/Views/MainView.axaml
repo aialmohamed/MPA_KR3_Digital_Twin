@@ -3,8 +3,8 @@
         xmlns:vm="using:DigitalTwin.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="600"
-        Width="1024" Height="600"
+        mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="800"
+        Width="1500" Height="800"
         x:Class="DigitalTwin.Views.MainView"
         x:CompileBindings="True"
         x:DataType="vm:MainViewModel"
@@ -58,22 +58,22 @@
                 <StackPanel Grid.Row="2" HorizontalAlignment="Center">
                      <Button IsEnabled="{Binding !IsAuthenticated}" Classes="transparent" ToolTip.Tip="Register" Command="{Binding GoToRegisterCommand}" HorizontalAlignment="Center" >
                         <StackPanel Orientation="Horizontal">
-                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Foreground="Black" Classes="icon" Content="&#xE4D0;" />
+                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Foreground="White" Classes="icon" Content="&#xE4D0;" />
                         </StackPanel>
                     </Button>
                     <Button IsEnabled="{Binding !IsAuthenticated}" Classes="transparent" ToolTip.Tip="Login" HorizontalAlignment="Center" Command="{Binding GoToLoginCommand}">
                         <StackPanel Orientation="Horizontal">
-                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xE428;" />
+                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Foreground="White" Classes="icon" Content="&#xE428;" />
                         </StackPanel>
                     </Button>   
                     <Button IsEnabled="{Binding IsAuthenticated}" Classes="transparent" ToolTip.Tip="Settings" HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
-                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xe228;" />
+                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Foreground="White" Classes="icon" Content="&#xe228;" />
                         </StackPanel>
                     </Button>   
                     <Button IsEnabled="{Binding IsAuthenticated}" Classes="transparent" ToolTip.Tip="Logout" Command="{Binding LogoutCommand}" HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
-                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xe42a;" />
+                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Foreground="White" Classes="icon" Content="&#xe42a;" />
                         </StackPanel>
                     </Button>   
                     </StackPanel>

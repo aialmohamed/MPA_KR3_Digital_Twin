@@ -4,26 +4,30 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="600"             
              xmlns:vm ="clr-namespace:DigitalTwin.ViewModels"
+             xmlns:controls="using:DigitalTwin.Controls"
              x:DataType="vm:HomeViewModel"
              xmlns:aura="using:Aura.UI"
              Background="{DynamicResource SecondaryBackground}"
              x:Class="DigitalTwin.Views.HomeView">
     <Grid  RowDefinitions="0.3*,*">
       <!--Header-->
-      <Border Background="{DynamicResource SecondaryBackground}" Grid.Column="1" Grid.Row="0" >
+      <Border Background="{DynamicResource SecondaryBackground}"  Grid.Row="0" >
         <StackPanel>
-          <Image Source="{SvgImage /Assets/Images/Logo_Light.svg}" Height="100" Width="100" />
+          <Image Source="{SvgImage /Assets/Images/Logo_Light.svg}" Height="80" Width="80" />
+          <Label Content="KukaVerse" Foreground="White" FontFamily="{DynamicResource RobotoRegular}" HorizontalAlignment="Center" FontSize="20"/>
+          <Label Content="Version 1.0.0" Foreground="White" FontFamily="{DynamicResource RobotoBold}" HorizontalAlignment="Center"/>
         </StackPanel>
+
       </Border>
       
       <!--Body-->
-      <Border Background="{DynamicResource PrimaryGradient}" Grid.Column="1" Grid.Row="1" >
-          <aura:CardView CornerRadius="10" Elevation="5" Background="White">
-              <StackPanel>
-                  <TextBlock Text="Hello, World!" FontSize="16" />
-              </StackPanel>
-          </aura:CardView>
-
+      <Border Background="{DynamicResource PrimaryGradient}" Grid.Row="1" >
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" RowDefinitions="*,*">
+          <controls:HomeCard Grid.Column="0" Grid.Row="0" CardHeight="200" CardWidth="400" CardIconString="&#xE2CE;" CardTitle="OS Info" CardContent="Test" />
+          <controls:HomeCard Grid.Column="1" Grid.Row="0" CardHeight="200" CardWidth="400" CardIconString="&#xE2CE;" CardTitle="Docker Info" CardContent="Test" />
+          <controls:HomeCard Grid.Column="0" Grid.Row="1" CardHeight="200" CardWidth="400" CardIconString="&#xE2CE;" CardTitle="OPCUA Info" CardContent="Test" />
+          <controls:HomeCard Grid.Column="1" Grid.Row="1" CardHeight="200" CardWidth="400" CardIconString="&#xE2CE;" CardTitle="DigitalTwin System Info" CardContent="Test" />
+        </Grid>
       </Border>
-    </Grid>
+      </Grid>
 </UserControl>
