@@ -54,7 +54,7 @@ public partial class MainViewModel : ViewModelBase
         if (Design.IsDesignMode)
         {
             
-            CurrentPage = new HomeViewModel();
+           // CurrentPage = new HomeViewModel();
         }
     }
 
@@ -80,6 +80,11 @@ public partial class MainViewModel : ViewModelBase
     private void GoToHome()
     {
         CurrentPage = _pageFactory.GetPageViewModel(ApplicationPageNames.Home);
+    }
+    [RelayCommand]
+    private void GoToDevice()
+    {
+        CurrentPage = _pageFactory.GetPageViewModel(ApplicationPageNames.Device);
     }
 
 }

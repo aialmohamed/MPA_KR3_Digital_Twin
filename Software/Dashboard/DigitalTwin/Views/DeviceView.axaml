@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm ="clr-namespace:DigitalTwin.ViewModels"
+              xmlns:dialogHost="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
+             x:DataType="vm:DeviceViewModel"
+             Background="{DynamicResource SecondaryBackground}"
+             x:Class="DigitalTwin.Views.DeviceView">
+
+    <Grid  RowDefinitions="0.3*,*">
+      <!--Header-->
+      <Border Background="{DynamicResource SecondaryBackground}"  Grid.Row="0" >
+        <StackPanel>
+          <Image Source="{SvgImage /Assets/Images/Logo_Light.svg}" Height="80" Width="80" />
+          <Label Content="KukaVerse" Foreground="White" FontFamily="{DynamicResource RobotoRegular}" HorizontalAlignment="Center" FontSize="20"/>
+          <Label Content="Version 1.0.0" Foreground="White" FontFamily="{DynamicResource RobotoBold}" HorizontalAlignment="Center"/>
+        </StackPanel>
+
+      </Border>
+      
+      <!--Body-->
+      <Border Background="{DynamicResource PrimaryGradient}" Grid.Row="1" >
+
+
+          <Grid Grid.Row="1"  RowDefinitions="*,0.2*">
+            <!--Device List-->
+            <Border Grid.Row="0" Background="{DynamicResource PrimaryHover}">
+              <StackPanel Margin="20">
+                <ScrollViewer>
+                  <ItemsRepeater >
+                  </ItemsRepeater >
+                  
+
+                  
+                </ScrollViewer>
+              </StackPanel>
+            </Border>
+
+            
+            <!--Button-->
+            <Button Grid.Row="1" HorizontalAlignment="Stretch" Command="{Binding AddDeviceCommand}">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xED4A;" />
+                    <Label  Content="Add Device"/>
+                </StackPanel>
+            </Button>
+          </Grid>
+      </Border>
+    </Grid>
+</UserControl>

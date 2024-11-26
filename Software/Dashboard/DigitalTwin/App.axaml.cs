@@ -38,6 +38,7 @@ public partial class App : Application
                 ApplicationPageNames.Login => x.GetRequiredService<LoginViewModel>(),
                 ApplicationPageNames.Register => x.GetRequiredService<RegisterViewModel>(),
                 ApplicationPageNames.Home => x.GetRequiredService<HomeViewModel>(),
+                ApplicationPageNames.Device => x.GetRequiredService<DeviceViewModel>(),
                 _ => throw new InvalidOperationException("Unknown page"),
             });
             collection.AddSingleton<PageFactory>();

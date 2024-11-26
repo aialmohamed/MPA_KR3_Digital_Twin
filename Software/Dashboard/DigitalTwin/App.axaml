@@ -1,6 +1,7 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="DigitalTwin.App"
+             xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
              xmlns:local="using:DigitalTwin"
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
@@ -10,6 +11,7 @@
     </Application.DataTemplates>
   
     <Application.Styles>
+         <dialogHostAvalonia:DialogHostStyles />
         <FluentTheme />
         <StyleInclude Source="Styles/AppDefaultStyles.axaml"/>
     </Application.Styles>

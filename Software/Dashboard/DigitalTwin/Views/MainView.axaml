@@ -8,6 +8,8 @@
         x:Class="DigitalTwin.Views.MainView"
         x:CompileBindings="True"
         x:DataType="vm:MainViewModel"
+        WindowStartupLocation="CenterScreen"
+        ExtendClientAreaChromeHints="PreferSystemChrome"
         Title="DigitalTwin">
 
     <Design.DataContext>
@@ -20,7 +22,7 @@
         <ContentControl Grid.Column="1" Content="{Binding CurrentPage}" />
 
         <!-- Menu-->
-        <Border  Padding="20" Background="{DynamicResource PrimaryGradient}">
+        <Border Classes="shadow" Padding="20" Background="{DynamicResource PrimaryGradient}">
             <Grid RowDefinitions="*,Auto,Auto">
                 <StackPanel IsEnabled="{Binding IsAuthenticated}" Grid.Row="0" Spacing="12">
                     <Image Source="{SvgImage /Assets/Images/Logo_Light.svg}" Height="100" Width="100" />
@@ -36,7 +38,7 @@
                             <Label Content="Home"/>
                         </StackPanel>
                     </Button>   
-                    <Button HorizontalAlignment="Stretch">
+                    <Button IsEnabled="False" Command="{Binding GoToDeviceCommand}" HorizontalAlignment="Stretch">
                         <StackPanel Orientation="Horizontal">
                             <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xe762;" />
                             <Label Content="Device"/>

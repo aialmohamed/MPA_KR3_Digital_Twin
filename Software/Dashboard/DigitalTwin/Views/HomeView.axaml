@@ -23,10 +23,9 @@
       <!--Body-->
       <Border Background="{DynamicResource PrimaryGradient}" Grid.Row="1" >
         <Grid Grid.Row="1" ColumnDefinitions="*,*" RowDefinitions="*,*">
-          <controls:HomeCard Grid.Column="0" Grid.Row="0" CardHeight="200" CardWidth="400" CardIconString="&#xE2CE;" CardTitle="OS Info" CardContent="Test" />
-          <controls:HomeCard Grid.Column="1" Grid.Row="0" CardHeight="200" CardWidth="400" CardIconString="&#xE2CE;" CardTitle="Docker Info" CardContent="Test" />
-          <controls:HomeCard Grid.Column="0" Grid.Row="1" CardHeight="200" CardWidth="400" CardIconString="&#xE2CE;" CardTitle="OPCUA Info" CardContent="Test" />
-          <controls:HomeCard Grid.Column="1" Grid.Row="1" CardHeight="200" CardWidth="400" CardIconString="&#xE2CE;" CardTitle="DigitalTwin System Info" CardContent="Test" />
+          <controls:HomeCard Grid.Column="0" Grid.Row="0" CardHeight="200" CardWidth="400" CardIconString="&#xE2CE;" CardTitle="OS Info" CardContent="{Binding OsInfo}" />
+          <controls:HomeCard Grid.Column="1" Grid.Row="0" CardHeight="200" CardWidth="400" CardIconString="&#xE2CE;" CardTitle="Docker Info" CardContent="{Binding DockerInfo}" />
+          <controls:HomeCard Grid.Column="0" Grid.Row="1" CardHeight="200" CardWidth="400" CardIconString="&#xE2CE;" CardTitle="DigitalTwin System Info" CardContent="{Binding DtImageInfo}" />
         </Grid>
       </Border>
       </Grid>

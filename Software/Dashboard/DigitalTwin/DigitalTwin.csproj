@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.1.0" />
+    <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="11.1.0" />
     <PackageReference Include="Avalonia.Desktop" Version="11.1.0" />
     <PackageReference Include="Avalonia.Svg.Skia" Version="11.1.0" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.0" />
@@ -23,8 +24,10 @@
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+    <PackageReference Include="DialogHost.Avalonia" Version="0.8.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="MongoDB.Driver" Version="3.0.0" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.5.374.126" />
     
   </ItemGroup>
 </Project>

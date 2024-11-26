@@ -7,5 +7,6 @@ public enum ApplicationPageNames
     Undefined,
     Login,
     Register,
-    Home
+    Home,
+    Device
 }
