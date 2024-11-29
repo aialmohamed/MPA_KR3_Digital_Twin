@@ -40,6 +40,7 @@ public partial class App : Application
                 ApplicationPageNames.Register => x.GetRequiredService<RegisterViewModel>(),
                 ApplicationPageNames.Home => x.GetRequiredService<HomeViewModel>(),
                 ApplicationPageNames.Launch => x.GetRequiredService<LaunchViewModel>(),
+                ApplicationPageNames.Connect => x.GetRequiredService<ConnectViewModel>(),
                 _ => throw new InvalidOperationException("Unknown page"),
             });
             collection.AddSingleton<PageFactory>();

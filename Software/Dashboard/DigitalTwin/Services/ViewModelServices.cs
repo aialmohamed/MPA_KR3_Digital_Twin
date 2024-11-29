@@ -4,6 +4,7 @@ using DigitalTwin.Database;
 using DigitalTwin.Models;
 using System;
 using DigitalTwin.Data;
+using DigitalTwin.Container;
 
 
 namespace DigitalTwin.Services;
@@ -16,7 +17,8 @@ public static class ViewModelServiceCollectionExtensions
         collection.AddTransient<LoginViewModel>();
         collection.AddTransient<RegisterViewModel>();
         collection.AddTransient<HomeViewModel>();
-        collection.AddTransient<LaunchViewModel>();
+        collection.AddSingleton<LaunchViewModel>();
+        collection.AddSingleton<ConnectViewModel>();
     }
     public static void AddDataBaseServices(this IServiceCollection collection)
     {
@@ -41,5 +43,7 @@ public static class ViewModelServiceCollectionExtensions
     {
         collection.AddSingleton<ProjectPaths>();
         collection.AddSingleton<Func<ProjectPaths>>(provider => () => provider.GetRequiredService<ProjectPaths>());
+        collection.AddSingleton<SystemContainer>();
+        collection.AddSingleton<Func<SystemContainer>>(provider => () => provider.GetRequiredService<SystemContainer>());
     }
 }

@@ -2,15 +2,12 @@
 
 using System;
 using System.Diagnostics;
-using System.IO;
-using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Logging;
 using DigitalTwin.Data;
 using Opc.Ua;
 using Opc.Ua.Client;
-using Org.BouncyCastle.Bcpg;
+
 
 namespace DigitalTwin.Container;
 
@@ -23,7 +20,13 @@ public class SystemContainer
 
     public SystemContainer(Func<ProjectPaths> GetProjectPaths)
     {
-        _GetProjectPaths = GetProjectPaths;
+            _GetProjectPaths = GetProjectPaths;
+
+
+        var projectPaths = _GetProjectPaths();
+
+
+        _dockerFilePath = projectPaths.DockerFilePath;
 
     }
     public async Task EnsureDockerImageExistsAsync(string imageName , string dockerFilePath )
@@ -40,7 +43,6 @@ public class SystemContainer
 
             Console.WriteLine($"Docker image '{imageName}' does not exist. Building image...");
 
-            // Build the Docker image
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -100,9 +102,9 @@ public class SystemContainer
 
             Task<string> outputTask = process.StandardOutput.ReadToEndAsync();
             Task<string> errorTask = process.StandardError.ReadToEndAsync();
-            Task delayTask = Task.Delay(5000); // Timeout after 5 seconds
+            Task delayTask = Task.Delay(5000); 
 
-            // Wait for either the tasks to complete or the delay to expire
+
             var completedTask = await Task.WhenAny(Task.WhenAll(outputTask, errorTask), delayTask);
 
             if (completedTask == delayTask)
@@ -110,7 +112,6 @@ public class SystemContainer
                 throw new TimeoutException("Docker command timed out.");
             }
 
-            // Ensure the process has exited before checking exit code
             process.WaitForExit();
 
             if (process.ExitCode != 0)
@@ -133,7 +134,7 @@ public class SystemContainer
     {
         try
         {
-            // Select the appropriate Docker command based on the platform
+
             string command;
 
             if (OperatingSystem.IsWindows())
@@ -164,23 +165,21 @@ public class SystemContainer
                 throw new NotSupportedException("Unsupported operating system.");
             }
 
-            // Start the Docker process
+
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = "docker", // Run Docker directly
+                    FileName = "docker",
                     Arguments = command,
-                    RedirectStandardOutput = true, // Capture output
-                    RedirectStandardError = true, // Capture error
-                    UseShellExecute = false,      // Run in background without terminal
-                    CreateNoWindow = true         // Prevent terminal from opening
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true, 
+                    UseShellExecute = false,     
+                    CreateNoWindow = true         
                 }
             };
 
             process.Start();
-
-            // Capture the output and error streams
             string output = await process.StandardOutput.ReadToEndAsync();
             string error = await process.StandardError.ReadToEndAsync();
 
@@ -210,7 +209,7 @@ public class SystemContainer
         {
             try
             {
-                // Create OPC UA client configuration
+
                 var config = new ApplicationConfiguration
                 {
                     ApplicationName = "OpcUaClient",
@@ -224,11 +223,7 @@ public class SystemContainer
                 };
 
                 await config.Validate(ApplicationType.Client);
-
-                // Discover endpoint
                 var endpoint = CoreClientUtils.SelectEndpoint(endpointUrl, useSecurity: false);
-
-                // Attempt to create a session
                 using var session = await Session.Create(config, new ConfiguredEndpoint(null, endpoint), false, "OpcUaClient", 60000, null, null);
 
                 if (session.Connected)
@@ -242,7 +237,7 @@ public class SystemContainer
                 Console.WriteLine($"Server not ready yet: {ex.Message}");
             }
 
-            await Task.Delay(1000); // Wait for 1 second before retrying
+            await Task.Delay(1000);
             elapsedSeconds++;
         }
 
@@ -254,7 +249,6 @@ public class SystemContainer
     {
         try
         {
-            // Stop the container
             var stopProcess = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -283,8 +277,6 @@ public class SystemContainer
                 Console.WriteLine($"Docker container '{containerName}' stopped successfully.");
                 Console.WriteLine(stopOutput);
             }
-
-            // Remove the container
             var removeProcess = new Process
             {
                 StartInfo = new ProcessStartInfo
