@@ -16,7 +16,7 @@ public static class ViewModelServiceCollectionExtensions
         collection.AddTransient<LoginViewModel>();
         collection.AddTransient<RegisterViewModel>();
         collection.AddTransient<HomeViewModel>();
-        collection.AddTransient<DeviceViewModel>();
+        collection.AddTransient<LaunchViewModel>();
     }
     public static void AddDataBaseServices(this IServiceCollection collection)
     {
@@ -36,5 +36,10 @@ public static class ViewModelServiceCollectionExtensions
         collection.AddSingleton<Func<UserSession>>(provider => () => provider.GetRequiredService<UserSession>());
         collection.AddTransient<HomeInfo>();
 
+    }
+    public static void AddProjectPaths(this IServiceCollection collection)
+    {
+        collection.AddSingleton<ProjectPaths>();
+        collection.AddSingleton<Func<ProjectPaths>>(provider => () => provider.GetRequiredService<ProjectPaths>());
     }
 }

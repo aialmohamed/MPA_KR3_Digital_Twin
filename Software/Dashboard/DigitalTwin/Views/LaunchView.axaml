@@ -5,9 +5,9 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm ="clr-namespace:DigitalTwin.ViewModels"
               xmlns:dialogHost="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
-             x:DataType="vm:DeviceViewModel"
+             x:DataType="vm:LaunchViewModel"
              Background="{DynamicResource SecondaryBackground}"
-             x:Class="DigitalTwin.Views.DeviceView">
+             x:Class="DigitalTwin.Views.LaunchView">
 
     <Grid  RowDefinitions="0.3*,*">
       <!--Header-->
@@ -42,8 +42,8 @@
             <!--Button-->
             <Button Grid.Row="1" HorizontalAlignment="Stretch" Command="{Binding AddDeviceCommand}">
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xED4A;" />
-                    <Label  Content="Add Device"/>
+                    <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xE3D0;" />
+                    <Label  Content="Start Container"/>
                 </StackPanel>
             </Button>
           </Grid>

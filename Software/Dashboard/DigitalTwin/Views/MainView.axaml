@@ -38,19 +38,19 @@
                             <Label Content="Home"/>
                         </StackPanel>
                     </Button>   
-                    <Button IsEnabled="False" Command="{Binding GoToDeviceCommand}" HorizontalAlignment="Stretch">
+                    <Button Command="{Binding GoToLaunchCommand}" HorizontalAlignment="Stretch">
                         <StackPanel Orientation="Horizontal">
-                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xe762;" />
-                            <Label Content="Device"/>
+                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xE3FE;" />
+                            <Label Content="Launch"/>
                         </StackPanel>
                     </Button>   
-                    <Button HorizontalAlignment="Stretch">
+                    <Button HorizontalAlignment="Stretch" Command="{Binding ConnectCommand}">
                         <StackPanel Orientation="Horizontal">
                             <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xebaa;" />
                             <Label Content="Connect"/>
                         </StackPanel>
                     </Button>   
-                    <Button HorizontalAlignment="Stretch">
+                    <Button HorizontalAlignment="Stretch" Command="{Binding StartCommand}">
                         <StackPanel Orientation="Horizontal">
                             <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xe3d0;" />
                             <Label Content="Start"/>
@@ -68,7 +68,7 @@
                             <Label  FontFamily="{DynamicResource Phosphor-Fill}" Foreground="White" Classes="icon" Content="&#xE428;" />
                         </StackPanel>
                     </Button>   
-                    <Button IsEnabled="{Binding IsAuthenticated}" Classes="transparent" ToolTip.Tip="Settings" HorizontalAlignment="Center">
+                    <Button Command="{Binding SettingsCommand}" IsEnabled="{Binding IsAuthenticated}" Classes="transparent" ToolTip.Tip="Settings" HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
                             <Label  FontFamily="{DynamicResource Phosphor-Fill}" Foreground="White" Classes="icon" Content="&#xe228;" />
                         </StackPanel>

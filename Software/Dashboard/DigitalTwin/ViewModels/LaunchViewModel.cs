@@ -6,12 +6,12 @@ using DigitalTwin.Data;
 
 namespace DigitalTwin.ViewModels;
 
-
-public partial class DeviceViewModel : PageViewModel
+// Starting the Docker Container and check status of docker 
+public partial class LaunchViewModel : PageViewModel
 {
-    public DeviceViewModel()
+    public LaunchViewModel()
     {
-        PageNames = ApplicationPageNames.Device;
+        PageNames = ApplicationPageNames.Launch;
     }
     [RelayCommand]
     private void AddDevice()

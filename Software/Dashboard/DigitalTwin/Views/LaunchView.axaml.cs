@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace DigitalTwin.Views;
 
-public partial class DeviceView : UserControl
+public partial class LaunchView : UserControl
 {
-    public DeviceView()
+    public LaunchView()
     {
         InitializeComponent();
     }

@@ -8,5 +8,6 @@ public enum ApplicationPageNames
     Login,
     Register,
     Home,
-    Device
+    Launch,
+    Connect,
 }
