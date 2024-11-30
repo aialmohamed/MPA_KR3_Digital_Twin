@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="600"
+              xmlns:vm ="clr-namespace:DigitalTwin.ViewModels"
+             xmlns:controls="using:DigitalTwin.Controls"
+             x:DataType="vm:StartViewModel"
+             Background="{DynamicResource SecondaryBackground}"
+             x:Class="DigitalTwin.Views.StartView">
+            
+            
+            <Grid ColumnDefinitions="2*,*" RowDefinitions="*,3*,*">
+              <!--Upper Margin for starting and stopping stuff ( simulation and more)-->
+              <Border Grid.Column="0" Grid.Row="0" Background="Aquamarine"/>
+              <!--Main Task Builder (Set points ...etc)-->
+              <Border Grid.Column="0" Grid.Row="1" Background="{DynamicResource PrimaryBackground}"/>            
+              <!-- Lower Margin for stop and start etc ...-->         
+              <Border Grid.Column="0" Grid.Row="2" Background="Beige"/>            
+              <!--Right Side Upper Margin for for Tasks info-->
+              <Border Grid.Column="1" Grid.Row="0"  Background="Bisque"/>
+              <!--Right Side for Tasks info-->
+              <Border Grid.Column="1" Grid.Row="1"  Background="Azure"/>
+              <!--Right Side Lower Margin  info-->
+              <Border Grid.Column="1" Grid.Row="2"  Background="BlueViolet"/>
+            </Grid>
+</UserControl>

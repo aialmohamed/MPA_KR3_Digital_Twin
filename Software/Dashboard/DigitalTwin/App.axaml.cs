@@ -34,6 +34,7 @@ public partial class App : Application
             collection.AddDataBaseServices();
             collection.AddAuthenticationServices();
             collection.AddMainViewModelServices();
+            collection.AddOpcuaClientServices();
             
             collection.AddSingleton<Func<ApplicationPageNames, PageViewModel>>(x => name => name switch {
                 ApplicationPageNames.Login => x.GetRequiredService<LoginViewModel>(),
@@ -41,6 +42,7 @@ public partial class App : Application
                 ApplicationPageNames.Home => x.GetRequiredService<HomeViewModel>(),
                 ApplicationPageNames.Launch => x.GetRequiredService<LaunchViewModel>(),
                 ApplicationPageNames.Connect => x.GetRequiredService<ConnectViewModel>(),
+                ApplicationPageNames.Start => x.GetRequiredService<StartViewModel>(),
                 _ => throw new InvalidOperationException("Unknown page"),
             });
             collection.AddSingleton<PageFactory>();

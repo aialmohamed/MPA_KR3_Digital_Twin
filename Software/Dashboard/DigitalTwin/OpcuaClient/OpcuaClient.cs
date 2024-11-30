@@ -18,78 +18,67 @@ public class OpcuaClient
         Url = url;
     }
 
-public async Task ConnectAsync()
-{
-    try
+    public async Task<bool> ConnectAsync()
     {
-        ApplicationConfiguration config = new ApplicationConfiguration()
+        try
         {
-            ApplicationName = "OpcUaClient",
-            ApplicationType = ApplicationType.Client,
-            TransportConfigurations = new TransportConfigurationCollection(),
-            TransportQuotas = new TransportQuotas { OperationTimeout = 15000 },
-            SecurityConfiguration = new SecurityConfiguration
+            ApplicationConfiguration config = new ApplicationConfiguration()
             {
-                ApplicationCertificate = new CertificateIdentifier()
-            },
-            ClientConfiguration = new ClientConfiguration { DefaultSessionTimeout = 60000 }
-        };
+                ApplicationName = "OpcUaClient",
+                ApplicationType = ApplicationType.Client,
+                TransportConfigurations = new TransportConfigurationCollection(),
+                TransportQuotas = new TransportQuotas { OperationTimeout = 15000 },
+                SecurityConfiguration = new SecurityConfiguration
+                {
+                    ApplicationCertificate = new CertificateIdentifier()
+                },
+                ClientConfiguration = new ClientConfiguration { DefaultSessionTimeout = 60000 }
+            };
 
-        await config.Validate(ApplicationType.Client);
+            await config.Validate(ApplicationType.Client);
 
-   
-      EndpointDescription endpointDescription = null;
+            EndpointDescription endpointDescription = null;
 
-        // Offload endpoint selection to a background thread
-        await Task.Run(() =>
-        {
-            try
+            // Offload endpoint selection to a background thread
+            await Task.Run(() =>
             {
-                endpointDescription = CoreClientUtils.SelectEndpoint(Url, useSecurity: false);
+                try
+                {
+                    endpointDescription = CoreClientUtils.SelectEndpoint(Url, useSecurity: false);
+                }
+                catch (Exception ex)
+                {
+                    Logger.TryGet(LogEventLevel.Error, "DigitalTwin")?.Log(this, $"Error selecting endpoint: {ex.Message}");
+                    endpointDescription = null;
+                }
+            });
+
+            if (endpointDescription == null)
+            {
+                Logger.TryGet(LogEventLevel.Error, "DigitalTwin")?.Log(this, "Failed to retrieve endpoint description.");
+                return false;
             }
-            catch (Exception ex)
+
+            // Continue with endpoint configuration if no exceptions occurred
+            EndpointConfiguration endpointConfiguration = EndpointConfiguration.Create(config);
+            ConfiguredEndpoint endpoint = new ConfiguredEndpoint(null, endpointDescription, endpointConfiguration);
+
+            // Create the session
+            Session = await Session.Create(config, endpoint, false, "OpcUaClient", 60000, null, null);
+
+            if (Session == null)
             {
-                Logger.TryGet(LogEventLevel.Error, "DigitalTwin")?.Log(this, $"Error selecting endpoint: {ex.Message}");
-                endpointDescription = null;
+                Logger.TryGet(LogEventLevel.Error, "DigitalTwin")?.Log(this, "Failed to create OPC UA session.");
+                return false;
             }
-        });
 
-        // Continue with endpoint configuration if no exceptions occurred
-        EndpointConfiguration endpointConfiguration = EndpointConfiguration.Create(config);
-        ConfiguredEndpoint endpoint = new ConfiguredEndpoint(null, endpointDescription, endpointConfiguration);
-
-        // Create the session
-        Session = await Session.Create(config, endpoint, false, "OpcUaClient", 60000, null, null);
-    }
-    catch (Exception ex)
-    {
-        Logger.TryGet(LogEventLevel.Error, "DigitalTwin")?.Log(this, $"Error during connection: {ex.Message}");
-    }
-}
-
-    public async Task SubscribeToDataChangesAsync(NodeId nodeId, MonitoredItemNotificationEventHandler handler)
-    {
-        // Create a subscription with a publishing interval of 1000 ms
-        Subscription = new Subscription(Session.DefaultSubscription) { PublishingInterval = 1000 };
-
-        // Create a monitored item
-        MonitoredItem monitoredItem = new MonitoredItem(Subscription.DefaultItem)
+            return true; // Connection successful
+        }
+        catch (Exception ex)
         {
-            DisplayName = nodeId.ToString(),
-            StartNodeId = nodeId
-        };
-
-        // Add the handler
-        monitoredItem.Notification += handler;
-
-        // Add the item to the subscription
-        Subscription.AddItem(monitoredItem);
-
-        // Add the subscription to the session
-        Session.AddSubscription(Subscription);
-
-        // Create the subscription on the server
-        await Task.Run(() => Subscription.Create());
+            Logger.TryGet(LogEventLevel.Error, "DigitalTwin")?.Log(this, $"Error during connection: {ex.Message}");
+            return false; // Connection failed
+        }
     }
 
     public async Task UnsubscribeAsync()

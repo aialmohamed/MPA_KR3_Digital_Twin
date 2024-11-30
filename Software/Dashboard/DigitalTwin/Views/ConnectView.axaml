@@ -2,11 +2,44 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="600"
              xmlns:vm ="clr-namespace:DigitalTwin.ViewModels"
              xmlns:controls="using:DigitalTwin.Controls"
              x:DataType="vm:ConnectViewModel"
              Background="{DynamicResource SecondaryBackground}"
              x:Class="DigitalTwin.Views.ConnectView">
-  Welcome to Avalonia!
+
+  <Grid  RowDefinitions="0.3*,*">
+      <!--Header-->
+      <Border Background="{DynamicResource SecondaryBackground}"  Grid.Row="0" >
+        <StackPanel>
+          <Image Source="{SvgImage /Assets/Images/Logo_Light.svg}" Height="80" Width="80" />
+          <Label Content="KukaVerse" Foreground="White" FontFamily="{DynamicResource RobotoRegular}" HorizontalAlignment="Center" FontSize="20"/>
+          <Label Content="Version 1.0.0" Foreground="White" FontFamily="{DynamicResource RobotoBold}" HorizontalAlignment="Center"/>
+        </StackPanel>
+
+      </Border>
+      
+      <!--Body-->
+      <Border Background="{DynamicResource PrimaryGradient}" Grid.Row="1" >
+        <Grid Grid.Row="1"  RowDefinitions="*,*">
+              <controls:HomeCard  Grid.Row="0" CardHeight="200" CardWidth="400" CardIconString="&#xE2CE;" CardTitle="OPCUA Server Status" CardContent="{Binding OpcuaClientStatusText}" />
+              
+              <StackPanel Grid.Row="1">
+              <Button  VerticalAlignment="Center" HorizontalAlignment="Stretch" Command="{Binding ConnectToOpcuaServerCommand}">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" FontSize="25" Content="&#xEB5A;" />
+                    <Label  Content="Connect to Server"/>
+                </StackPanel>
+              </Button>
+                <Button VerticalAlignment="Center" HorizontalAlignment="Stretch" Command="{Binding DisconnectFromOpcuaServerCommand}">
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                    <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" FontSize="25" Content="&#xEB56;" />
+                    <Label  Content="Disconnect"/>
+                </StackPanel>
+              </Button>
+              </StackPanel>
+        </Grid>
+      </Border>
+      </Grid>
 </UserControl>

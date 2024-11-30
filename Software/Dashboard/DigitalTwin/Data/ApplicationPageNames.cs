@@ -10,4 +10,5 @@ public enum ApplicationPageNames
     Home,
     Launch,
     Connect,
+    Start,
 }

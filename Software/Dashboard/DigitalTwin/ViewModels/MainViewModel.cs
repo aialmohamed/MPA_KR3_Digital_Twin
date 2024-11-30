@@ -100,7 +100,7 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     private async Task Start()
     {
-       // await _opcuaClient.CallSystemMethodAsync(_opcuaClient.Session,"ns=2;s=ControlMethods","ns=2;s=LaunchRos2Simulation");
+       CurrentPage = _pageFactory.GetPageViewModel(ApplicationPageNames.Start);
     }
     [RelayCommand]
     private async Task Settings()

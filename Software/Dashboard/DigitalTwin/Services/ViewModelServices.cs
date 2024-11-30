@@ -5,6 +5,7 @@ using DigitalTwin.Models;
 using System;
 using DigitalTwin.Data;
 using DigitalTwin.Container;
+using DigitalTwin.OpcaClient;
 
 
 namespace DigitalTwin.Services;
@@ -19,6 +20,7 @@ public static class ViewModelServiceCollectionExtensions
         collection.AddTransient<HomeViewModel>();
         collection.AddSingleton<LaunchViewModel>();
         collection.AddSingleton<ConnectViewModel>();
+        collection.AddSingleton<StartViewModel>();
     }
     public static void AddDataBaseServices(this IServiceCollection collection)
     {
@@ -45,5 +47,10 @@ public static class ViewModelServiceCollectionExtensions
         collection.AddSingleton<Func<ProjectPaths>>(provider => () => provider.GetRequiredService<ProjectPaths>());
         collection.AddSingleton<SystemContainer>();
         collection.AddSingleton<Func<SystemContainer>>(provider => () => provider.GetRequiredService<SystemContainer>());
+    }
+    public static void AddOpcuaClientServices(this IServiceCollection collection)
+    {
+        collection.AddSingleton<OpcuaClient>();
+        collection.AddSingleton<Func<OpcuaClient>>(provider => () => provider.GetRequiredService<OpcuaClient>());
     }
 }
