@@ -18,6 +18,10 @@ public class SystemContainer
     private readonly string _dockerFilePath;
     public string DockerFilePath => _dockerFilePath;
 
+    private readonly string root;
+
+    public string RootPath  => root;
+
     public SystemContainer(Func<ProjectPaths> GetProjectPaths)
     {
             _GetProjectPaths = GetProjectPaths;
@@ -27,28 +31,30 @@ public class SystemContainer
 
 
         _dockerFilePath = projectPaths.DockerFilePath;
+        root = projectPaths.RootPath;
 
     }
-    public async Task EnsureDockerImageExistsAsync(string imageName , string dockerFilePath )
+    public async Task<bool> EnsureDockerImageExistsAsync(string imageName, string rootPath)
     {
         try
         {
-            // Check if the Docker image exists
+
             bool imageExists = await CheckDockerImageExists(imageName);
             if (imageExists)
             {
                 Console.WriteLine($"Docker image '{imageName}' already exists.");
-                return;
+                return true;
             }
 
             Console.WriteLine($"Docker image '{imageName}' does not exist. Building image...");
+            Console.WriteLine($"Docker build context: {rootPath}");
 
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "docker",
-                    Arguments = $"build -t {imageName} {dockerFilePath}",
+                    Arguments = $"build -t {imageName} {rootPath}",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,
@@ -58,27 +64,39 @@ public class SystemContainer
 
             process.Start();
 
-            string output = await process.StandardOutput.ReadToEndAsync();
-            string error = await process.StandardError.ReadToEndAsync();
+            var outputTask = process.StandardOutput.ReadToEndAsync();
+            var errorTask = process.StandardError.ReadToEndAsync();
+
+            await Task.WhenAll(outputTask, errorTask);
+
+            string output = outputTask.Result;
+            string error = errorTask.Result;
 
             await process.WaitForExitAsync();
+
+            Console.WriteLine($"Process exited with code: {process.ExitCode}");
 
             if (process.ExitCode == 0)
             {
                 Console.WriteLine($"Docker image '{imageName}' built successfully.");
                 Console.WriteLine(output);
+                return true;
             }
             else
             {
                 Console.WriteLine($"Error building Docker image '{imageName}':");
                 Console.WriteLine(error);
+                return false; 
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occurred while ensuring Docker image exists: {ex.Message}");
+            return false; 
         }
     }
+
+
 
 
     public async Task<bool> CheckDockerImageExists(string imageName)

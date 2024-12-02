@@ -18,6 +18,6 @@ public class ProjectPaths
     public ProjectPaths()
     {
         _rootPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\..\.."));
-        _dockerFilePath = Path.Combine(_rootPath, "DockerFile");
+        _dockerFilePath = Path.Combine(_rootPath, "Dockerfile");
     }
 }

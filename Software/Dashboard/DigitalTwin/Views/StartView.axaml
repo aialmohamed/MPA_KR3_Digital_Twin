@@ -11,16 +11,42 @@
             
             
             <Grid ColumnDefinitions="2*,*" RowDefinitions="*,3*,*">
-              <!--Upper Margin for starting and stopping stuff ( simulation and more)-->
-              <Border Grid.Column="0" Grid.Row="0" Background="Aquamarine"/>
+              <Border Classes="shadow" Grid.Column="0" Grid.Row="0" Background="{DynamicResource SecondaryBackground}">
+                <Grid Margin="10,0,0,0" ColumnDefinitions="*,*" RowDefinitions="*,*">
+                    <Button Width="200" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xE3D0;" />
+                            <Label Content="Start"/>
+                        </StackPanel>
+                    </Button>   
+                      <Button Width="200" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xE46C;" />
+                            <Label Content="Stop"/>
+                        </StackPanel>
+                    </Button>
+                    <CheckBox Margin="0,0,100,0" Grid.Column="1" Grid.Row="0" Foreground="White" Content="Subscribe to Simulation" HorizontalAlignment="Right"/>
+                    <CheckBox Margin="0,0,98,0" Grid.Column="1" Grid.Row="1" Foreground="White" Content="Subscribe to Real Robot" HorizontalAlignment="Right"/>
+                </Grid>
+              </Border>
               <!--Main Task Builder (Set points ...etc)-->
               <Border Grid.Column="0" Grid.Row="1" Background="{DynamicResource PrimaryBackground}"/>            
               <!-- Lower Margin for stop and start etc ...-->         
               <Border Grid.Column="0" Grid.Row="2" Background="Beige"/>            
               <!--Right Side Upper Margin for for Tasks info-->
-              <Border Grid.Column="1" Grid.Row="0"  Background="Bisque"/>
+              <Border Classes="shadow" Grid.Column="1" Grid.Row="0" Background="{DynamicResource SecondaryBackground}">
+                <StackPanel>
+                
+                </StackPanel>
+              </Border>
               <!--Right Side for Tasks info-->
-              <Border Grid.Column="1" Grid.Row="1"  Background="Azure"/>
+              <Border Classes="shadow" Grid.Column="1" Grid.Row="1" Background="{DynamicResource SecondaryBackground}">
+                <StackPanel>
+                    <StackPanel>
+                    </StackPanel>
+                    <Line StartPoint="200,30" EndPoint="200,400" Stroke="White" StrokeThickness="2"/>
+                </StackPanel>
+              </Border>
               <!--Right Side Lower Margin  info-->
               <Border Grid.Column="1" Grid.Row="2"  Background="BlueViolet"/>
             </Grid>

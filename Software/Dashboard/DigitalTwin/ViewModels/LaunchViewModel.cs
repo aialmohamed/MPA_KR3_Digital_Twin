@@ -4,10 +4,12 @@
 using System;
 using System.Threading.Tasks;
 using Avalonia.Media;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DigitalTwin.Container;
 using DigitalTwin.Data;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DigitalTwin.ViewModels;
 
@@ -67,53 +69,79 @@ public partial class LaunchViewModel : PageViewModel
             try
             {
                 await _systemContainer.LaunchDockerContainerInBackgroundAsync();
-                ContainerStatus = "Container is running , waiting for the OPC UA server ...";
-                ContainerStatusColor = Brushes.Yellow;
-                bool isServerReady = await _systemContainer.WaitForOpcUaServerAsync("opc.tcp://localhost:4840");
 
-                if (isServerReady)
+                 await Dispatcher.UIThread.InvokeAsync(() =>
                 {
-                    IsContainerRunning = true;
-                    ContainerStatus = "The OPC UA server is ready.";
-                    ContainerStatusColor = Brushes.Green;
-                    
+                        ContainerStatus = "Container is running , waiting for the OPC UA server ...";
+                        ContainerStatusColor = Brushes.Yellow;
+                });
+
+                bool isServerReady = await _systemContainer.WaitForOpcUaServerAsync("opc.tcp://localhost:4840");
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {                
+                    if (isServerReady)
+                    {
+                        IsContainerRunning = true;
+                        ContainerStatus = "The OPC UA server is ready.";
+                        ContainerStatusColor = Brushes.Green;
+                        
+                    }
+                    else
+                    {
+                        ContainerStatus = "The server failed to start within the timeout period.";
+                        ContainerStatusColor = Brushes.Red;
+                    } 
+                });
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        });
+    }
+    [RelayCommand]private void BuildImage()
+{
+    Task.Run(async () =>
+    {
+        try
+        {
+            string imageName = "ibo311/kr3r540_digital_twin:v1.0";
+            string dockerFilePath = _systemContainer.RootPath; 
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                ImageStatusColor = Brushes.Yellow;
+                ImageStatusText = "Building Docker Image ...";
+            });
+            bool image_built = await _systemContainer.EnsureDockerImageExistsAsync(imageName, dockerFilePath);
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                if (!image_built)
+                {
+                    ImageStatusColor = Brushes.Red;
+                    ImageStatusText = "Failed to build Docker Image";
+                    DoseImageExist = false;
                 }
                 else
                 {
-                    ContainerStatus = "The server failed to start within the timeout period.";
-                    ContainerStatusColor = Brushes.Red;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        });
-    }
-    [RelayCommand]
-    private void BuildImage()
-    {
-                Task.Run(async () =>
-        {
-            try
-            {
-                string imageName = "ibo311/kr3r540_digital_twin:v1.0";
-                string dockerFilePath = _systemContainer.DockerFilePath; 
-                ImageStatusColor = Brushes.Yellow;
-                ImageStatusText = "Building Docker Image ...";
-                IsContainerRunning = false;
-                await _systemContainer.EnsureDockerImageExistsAsync(imageName, dockerFilePath);
-                ImageStatusColor = Brushes.Green;
-                ImageStatusText = "Docker Image Done Building , you can run the container now";
-                IsContainerRunning = true;
+                    ImageStatusColor = Brushes.Green;
+                    ImageStatusText = "Docker Image Done Building, you can run the container now";
+                    DoseImageExist = true;
 
-            }
-            catch (Exception ex)
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions and update the UI
+             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        });
-    }
+                ImageStatusColor = Brushes.Red;
+                ImageStatusText = $"An error occurred: {ex.Message}";
+            });
+        }
+    });
+}
 
     [RelayCommand]
     private void StopContainer()
