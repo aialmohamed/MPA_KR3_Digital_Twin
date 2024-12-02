@@ -18,6 +18,11 @@ public class OpcuaClient
         Url = url;
     }
 
+    public bool IsConnected()
+    {
+        return Session != null && Session.Connected;
+    }
+
     public async Task<bool> ConnectAsync()
     {
         try

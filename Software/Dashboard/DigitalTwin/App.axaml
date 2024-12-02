@@ -21,6 +21,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="/Controls/HomeCard.axaml"/>
+                <ResourceInclude Source="/Controls/PositionControl.axaml"/>
             </ResourceDictionary.MergedDictionaries>
             
         </ResourceDictionary>

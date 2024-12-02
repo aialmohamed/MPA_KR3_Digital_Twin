@@ -1,0 +1,45 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:DigitalTwin.Controls">
+
+  
+  <Design.PreviewWith>
+    <StackPanel Width="400" Spacing="10">      
+        <StackPanel Background="{DynamicResource SystemRegionBrush}">
+          <controls:PositionControl CardHeight="350" CardIconString="&#xE2CE;" CardTitle="OS Info" CardWidth="200" XCoordinate="10.0" YCoordinate="9.0" ZCoordinate="100.0" Roll="10" Pitch="10" Yaw="10" Gripper="Open" />
+        </StackPanel>
+    </StackPanel>
+  </Design.PreviewWith>
+ 
+  <ControlTheme x:Key="{x:Type controls:PositionControl}" TargetType="controls:PositionControl">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border CornerRadius="15" Height="{TemplateBinding CardHeight}" Width="{TemplateBinding CardWidth}" Classes="shadow" Background="{DynamicResource HomeCard}">
+          <StackPanel Orientation="Vertical">
+            <StackPanel HorizontalAlignment="Stretch"  Orientation="Horizontal">
+              <Label Padding="10"  FontFamily="{DynamicResource PhosphorReg}" Foreground="White" FontSize="30" Content="{TemplateBinding CardIconString}" />
+              <Label Content="{TemplateBinding CardTitle}" FontFamily="{DynamicResource RobotoBold}" Foreground="White" FontSize="20" Padding="10"/>
+            </StackPanel>
+
+                  <Grid Height="300" Width="{TemplateBinding CardWidth}" ColumnDefinitions="0.7*,*" RowDefinitions="*,*,*,*,*,*,*">
+                  <Label Grid.Column="0" Grid.Row="0" Content="x: " FontFamily="{DynamicResource RobotoRegular}" Foreground="White" FontSize="20" Padding="5"/>
+                  <Label Grid.Column="1" Grid.Row="0" Content="{TemplateBinding XCoordinate}" FontFamily="{DynamicResource RobotoRegular}" Foreground="White" FontSize="20" Padding="5"/>
+                  <Label Grid.Column="0" Grid.Row="1" Content="y: " FontFamily="{DynamicResource RobotoRegular}" Foreground="White" FontSize="20" Padding="5"/>
+                  <Label Grid.Column="1" Grid.Row="1" Content="{TemplateBinding YCoordinate}" FontFamily="{DynamicResource RobotoRegular}" Foreground="White" FontSize="20" Padding="5"/>
+                  <Label Grid.Column="0" Grid.Row="2" Content="z: " FontFamily="{DynamicResource RobotoRegular}" Foreground="White" FontSize="20" Padding="5"/>
+                  <Label Grid.Column="1" Grid.Row="2" Content="{TemplateBinding ZCoordinate}" FontFamily="{DynamicResource RobotoRegular}" Foreground="White" FontSize="20" Padding="5"/>
+                  <Label Grid.Column="0" Grid.Row="3" Content="roll: " FontFamily="{DynamicResource RobotoRegular}" Foreground="White" FontSize="20" Padding="5"/>
+                  <Label Grid.Column="1" Grid.Row="3" Content="{TemplateBinding Roll}" FontFamily="{DynamicResource RobotoRegular}" Foreground="White" FontSize="20" Padding="5"/>
+                  <Label Grid.Column="0" Grid.Row="4" Content="pitch: " FontFamily="{DynamicResource RobotoRegular}" Foreground="White" FontSize="20" Padding="5"/>
+                  <Label Grid.Column="1" Grid.Row="4" Content="{TemplateBinding Pitch}" FontFamily="{DynamicResource RobotoRegular}" Foreground="White" FontSize="20" Padding="5"/>
+                  <Label Grid.Column="0" Grid.Row="5" Content="yaw: " FontFamily="{DynamicResource RobotoRegular}" Foreground="White" FontSize="20" Padding="5"/>
+                  <Label Grid.Column="1" Grid.Row="5" Content="{TemplateBinding Yaw}" FontFamily="{DynamicResource RobotoRegular}" Foreground="White" FontSize="20" Padding="5"/>
+                  <Label Grid.Column="0" Grid.Row="6" Content="Gripper" FontFamily="{DynamicResource RobotoRegular}" Foreground="White" FontSize="20" Padding="5"/>
+                  <Label Grid.Column="1" Grid.Row="6" Content="{TemplateBinding Gripper}" FontFamily="{DynamicResource RobotoRegular}" Foreground="White" FontSize="20" Padding="5"/>
+                </Grid>
+          </StackPanel>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+  </ControlTheme>
+</ResourceDictionary>

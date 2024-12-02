@@ -3,14 +3,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="1024" d:DesignHeight="600"
-              xmlns:vm ="clr-namespace:DigitalTwin.ViewModels"
+            xmlns:vm ="clr-namespace:DigitalTwin.ViewModels"
              xmlns:controls="using:DigitalTwin.Controls"
              x:DataType="vm:StartViewModel"
              Background="{DynamicResource SecondaryBackground}"
              x:Class="DigitalTwin.Views.StartView">
             
             
-            <Grid ColumnDefinitions="2*,*" RowDefinitions="*,3*,*">
+            <Grid ColumnDefinitions="1.8*,*" RowDefinitions="*,4*,*">
               <Border Classes="shadow" Grid.Column="0" Grid.Row="0" Background="{DynamicResource SecondaryBackground}">
                 <Grid Margin="10,0,0,0" ColumnDefinitions="*,*" RowDefinitions="*,*">
                     <Button Width="200" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left">
@@ -41,11 +41,10 @@
               </Border>
               <!--Right Side for Tasks info-->
               <Border Classes="shadow" Grid.Column="1" Grid.Row="1" Background="{DynamicResource SecondaryBackground}">
-                <StackPanel>
-                    <StackPanel>
-                    </StackPanel>
-                    <Line StartPoint="200,30" EndPoint="200,400" Stroke="White" StrokeThickness="2"/>
-                </StackPanel>
+                <Grid VerticalAlignment="Stretch" ColumnDefinitions="*,*">
+                    <controls:PositionControl Grid.Column="0" CardHeight="350" CardIconString="&#xE2CE;" CardTitle="Simulation" CardWidth="200" XCoordinate="{Binding XCoords_sim}" YCoordinate="{Binding YCoords_sim}" ZCoordinate="{Binding ZCoords_sim}" Roll="{Binding Roll_sim}" Pitch="{Binding Pitch_sim}" Yaw="{Binding Yaw_sim}" Gripper="{Binding Gripper_sim}" />
+                    <controls:PositionControl Grid.Column="1" CardHeight="350" CardIconString="&#xE2CE;" CardTitle="Real" CardWidth="200" XCoordinate="{Binding XCoords_real}" YCoordinate="{Binding YCoords_real}" ZCoordinate="{Binding ZCoords_real}" Roll="{Binding Roll_real}" Pitch="{Binding Pitch_real}" Yaw="{Binding Yaw_real}" Gripper="{Binding Gripper_real} />
+                </Grid>
               </Border>
               <!--Right Side Lower Margin  info-->
               <Border Grid.Column="1" Grid.Row="2"  Background="BlueViolet"/>
