@@ -7,15 +7,15 @@ using DigitalTwin.OpcaClient;
 
 namespace DigitalTwin.Models
 {
-    public class RobotPositionSimulation
+    public class RobotPositionReal
     {
         private readonly OpcuaClient _opcUaClient;
 
         public event Action<string, string> DataUpdated;
         public event Action<bool> MovementStatusChanged; // Event to indicate movement state (true = moving, false = stationary)
 
-        private readonly double _movementThreshold = 1e-3; // Movement tolerance for X, Y, Z, Roll, Pitch, Yaw
-        private readonly int _movementCheckIntervalMs = 1200; // Check interval in milliseconds
+        private readonly double _movementThreshold = 1e-2; // Movement tolerance
+        private readonly int _movementCheckIntervalMs = 500; // Check interval in milliseconds
 
         private string _xCoordinate;
         public string XCoordinate => _xCoordinate;
@@ -38,11 +38,10 @@ namespace DigitalTwin.Models
         private string _gripper;
         public string Gripper => _gripper;
 
-        private double[] _lastState = new double[6]; // Last known state: [X, Y, Z, Roll, Pitch, Yaw]
-        private bool _lastGripperState; // Last known gripper state
+        private double[] _lastPosition = new double[6]; // Last known position [X, Y, Z, Roll, Pitch, Yaw]
         private bool _isMoving;
 
-        public RobotPositionSimulation(OpcuaClient opcUaClient)
+        public RobotPositionReal(OpcuaClient opcUaClient)
         {
             _opcUaClient = opcUaClient ?? throw new ArgumentNullException(nameof(opcUaClient));
         }
@@ -57,19 +56,19 @@ namespace DigitalTwin.Models
 
             try
             {
-                Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, "Starting data subscription for simulation position.");
+                Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, "Starting data subscription for real robot position.");
 
-                await SubscribeToCoordinateAsync("ns=2;i=45", value => UpdateProperty(nameof(XCoordinate), ref _xCoordinate, value));
-                await SubscribeToCoordinateAsync("ns=2;i=46", value => UpdateProperty(nameof(YCoordinate), ref _yCoordinate, value));
-                await SubscribeToCoordinateAsync("ns=2;i=47", value => UpdateProperty(nameof(ZCoordinate), ref _zCoordinate, value));
-                await SubscribeToCoordinateAsync("ns=2;i=48", value => UpdateProperty(nameof(Roll), ref _roll, value));
-                await SubscribeToCoordinateAsync("ns=2;i=49", value => UpdateProperty(nameof(Pitch), ref _pitch, value));
-                await SubscribeToCoordinateAsync("ns=2;i=50", value => UpdateProperty(nameof(Yaw), ref _yaw, value));
-                await SubscribeToCoordinateAsync("ns=2;i=51", value => UpdateProperty(nameof(Gripper), ref _gripper, value));
+                await SubscribeToCoordinateAsync("ns=2;i=36", value => UpdateProperty(nameof(XCoordinate), ref _xCoordinate, value));
+                await SubscribeToCoordinateAsync("ns=2;i=37", value => UpdateProperty(nameof(YCoordinate), ref _yCoordinate, value));
+                await SubscribeToCoordinateAsync("ns=2;i=38", value => UpdateProperty(nameof(ZCoordinate), ref _zCoordinate, value));
+                await SubscribeToCoordinateAsync("ns=2;i=39", value => UpdateProperty(nameof(Roll), ref _roll, value));
+                await SubscribeToCoordinateAsync("ns=2;i=40", value => UpdateProperty(nameof(Pitch), ref _pitch, value));
+                await SubscribeToCoordinateAsync("ns=2;i=41", value => UpdateProperty(nameof(Yaw), ref _yaw, value));
+                await SubscribeToCoordinateAsync("ns=2;i=42", value => UpdateProperty(nameof(Gripper), ref _gripper, value));
 
                 StartMonitoringMovement();
 
-                Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, "Data subscription for simulation position started successfully.");
+                Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, "Data subscription for real robot position started successfully.");
             }
             catch (Exception ex)
             {
@@ -85,9 +84,15 @@ namespace DigitalTwin.Models
                 {
                     await Task.Delay(_movementCheckIntervalMs);
 
-                    if (TryParseState(out var currentState, out var gripperState))
+                    if (double.TryParse(XCoordinate, out var x) &&
+                        double.TryParse(YCoordinate, out var y) &&
+                        double.TryParse(ZCoordinate, out var z) &&
+                        double.TryParse(Roll, out var roll) &&
+                        double.TryParse(Pitch, out var pitch) &&
+                        double.TryParse(Yaw, out var yaw))
                     {
-                        var isMoving = IsMoving(_lastState, _lastGripperState, currentState, gripperState);
+                        var currentPosition = new[] { x, y, z, roll, pitch, yaw };
+                        var isMoving = IsMoving(_lastPosition, currentPosition);
 
                         if (isMoving != _isMoving)
                         {
@@ -95,59 +100,22 @@ namespace DigitalTwin.Models
                             MovementStatusChanged?.Invoke(_isMoving); // Notify about movement state
                         }
 
-                        // Update last known state
-                        _lastState = currentState;
-                        _lastGripperState = gripperState;
+                        _lastPosition = currentPosition; // Update last position
                     }
                 }
             });
         }
 
-        private bool IsMoving(double[] lastState, bool lastGripper, double[] currentState, bool currentGripper)
+        private bool IsMoving(double[] lastPosition, double[] currentPosition)
         {
-            // Check positional movement (X, Y, Z, Roll, Pitch, Yaw)
-            for (int i = 0; i < lastState.Length; i++)
+            for (int i = 0; i < lastPosition.Length; i++)
             {
-                if (Math.Abs(currentState[i] - lastState[i]) > _movementThreshold)
+                if (Math.Abs(currentPosition[i] - lastPosition[i]) > _movementThreshold)
                 {
-                    return true; // Movement detected in one of the parameters
+                    return true; // Movement detected
                 }
             }
-
-            // Check gripper state change
-            if (lastGripper != currentGripper)
-            {
-                return true; // Gripper state changed
-            }
-
             return false; // No movement
-        }
-
-        private bool TryParseState(out double[] state, out bool gripperState)
-        {
-            state = new double[6];
-            gripperState = false;
-
-            if (double.TryParse(XCoordinate, out var x) &&
-                double.TryParse(YCoordinate, out var y) &&
-                double.TryParse(ZCoordinate, out var z) &&
-                double.TryParse(Roll, out var roll) &&
-                double.TryParse(Pitch, out var pitch) &&
-                double.TryParse(Yaw, out var yaw) &&
-                bool.TryParse(Gripper, out var gripper))
-            {
-                state[0] = x;
-                state[1] = y;
-                state[2] = z;
-                state[3] = roll;
-                state[4] = pitch;
-                state[5] = yaw;
-                gripperState = gripper;
-                return true;
-            }
-
-            Logger.TryGet(LogEventLevel.Warning, "DigitalTwin")?.Log(this, "Failed to parse robot state values.");
-            return false;
         }
 
         private async Task SubscribeToCoordinateAsync(string nodeId, Action<string> onDataReceived)
@@ -185,7 +153,7 @@ namespace DigitalTwin.Models
                 return "Invalid Data";
             }
 
-            if (nodeId == "ns=2;i=51") // NodeId for Gripper (boolean)
+            if (nodeId == "ns=2;i=42") // NodeId for Gripper (boolean)
             {
                 if (bool.TryParse(dataValue.Value.ToString(), out bool boolValue))
                 {

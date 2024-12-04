@@ -20,14 +20,27 @@ public partial class StartViewModel : PageViewModel
     private TaskCompletionSource<bool> _movementCompletionSource;
     private bool _isRobotMoving = true;
     private RobotPositionSimulation _robotPositionSimulation;
+    private RobotPositionReal _robotPositionReal;
     private UserSession _userSession;
 
     private ITaskService _taskService;
     [ObservableProperty]
-    private bool _isSimulationSubscriberChecked = true;
+    private bool _isSimulationSubscriberChecked;
+
+    [ObservableProperty]
+    private bool _isRealSubscriberChecked;
 
     [ObservableProperty]
     private bool _isMultiTaskChecked;
+
+    [ObservableProperty]
+    private bool _isDigitalTwinChecked;
+
+#region Task Properties
+    [ObservableProperty]
+    private string _taskStatus;
+
+#endregion
 
 #region cards Properties
     [ObservableProperty]
@@ -80,21 +93,45 @@ public partial class StartViewModel : PageViewModel
 
 #endregion
     private readonly OpcuaClient _opcaClient;
-    public StartViewModel(Func<OpcuaClient> getOpcuaClient,Func<RobotPositionSimulation> getRobotPositionSimulation, Func<ITaskService> getTaskService ,Func<UserSession> getUserSession)
+    public StartViewModel(Func<OpcuaClient> getOpcuaClient,Func<RobotPositionSimulation> getRobotPositionSimulation,Func<RobotPositionReal> getRobotPositionReal , Func<ITaskService> getTaskService ,Func<UserSession> getUserSession)
     {
         PageNames = ApplicationPageNames.Start;
         _robotPositionSimulation = getRobotPositionSimulation();
+        _robotPositionReal = getRobotPositionReal();
         _opcaClient = getOpcuaClient();
         _robotPositionSimulation.DataUpdated += OnSimulationDataUpdated;
         _robotPositionSimulation.MovementStatusChanged += OnMovementStatusChanged;
-
+        _robotPositionReal.DataUpdated += OnRealDataUpdated;
+        _robotPositionReal.MovementStatusChanged += OnMovementStatusChanged;
         _taskService = getTaskService();
         _userSession = getUserSession();
     }
 
     [RelayCommand]
-    public async Task SubScribeToSimulationPositionAsync()
+    public async Task StartDigitalTwin()
     {
+        if(IsDigitalTwinChecked)
+        {
+            await _opcaClient.CallSystemMethodAsync(_opcaClient.Session,"ns=2;s=DigitalTwinMethods","ns=2;s=LaunchDigitalTwin");
+        }else
+        {
+            await _opcaClient.CallSystemMethodAsync(_opcaClient.Session,"ns=2;s=DigitalTwinMethods","ns=2;s=ShutdownDigitalTwin");
+        }
+    }
+
+    [RelayCommand]
+    public async Task StartRqt()
+    {
+        
+        Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, "Starting Rqt...");
+        await _opcaClient.CallSystemMethodAsync(_opcaClient.Session,"ns=2;s=RqtMethods","ns=2;s=LaunchRqt");
+        Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, "Rqt started.");
+    }
+
+    [RelayCommand]
+    public async Task SubScribeToSimulationPosition()
+    {
+        
         if(IsSimulationSubscriberChecked)
         {         
             await _opcaClient.CallSystemMethodAsync(_opcaClient.Session,"ns=2;s=CartesianPoseMethods","ns=2;s=GetSimCartesianPose");
@@ -106,12 +143,27 @@ public partial class StartViewModel : PageViewModel
         }
 
     }
+    [RelayCommand]
+    public async Task SubScribeToRealPosition()
+    {
+        if(IsRealSubscriberChecked)
+        {
+            await _opcaClient.CallSystemMethodAsync(_opcaClient.Session,"ns=2;s=CartesianPoseMethods","ns=2;s=GetRealCartesianPose");
+            await _robotPositionReal.StartDataSubscriptionAsync();
+        }
+        else
+        {
+            await _opcaClient.CallSystemMethodAsync(_opcaClient.Session,"ns=2;s=CartesianPoseMethods","ns=2;s=ShutdownRealCartesianPose");
+        }
+    }
 
     [RelayCommand]
     public void StartSystem()
     {
+        IsSimulationSubscriberChecked = true;
         Task.Run(async() =>
         {
+
             await _opcaClient.CallSystemMethodAsync(_opcaClient.Session,"ns=2;s=ControlMethods","ns=2;s=LaunchRos2Simulation");
         });
         
@@ -139,8 +191,10 @@ public partial class StartViewModel : PageViewModel
         .SetGripper(CheckBoxGripper);
         var task = builder.Build();
         Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, $"Task to be added: {task.ToString()}");
+        TaskStatus = $"Adding Simple Task: {task.ToString()}";
         await _taskService.AddTaskAsync(_userSession.Username,task,TaskDataStatus.Idle);       
         Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, $"Task added successfully.");
+        TaskStatus = $"Task Added: {task.ToString()}";
         
     }
 
@@ -160,14 +214,14 @@ public partial class StartViewModel : PageViewModel
                 .SetGripper(CheckBoxGripper);
             var task = builder.Build();
             Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, $"Sending task: {task.ToString()}");
+            TaskStatus = $"Simple Task Started : {task.ToString()}";
             await _opcaClient.CallSendGoalAsync(task);
-            Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, $"Task sent successfully.");
+            TaskStatus = $"Simple Task Sent : {task.ToString()}";
             await WaitForRobotToStopAsync();
-            Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, "Robot has stopped.");
+            TaskStatus = $"Simple Task Completed : {task.ToString()}";
         }
         else
         {
-            // Start at Home Position :
             var builder = new TaskBuilder()
                 .SetX(0.35)
                 .SetY(0.0)
@@ -177,27 +231,32 @@ public partial class StartViewModel : PageViewModel
                 .SetYaw(0.0)
                 .SetGripper(false);
             var HomeTask = builder.Build();
+            TaskStatus = $"Sending Home Task : {HomeTask.ToString()}";
             await _opcaClient.CallSendGoalAsync(HomeTask);
+            TaskStatus = $"Home Task Sent : {HomeTask.ToString()}";
+            await WaitForRobotToStopAsync();
+            TaskStatus = $"Home Task Completed : {HomeTask.ToString()}";
 
             // Multi-Task
             var tasks = await _taskService.GetTasksByUsernameAsync(_userSession.Username);
             foreach (var task in tasks)
             {
-                Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, $"Sending task: {task.TaskData.ToString()}");
+                TaskStatus = $"Sending Task : {task.TaskData.ToString()}";
                 await _opcaClient.CallSendGoalAsync(task.TaskData);
-                Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, $"Task sent successfully.");
+                TaskStatus = $"Task Sent : {task.TaskData.ToString()}";
                 await WaitForRobotToStopAsync();
-                Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, "Robot has stopped.");
+                TaskStatus = $"Task Completed : {task.TaskData.ToString()}";
             }
+            TaskStatus = "All tasks completed.";
         }
     }
 
     [RelayCommand]
     public async Task ResetTasks()
     {
-        Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, $"Resetting all tasks.");
+        TaskStatus = "Deleting all tasks...";
         await _taskService.DeleteAllTasksAsync();
-        Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, $"All tasks deleted successfully.");
+        TaskStatus = "All tasks deleted.";
     }
 
     private void OnSimulationDataUpdated(string propertyName, string newValue)
@@ -227,6 +286,35 @@ public partial class StartViewModel : PageViewModel
                 Gripper_sim = newValue;
                 break;
         }
+    }
+    private void OnRealDataUpdated(string propertyName, string newValue)
+    {
+              // Update the corresponding ViewModel property
+        switch (propertyName)
+        {
+            case nameof(RobotPositionReal.XCoordinate):
+                XCoords_real = newValue;
+                break;
+            case nameof(RobotPositionReal.YCoordinate):
+                YCoords_real = newValue;
+                break;
+            case nameof(RobotPositionReal.ZCoordinate):
+                ZCoords_real = newValue;
+                break;
+            case nameof(RobotPositionReal.Roll):
+                Roll_real = newValue;
+                break;
+            case nameof(RobotPositionReal.Pitch):
+                Pitch_real = newValue;
+                break;
+            case nameof(RobotPositionReal.Yaw):
+                Yaw_real = newValue;
+                break;
+            case nameof(RobotPositionReal.Gripper):
+                Gripper_real = newValue;
+                break;
+        }
+
     }
 
     private Task WaitForRobotToStopAsync()
@@ -264,4 +352,5 @@ public partial class StartViewModel : PageViewModel
             _robotPositionSimulation.MovementStatusChanged -= OnRobotStopped;
         }
     }
+
 }   

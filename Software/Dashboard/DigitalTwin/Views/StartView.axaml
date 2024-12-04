@@ -26,7 +26,7 @@
                         </StackPanel>
                     </Button>
                     <CheckBox IsChecked="{Binding IsSimulationSubscriberChecked}" Command="{Binding SubScribeToSimulationPositionCommand}" Margin="0,0,100,0" Grid.Column="1" Grid.Row="0" Foreground="White" Content="Subscribe to Simulation" HorizontalAlignment="Right"/>
-                    <CheckBox IsChecked="{Binding IsSimulationSubscriberChecked}" Margin="0,0,98,0" Grid.Column="1" Grid.Row="1" Foreground="White" Content="Subscribe to Real Robot" HorizontalAlignment="Right"/>
+                    <CheckBox IsChecked="{Binding IsRealSubscriberChecked}" Command="{Binding SubScribeToRealPositionCommand}" Margin="0,0,98,0" Grid.Column="1" Grid.Row="1" Foreground="White" Content="Subscribe to Real Robot" HorizontalAlignment="Right"/>
                 </Grid>
               </Border>
               <!--Main Task Builder (Set points ...etc)-->
@@ -74,7 +74,10 @@
                     </ScrollViewer>
                   <!--Buttons and Task Builder-->
                   <Grid Grid.Column="1"  RowDefinitions="*,*">
-                    <CheckBox x:Name="Multi_Point_Checkbox" HorizontalAlignment="Center" Grid.Row="0" IsChecked="{Binding IsMultiTaskChecked}" Content="Set Multi-Task" Foreground="White"/>
+                    <StackPanel Spacing="10" Grid.Row="0">
+                    <CheckBox  x:Name="Multi_Point_Checkbox" HorizontalAlignment="Center" IsChecked="{Binding IsMultiTaskChecked}" Content="Set Multi-Task" Foreground="White"/>
+                    <CheckBox  x:Name="DigitalTwin" HorizontalAlignment="Center" IsChecked="{Binding IsDigitalTwinChecked}" Command="{Binding StartDigitalTwinCommand}" Content="Connect Digital Twin" Foreground="White"/>
+                    </StackPanel>
                     <StackPanel Grid.Row="1">
                     <Button IsEnabled="{Binding #Multi_Point_Checkbox.IsChecked}" Margin="10,0,0,0" Command="{Binding SetTaskCommand}" Width="200"  HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
@@ -103,7 +106,8 @@
               <!--Right Side Upper Margin for for Tasks info-->
               <Border Classes="shadow" Grid.Column="1" Grid.Row="0" Background="{DynamicResource SecondaryBackground}">
                 <StackPanel>
-                
+                  <Label Margin="10,10,0,0" Content="Tasks Status" Foreground="White"/>
+                  <Label Margin="10,10,0,0" Content="{Binding TaskStatus}" Foreground="White"/>
                 </StackPanel>
               </Border>
               <!--Right Side for Position info-->
@@ -114,6 +118,16 @@
                 </Grid>
               </Border>
               <!--Right Side Lower Margin  info-->
-              <Border Grid.Column="1" Grid.Row="2"  Background="BlueViolet"/>
+              <Border Grid.Column="1" Grid.Row="2"  Background="{DynamicResource SecondaryBackground}">
+                  <StackPanel>
+                    <Button Margin="10,0,0,0" Command="{Binding StartRqtCommand}" Width="200"  HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xE008;" />
+                            <Label Content="RQT"/>
+                        </StackPanel>
+                    </Button>
+
+                  </StackPanel>
+              </Border>
             </Grid>
 </UserControl>
