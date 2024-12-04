@@ -52,6 +52,9 @@ public static class ViewModelServiceCollectionExtensions
     {
         collection.AddSingleton<OpcuaClient>();
         collection.AddSingleton<Func<OpcuaClient>>(provider => () => provider.GetRequiredService<OpcuaClient>());
-        collection.AddSingleton<RobotPosition>();
+        collection.AddSingleton<RobotPositionSimulation>();
+        collection.AddSingleton<Func<RobotPositionSimulation>>(provider => () => provider.GetRequiredService<RobotPositionSimulation>());
+        collection.AddSingleton<ITaskService, TaskService>();
+        collection.AddSingleton<Func<ITaskService>>(provider => () => provider.GetRequiredService<ITaskService>());
     }
 }

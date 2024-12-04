@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Logging;
+using DigitalTwin.Data;
 using Opc.Ua;
 using Opc.Ua.Client;
 
@@ -168,4 +169,100 @@ public class OpcuaClient
         }
     }
 
+    public async Task SubscribeToVariableAsync(string variableNodeId, Action<DataValue> callback)
+    {
+        if (Session == null || !Session.Connected)
+        {
+            Logger.TryGet(LogEventLevel.Error, "DigitalTwin")?.Log(this, "Session is not connected.");
+            return;
+        }
+
+        try
+        {
+            if (Subscription == null)
+            {
+                Subscription = new Subscription(Session.DefaultSubscription)
+                {
+                    PublishingInterval = 100, // 1-second interval
+                    KeepAliveCount = 10,
+                    LifetimeCount = 20,
+                    Priority = 0,
+                };
+
+                Session.AddSubscription(Subscription);
+                await Task.Run(() => Subscription.Create());
+            }
+
+            MonitoredItem monitoredItem = new MonitoredItem(Subscription.DefaultItem)
+            {
+                StartNodeId = new NodeId(variableNodeId),
+                AttributeId = Attributes.Value,
+                SamplingInterval = 1000, // 1-second interval
+                QueueSize = 10,
+                DiscardOldest = true,
+            };
+
+            monitoredItem.Notification += (sender, args) =>
+            {
+                foreach (var value in monitoredItem.DequeueValues())
+                {
+                    callback?.Invoke(value);
+                }
+            };
+
+            Subscription.AddItem(monitoredItem);
+            await Task.Run(() => Subscription.ApplyChanges());
+        }
+        catch (Exception ex)
+        {
+            Logger.TryGet(LogEventLevel.Error, "DigitalTwin")?.Log(this, $"Error subscribing to variable {variableNodeId}: {ex.Message}");
+        }
+    }
+
+    public async Task CallSendGoalAsync(TaskData taskData)
+    {
+        if (Session == null || !Session.Connected)
+        {
+            Logger.TryGet(LogEventLevel.Error, "DigitalTwin")?.Log(this, "Session is not connected.");
+            return;
+        }
+
+        try
+        {
+
+            var objectNodeId = new NodeId("ns=2;s=GoalMethods");
+            var methodNodeId = new NodeId("ns=2;s=SendGoal");   
+
+            // Prepare input arguments
+            var inputArguments = new List<object>
+                {
+                    taskData.X,           // x in meters (float)
+                    taskData.Y,           // y in meters (float)
+                    taskData.Z,           // z in meters (float)
+                    taskData.Roll,        // roll in degrees (float)
+                    taskData.Pitch,       // pitch in degrees (float)
+                    taskData.Yaw,         // yaw in degrees (float)
+                    taskData.Gripper      // gripper state (0 or 1, int)
+                };
+
+
+                IList<object> outputArguments = await Task.Run(() =>
+                    Session.Call(objectNodeId, methodNodeId, inputArguments.ToArray())
+                );
+
+                // Handle the output if necessary
+                if (outputArguments != null && outputArguments.Count > 0)
+                {
+                    var result = outputArguments[0]?.ToString();
+                    Logger.TryGet(LogEventLevel.Information, "DigitalTwin")
+                        ?.Log(this, $"SendGoal method completed. Result: {result}");
+                }
+        }
+        catch (Exception ex)
+        {
+            Logger.TryGet(LogEventLevel.Error, "DigitalTwin")
+                ?.Log(this, $"Error calling SendGoal method: {ex.Message}");
+        }
+    }
+ 
 }

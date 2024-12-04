@@ -13,24 +13,91 @@
             <Grid ColumnDefinitions="1.8*,*" RowDefinitions="*,4*,*">
               <Border Classes="shadow" Grid.Column="0" Grid.Row="0" Background="{DynamicResource SecondaryBackground}">
                 <Grid Margin="10,0,0,0" ColumnDefinitions="*,*" RowDefinitions="*,*">
-                    <Button Width="200" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left">
+                    <Button Command="{Binding StartSystemCommand}" Width="200" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
                             <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xE3D0;" />
                             <Label Content="Start"/>
                         </StackPanel>
                     </Button>   
-                      <Button Width="200" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left">
+                      <Button Command="{Binding StopSystemCommand}" Width="200" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
                             <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xE46C;" />
                             <Label Content="Stop"/>
                         </StackPanel>
                     </Button>
-                    <CheckBox Margin="0,0,100,0" Grid.Column="1" Grid.Row="0" Foreground="White" Content="Subscribe to Simulation" HorizontalAlignment="Right"/>
-                    <CheckBox Margin="0,0,98,0" Grid.Column="1" Grid.Row="1" Foreground="White" Content="Subscribe to Real Robot" HorizontalAlignment="Right"/>
+                    <CheckBox IsChecked="{Binding IsSimulationSubscriberChecked}" Command="{Binding SubScribeToSimulationPositionCommand}" Margin="0,0,100,0" Grid.Column="1" Grid.Row="0" Foreground="White" Content="Subscribe to Simulation" HorizontalAlignment="Right"/>
+                    <CheckBox IsChecked="{Binding IsSimulationSubscriberChecked}" Margin="0,0,98,0" Grid.Column="1" Grid.Row="1" Foreground="White" Content="Subscribe to Real Robot" HorizontalAlignment="Right"/>
                 </Grid>
               </Border>
               <!--Main Task Builder (Set points ...etc)-->
-              <Border Grid.Column="0" Grid.Row="1" Background="{DynamicResource PrimaryBackground}"/>            
+              <Border Grid.Column="0" Grid.Row="1" Background="{DynamicResource PrimaryBackground}">
+
+                <Grid ColumnDefinitions="2*,*">
+                    <ScrollViewer Grid.Column="0">
+                      <!-- Sliders and Gripper Setter-->
+                      <Grid RowDefinitions="*,*,*,*,*,*,*">
+                        <StackPanel Margin="10,0,0,0" Orientation="Vertical" Grid.Row="0">
+                          <Label Content="X [m] [Min,Max] [0.1,0.5]" Foreground="White"/>
+                          <TextBox Text="{Binding #x_slider.Value , Mode=TwoWay}" Foreground="White"/>
+                          <Slider TickPlacement="Outside" IsSnapToTickEnabled="True" TickFrequency="0.01"  SmallChange="0.1" LargeChange="0.2"  x:Name="x_slider"  Minimum="0.1" Maximum="0.5" Value="{Binding SliderX, Mode=TwoWay}" Orientation="Horizontal" Margin="10,10,10,0"/>
+                        </StackPanel>
+                        <StackPanel Margin="10,0,0,0" Orientation="Vertical" Grid.Row="1">
+                          <Label Content="Y [m] [Min,Max] [-0.2,0.2]" Foreground="White"/>
+                          <TextBox Text="{Binding #y_slider.Value, Mode=TwoWay}" Foreground="White"/>
+                          <Slider TickPlacement="Outside" IsSnapToTickEnabled="True" TickFrequency="0.01" SmallChange="0.1" LargeChange="0.2" x:Name="y_slider"  Minimum="-0.2" Maximum="0.2" Value="{Binding SliderY, Mode=TwoWay}" Orientation="Horizontal" Margin="10,10,10,0"/>
+                        </StackPanel>
+                        <StackPanel Margin="10,0,0,0" Orientation="Vertical" Grid.Row="2">
+                          <Label Content="Z [m] [Min,Max] [0.35,0.7]" Foreground="White"/>
+                          <TextBox Text="{Binding #z_slider.Value, Mode=TwoWay}" Foreground="White"/>
+                          <Slider TickPlacement="Outside" IsSnapToTickEnabled="True" TickFrequency="0.01" SmallChange="0.1" LargeChange="0.2" x:Name="z_slider"  Minimum="0.35" Maximum="0.7" Value="{Binding SliderZ, Mode=TwoWay}" Orientation="Horizontal" Margin="10,10,10,0"/>
+                        </StackPanel>
+                        <StackPanel Margin="10,0,0,0" Orientation="Vertical" Grid.Row="3">
+                          <Label Content="Roll [°] [Min,Max] [0,90]" Foreground="White"/>
+                          <TextBox Text="{Binding #roll_slider.Value, Mode=TwoWay}" Foreground="White"/>
+                          <Slider TickPlacement="Outside" IsSnapToTickEnabled="True" TickFrequency="1" x:Name="roll_slider" SmallChange="1" LargeChange="10" Minimum="0" Maximum="90" Value="{Binding SliderRoll, Mode=TwoWay}" Orientation="Horizontal" Margin="10,10,10,0"/>
+                        </StackPanel>
+                        <StackPanel Margin="10,0,0,0" Orientation="Vertical" Grid.Row="4">
+                          <Label Content="Pitch [°] [Min,Max] [0,90]" Foreground="White"/>
+                          <TextBox Text="{Binding #pitch_slider.Value, Mode=TwoWay}" Foreground="White"/>
+                          <Slider  TickPlacement="Outside" IsSnapToTickEnabled="True" TickFrequency="1"  SmallChange="1" LargeChange="10"  x:Name="pitch_slider"  Minimum="0" Value="{Binding SliderPitch, Mode=TwoWay}" Maximum="90" Orientation="Horizontal" Margin="10,10,10,0"/>
+                        </StackPanel>
+                        <StackPanel Margin="10,0,0,0" Orientation="Vertical" Grid.Row="5">
+                          <Label Content="Yaw [°] [Min,Max] [0,90]" Foreground="White"/>
+                          <TextBox Text="{Binding #yaw_slider.Value, Mode=TwoWay}" Foreground="White"/>
+                          <Slider  TickPlacement="Outside" IsSnapToTickEnabled="True" TickFrequency="1"  SmallChange="1" LargeChange="10"  x:Name="yaw_slider"  Minimum="0" Maximum="90" Value="{Binding SliderYaw, Mode=TwoWay}" Orientation="Horizontal" Margin="10,10,10,0"/>
+                        </StackPanel>
+                        <StackPanel  Margin="10,0,0,0" Orientation="Vertical" Grid.Row="6">
+                          <Label Content="Gripper" Foreground="White"/>
+                          <CheckBox Content="Is Open" IsChecked="{Binding CheckBoxGripper}" Foreground="White"/>
+                        </StackPanel>
+                      </Grid>
+                    </ScrollViewer>
+                  <!--Buttons and Task Builder-->
+                  <Grid Grid.Column="1"  RowDefinitions="*,*">
+                    <CheckBox x:Name="Multi_Point_Checkbox" HorizontalAlignment="Center" Grid.Row="0" IsChecked="{Binding IsMultiTaskChecked}" Content="Set Multi-Task" Foreground="White"/>
+                    <StackPanel Grid.Row="1">
+                    <Button IsEnabled="{Binding #Multi_Point_Checkbox.IsChecked}" Margin="10,0,0,0" Command="{Binding SetTaskCommand}" Width="200"  HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xE5A0;" />
+                            <Label Content="Set Task"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Margin="10,0,0,0" Command="{Binding StartTaskCommand}" Width="200"  HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xE3D0;" />
+                            <Label Content="Start Task"/>
+                        </StackPanel>
+                    </Button>
+                      <Button Margin="10,0,0,0" Command="{Binding ResetTasksCommand}" Width="200"  HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <Label  FontFamily="{DynamicResource Phosphor-Fill}" Classes="icon" Content="&#xE19E;" />
+                            <Label Content="Reset Tasks"/>
+                        </StackPanel>
+                    </Button>
+                    </StackPanel>
+                  </Grid>
+                </Grid>
+              </Border>            
               <!-- Lower Margin for stop and start etc ...-->         
               <Border Grid.Column="0" Grid.Row="2" Background="Beige"/>            
               <!--Right Side Upper Margin for for Tasks info-->
@@ -39,11 +106,11 @@
                 
                 </StackPanel>
               </Border>
-              <!--Right Side for Tasks info-->
+              <!--Right Side for Position info-->
               <Border Classes="shadow" Grid.Column="1" Grid.Row="1" Background="{DynamicResource SecondaryBackground}">
                 <Grid VerticalAlignment="Stretch" ColumnDefinitions="*,*">
                     <controls:PositionControl Grid.Column="0" CardHeight="350" CardIconString="&#xE2CE;" CardTitle="Simulation" CardWidth="200" XCoordinate="{Binding XCoords_sim}" YCoordinate="{Binding YCoords_sim}" ZCoordinate="{Binding ZCoords_sim}" Roll="{Binding Roll_sim}" Pitch="{Binding Pitch_sim}" Yaw="{Binding Yaw_sim}" Gripper="{Binding Gripper_sim}" />
-                    <controls:PositionControl Grid.Column="1" CardHeight="350" CardIconString="&#xE2CE;" CardTitle="Real" CardWidth="200" XCoordinate="{Binding XCoords_real}" YCoordinate="{Binding YCoords_real}" ZCoordinate="{Binding ZCoords_real}" Roll="{Binding Roll_real}" Pitch="{Binding Pitch_real}" Yaw="{Binding Yaw_real}" Gripper="{Binding Gripper_real} />
+                    <controls:PositionControl Grid.Column="1" CardHeight="350" CardIconString="&#xE2CE;" CardTitle="Real" CardWidth="200" XCoordinate="{Binding XCoords_real}" YCoordinate="{Binding YCoords_real}" ZCoordinate="{Binding ZCoords_real}" Roll="{Binding Roll_real}" Pitch="{Binding Pitch_real}" Yaw="{Binding Yaw_real}" Gripper="{Binding Gripper_real}" />
                 </Grid>
               </Border>
               <!--Right Side Lower Margin  info-->
