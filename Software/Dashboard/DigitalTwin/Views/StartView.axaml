@@ -54,17 +54,17 @@
                         <StackPanel Margin="10,0,0,0" Orientation="Vertical" Grid.Row="3">
                           <Label Content="Roll [°] [Min,Max] [0,90]" Foreground="White"/>
                           <TextBox Text="{Binding #roll_slider.Value, Mode=TwoWay}" Foreground="White"/>
-                          <Slider TickPlacement="Outside" IsSnapToTickEnabled="True" TickFrequency="1" x:Name="roll_slider" SmallChange="1" LargeChange="10" Minimum="0" Maximum="90" Value="{Binding SliderRoll, Mode=TwoWay}" Orientation="Horizontal" Margin="10,10,10,0"/>
+                          <Slider TickPlacement="Outside" IsSnapToTickEnabled="True" TickFrequency="1" x:Name="roll_slider" SmallChange="1" LargeChange="10" Minimum="0" Maximum="360" Value="{Binding SliderRoll, Mode=TwoWay}" Orientation="Horizontal" Margin="10,10,10,0"/>
                         </StackPanel>
                         <StackPanel Margin="10,0,0,0" Orientation="Vertical" Grid.Row="4">
                           <Label Content="Pitch [°] [Min,Max] [0,90]" Foreground="White"/>
                           <TextBox Text="{Binding #pitch_slider.Value, Mode=TwoWay}" Foreground="White"/>
-                          <Slider  TickPlacement="Outside" IsSnapToTickEnabled="True" TickFrequency="1"  SmallChange="1" LargeChange="10"  x:Name="pitch_slider"  Minimum="0" Value="{Binding SliderPitch, Mode=TwoWay}" Maximum="90" Orientation="Horizontal" Margin="10,10,10,0"/>
+                          <Slider  TickPlacement="Outside" IsSnapToTickEnabled="True" TickFrequency="1"  SmallChange="1" LargeChange="10"  x:Name="pitch_slider"  Minimum="0" Value="{Binding SliderPitch, Mode=TwoWay}" Maximum="360" Orientation="Horizontal" Margin="10,10,10,0"/>
                         </StackPanel>
                         <StackPanel Margin="10,0,0,0" Orientation="Vertical" Grid.Row="5">
                           <Label Content="Yaw [°] [Min,Max] [0,90]" Foreground="White"/>
                           <TextBox Text="{Binding #yaw_slider.Value, Mode=TwoWay}" Foreground="White"/>
-                          <Slider  TickPlacement="Outside" IsSnapToTickEnabled="True" TickFrequency="1"  SmallChange="1" LargeChange="10"  x:Name="yaw_slider"  Minimum="0" Maximum="90" Value="{Binding SliderYaw, Mode=TwoWay}" Orientation="Horizontal" Margin="10,10,10,0"/>
+                          <Slider  TickPlacement="Outside" IsSnapToTickEnabled="True" TickFrequency="1"  SmallChange="1" LargeChange="10"  x:Name="yaw_slider"  Minimum="0" Maximum="360" Value="{Binding SliderYaw, Mode=TwoWay}" Orientation="Horizontal" Margin="10,10,10,0"/>
                         </StackPanel>
                         <StackPanel  Margin="10,0,0,0" Orientation="Vertical" Grid.Row="6">
                           <Label Content="Gripper" Foreground="White"/>
