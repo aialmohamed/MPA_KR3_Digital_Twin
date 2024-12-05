@@ -14,8 +14,8 @@ namespace DigitalTwin.Models
         public event Action<string, string> DataUpdated;
         public event Action<bool> MovementStatusChanged; // Event to indicate movement state (true = moving, false = stationary)
 
-        private readonly double _movementThreshold = 1e-2; // Movement tolerance for X, Y, Z, Roll, Pitch, Yaw
-        private readonly int _movementCheckIntervalMs = 1200; // Check interval in milliseconds
+        private readonly double _movementThreshold = 5e-3; // Movement tolerance for X, Y, Z, Roll, Pitch, Yaw
+        private readonly int _movementCheckIntervalMs = 800; // Check interval in milliseconds
 
         private string _xCoordinate;
         public string XCoordinate => _xCoordinate;

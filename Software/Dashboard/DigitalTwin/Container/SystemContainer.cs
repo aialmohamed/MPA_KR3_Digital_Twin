@@ -24,7 +24,7 @@ public class SystemContainer
 
     public SystemContainer(Func<ProjectPaths> GetProjectPaths)
     {
-            _GetProjectPaths = GetProjectPaths;
+        _GetProjectPaths = GetProjectPaths;
 
 
         var projectPaths = _GetProjectPaths();
@@ -32,6 +32,8 @@ public class SystemContainer
 
         _dockerFilePath = projectPaths.DockerFilePath;
         root = projectPaths.RootPath;
+        Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, $"Root path: {root}");
+        Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, $"Dockerfile path: {DockerFilePath}");
 
     }
     public async Task<bool> EnsureDockerImageExistsAsync(string imageName, string rootPath)
@@ -153,9 +155,53 @@ public class SystemContainer
         try
         {
 
+            if (OperatingSystem.IsLinux())
+            {
+                var xhostProcess = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "xhost",
+                        Arguments = "+local:docker",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    }
+                };
+
+                xhostProcess.Start();
+                string xhostOutput = await xhostProcess.StandardOutput.ReadToEndAsync();
+                string xhostError = await xhostProcess.StandardError.ReadToEndAsync();
+
+                await xhostProcess.WaitForExitAsync();
+
+                if (xhostProcess.ExitCode != 0)
+                {
+                    Console.WriteLine($"Error setting X11 permissions for Docker:");
+                    Console.WriteLine(xhostError);
+                }
+                else
+                {
+                    Console.WriteLine("X11 permissions granted for Docker:");
+                    Console.WriteLine(xhostOutput);
+                }
+            }
+            string display = Environment.GetEnvironmentVariable("DISPLAY") ?? ":0";
             string command;
 
-            if (OperatingSystem.IsWindows())
+            if (OperatingSystem.IsLinux())
+            {
+                command = $"run -d --rm --gpus all " +
+                        $"--net=host " +
+                        $"-e NVIDIA_VISIBLE_DEVICES=all " +
+                        $"-e NVIDIA_DRIVER_CAPABILITIES=all " +
+                        $"-e DISPLAY={display} " +
+                        $"-v /tmp/.X11-unix:/tmp/.X11-unix " +
+                        $"--name kr3r540_digital_twin " +
+                        $"ibo311/kr3r540_digital_twin:v1.0";
+            }
+            else if (OperatingSystem.IsWindows())
             {
                 command = "run -d -p 4840:4840 " +
                         "-v /run/desktop/mnt/host/wslg/.X11-unix:/tmp/.X11-unix " +
@@ -167,22 +213,10 @@ public class SystemContainer
                         "--name kr3r540_digital_twin " +
                         "--gpus all ibo311/kr3r540_digital_twin:v1.0";
             }
-            else if (OperatingSystem.IsLinux())
-            {
-                command = "run -d --rm --gpus all " +
-                        "--net=host " +
-                        "-e NVIDIA_VISIBLE_DEVICES=all " +
-                        "-e NVIDIA_DRIVER_CAPABILITIES=all " +
-                        "-e DISPLAY=$DISPLAY " +
-                        "-v /tmp/.X11-unix:/tmp/.X11-unix " +
-                        "--name kr3r540_digital_twin " +
-                        "--memory-reservation=1g ibo311/kr3r540_digital_twin:v1.0";
-            }
             else
             {
                 throw new NotSupportedException("Unsupported operating system.");
             }
-
 
             var process = new Process
             {
@@ -191,9 +225,9 @@ public class SystemContainer
                     FileName = "docker",
                     Arguments = command,
                     RedirectStandardOutput = true,
-                    RedirectStandardError = true, 
-                    UseShellExecute = false,     
-                    CreateNoWindow = true         
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
                 }
             };
 
@@ -219,6 +253,7 @@ public class SystemContainer
             Console.WriteLine($"An error occurred while launching Docker in the background: {ex.Message}");
         }
     }
+
     public async Task<bool> WaitForOpcUaServerAsync(string endpointUrl, int timeoutSeconds = 100)
     {
         int elapsedSeconds = 0;

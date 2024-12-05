@@ -17,6 +17,7 @@ using DigitalTwin.Services;
 
 public partial class StartViewModel : PageViewModel
     {
+
     private TaskCompletionSource<bool> _movementCompletionSource;
     private bool _isRobotMoving = true;
     private RobotPositionSimulation _robotPositionSimulation;
@@ -102,7 +103,7 @@ public partial class StartViewModel : PageViewModel
         _robotPositionSimulation.DataUpdated += OnSimulationDataUpdated;
         _robotPositionSimulation.MovementStatusChanged += OnMovementStatusChanged;
         _robotPositionReal.DataUpdated += OnRealDataUpdated;
-        _robotPositionReal.MovementStatusChanged += OnMovementStatusChanged;
+        //_robotPositionReal.MovementStatusChanged += OnMovementStatusChanged;
         _taskService = getTaskService();
         _userSession = getUserSession();
     }
@@ -201,6 +202,24 @@ public partial class StartViewModel : PageViewModel
     [RelayCommand]
     public async Task StartTask()
     {
+        async Task ExecuteTask(TaskData task, string taskDescription)
+        {
+            try
+            {
+                Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, $"Sending task: {taskDescription}");
+                TaskStatus = $"Task Started: {taskDescription}";
+                await _opcaClient.CallSendGoalAsync(task);
+                TaskStatus = $"Task Sent: {taskDescription}";
+                await WaitForRobotToStopAsync(5000); // Timeout after 5 seconds
+                TaskStatus = $"Task Completed: {taskDescription}";
+            }
+            catch (Exception ex)
+            {
+                Logger.TryGet(LogEventLevel.Error, "DigitalTwin")?.Log(this, $"Error executing task: {taskDescription}. Exception: {ex.Message}");
+                TaskStatus = $"Task Failed: {taskDescription}";
+            }
+        }
+
         if (!IsMultiTaskChecked)
         {
             // Single Task
@@ -213,15 +232,12 @@ public partial class StartViewModel : PageViewModel
                 .SetYaw(SliderYaw)
                 .SetGripper(CheckBoxGripper);
             var task = builder.Build();
-            Logger.TryGet(LogEventLevel.Information, "DigitalTwin")?.Log(this, $"Sending task: {task.ToString()}");
-            TaskStatus = $"Simple Task Started : {task.ToString()}";
-            await _opcaClient.CallSendGoalAsync(task);
-            TaskStatus = $"Simple Task Sent : {task.ToString()}";
-            await WaitForRobotToStopAsync();
-            TaskStatus = $"Simple Task Completed : {task.ToString()}";
+
+            await ExecuteTask(task, task.ToString());
         }
         else
         {
+            // Home Task
             var builder = new TaskBuilder()
                 .SetX(0.35)
                 .SetY(0.0)
@@ -230,23 +246,19 @@ public partial class StartViewModel : PageViewModel
                 .SetPitch(0.0)
                 .SetYaw(0.0)
                 .SetGripper(false);
-            var HomeTask = builder.Build();
-            TaskStatus = $"Sending Home Task : {HomeTask.ToString()}";
-            await _opcaClient.CallSendGoalAsync(HomeTask);
-            TaskStatus = $"Home Task Sent : {HomeTask.ToString()}";
-            await WaitForRobotToStopAsync();
-            TaskStatus = $"Home Task Completed : {HomeTask.ToString()}";
+            var homeTask = builder.Build();
+
+            await ExecuteTask(homeTask, "Home Task");
+            await Task.Delay(2500); // Delay between tasks
 
             // Multi-Task
             var tasks = await _taskService.GetTasksByUsernameAsync(_userSession.Username);
             foreach (var task in tasks)
             {
-                TaskStatus = $"Sending Task : {task.TaskData.ToString()}";
-                await _opcaClient.CallSendGoalAsync(task.TaskData);
-                TaskStatus = $"Task Sent : {task.TaskData.ToString()}";
-                await WaitForRobotToStopAsync();
-                TaskStatus = $"Task Completed : {task.TaskData.ToString()}";
+                await ExecuteTask(task.TaskData, task.TaskData.ToString());
+                await Task.Delay(2500); // Delay between tasks
             }
+
             TaskStatus = "All tasks completed.";
         }
     }
@@ -317,14 +329,30 @@ public partial class StartViewModel : PageViewModel
 
     }
 
-    private Task WaitForRobotToStopAsync()
+    private async Task WaitForRobotToStopAsync(int timeoutMs = 5000)
     {
-        _movementCompletionSource = new TaskCompletionSource<bool>();
 
-        // Set up a one-time event handler
-        _robotPositionSimulation.MovementStatusChanged += OnRobotStopped;
+            if (_movementCompletionSource != null && !_movementCompletionSource.Task.IsCompleted)
+            {
+                throw new InvalidOperationException("Another task is already waiting for robot to stop.");
+            }
 
-        return _movementCompletionSource.Task;
+            _movementCompletionSource = new TaskCompletionSource<bool>();
+            _robotPositionSimulation.MovementStatusChanged += OnRobotStopped;
+
+        var timeoutTask = Task.Delay(timeoutMs).ContinueWith(_ => false);
+
+        var completedTask = await Task.WhenAny(_movementCompletionSource.Task, timeoutTask);
+
+        if (completedTask == timeoutTask)
+        {
+            Logger.TryGet(LogEventLevel.Warning, "DigitalTwin")?.Log(this, "Timeout reached. Assuming robot has stopped.");
+            _movementCompletionSource.TrySetResult(true);
+        }
+
+        _robotPositionSimulation.MovementStatusChanged -= OnRobotStopped;
+
+        await _movementCompletionSource.Task;
     }
     private void OnMovementStatusChanged(bool isMoving)
     {
@@ -344,12 +372,10 @@ public partial class StartViewModel : PageViewModel
     }
     private void OnRobotStopped(bool isMoving)
     {
-        if (!isMoving) // Robot has stopped
+        if (!isMoving)
         {
             _movementCompletionSource?.TrySetResult(true);
-
-            // Clean up the event handler
-            _robotPositionSimulation.MovementStatusChanged -= OnRobotStopped;
+            _robotPositionSimulation.MovementStatusChanged -= OnRobotStopped; // Ensure cleanup
         }
     }
 
