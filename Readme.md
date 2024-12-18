@@ -69,7 +69,8 @@ The project involves setting up a **digital twin** system for the **Kuka KR3 R54
 | Robot controller | KRC4| n/A|
 |KRC Windows version|WES7 4.0|n/A|
 |KSS | 8.3 | n/A|
-|cargo|1.82.0|n/A|
+|dotnet|8.0|n/A|
+|Avalonia|latest|n/A|
 
 
 ## To-do
