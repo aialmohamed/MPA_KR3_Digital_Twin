@@ -1,0 +1,34 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{cite}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage[rightcaption]{sidecap}
+\usepackage{datetime}
+\usepackage{url}
+\newdate{date}{01}{12}{2024}
+\graphicspath{{../../../images/}}
+
+\date{\displaydate{date}}
+\title{
+    Digital Twin KR3 \\ \large ROS2 Controller and Path Planning
+}
+
+\author{
+    Ahmed Ibrahim Almohamed
+}
+
+\begin{document}
+\maketitle
+
+\newpage
+\include{Intro}
+\newpage
+\include{PathPlanSpace}
+
+\newpage
+\include{Ros2_Controllers}
+
+\bibliographystyle{IEEEtran}
+\bibliography{ref}
+\end{document}
